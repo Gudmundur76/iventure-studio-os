@@ -48,9 +48,9 @@ agents:
 
   - id: "subsidy-advisor"
     name: "GTM Consultant"
-    role: "US GTM / NIST Compliance"
+    role: "US/EU GTM / NIST Compliance"
     model: "gpt-5"
-    description: "Iceland-China bridge, subsidy filings, and compliance."
+    description: "Iceland-US bridge, EU market entry, US federal/state subsidies, and NIST AI compliance."
 
   - id: "researcher"
     name: "Deep Research Lead"

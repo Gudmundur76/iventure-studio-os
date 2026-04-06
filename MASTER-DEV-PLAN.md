@@ -40,7 +40,7 @@
 | P5 | OS | OpenManus-RL Training Loop | 10–12 | 8h | P4 |
 | P6 | OS | Frontend Dashboard | 7–14 | 12h | P3 *(parallel P4)* |
 | P7 | OS | Workspace Integrations | 14–17 | 8h | P6 |
-| P8 | OS | OPC Templates (CN Market) | 17–20 | 6h | P7 |
+| P8 | OS | OPC Templates (US/EU Market) | 17–20 | 6h | P7 |
 | P9 | OS | Production Hardening | 20–24 | 8h | P8 |
 | P10 | OS | Public Launch | 24–28 | 8h | P9 |
 | P11 | NET | Agent Identity + Thenvoi Registry | 29–33 | 8h | P10 |
@@ -55,7 +55,7 @@
 
 **Total build hours (P1–P17): ~188 hours**
 **Timeline to full cortex: ~50 days from Day 1**
-**Critical external deadline: Apr 6 — Shenzhen Longgang subsidy**
+**Critical external deadline: Apr 6 — US Federal subsidy**
 
 ---
 
@@ -149,7 +149,7 @@ P2.8  Test fallback: stop genspark2api → verify LiteLLM handles gracefully
 □ genspark2api → 30+ models listed
 □ litellm /health → "healthy"
 □ GPT-5 responds via LiteLLM
-□ DeepSeek-V3 responds in Chinese
+□ DeepSeek-V3 responds in US/EU
 □ Gemini-2.5-Pro responds
 □ Latency logged for top 6 models
 ```
@@ -402,7 +402,7 @@ P7.7  Configure wildcard subdomain routing in Traefik
 ### P8 — OPC TEMPLATES (CHINESE MARKET)
 **Days 17–20 | 6h | Requires P7**
 
-**Goal:** 5 production-ready templates for Chinese OPC verticals.
+**Goal:** 5 production-ready templates for US/EU OPC verticals.
 Each deploys a configured agent in under 2 minutes.
 
 **5 Templates:**
@@ -427,8 +427,8 @@ P8.5  Test each template: deploy + 5 sample prompts each
 ```
 □ All 5 templates in gallery, bilingual labels
 □ Each deploys working agent in <2 min
-□ Chinese UI renders correctly
-□ Finance template handles CNY calculations
+□ US/EU UI renders correctly
+□ Finance template handles USD calculations
 ```
 
 ---
@@ -473,10 +473,10 @@ Subsidy application filed.
 **Key tasks:**
 ```
 P10.1  Stripe payment integration (3 tiers: €29/€79/€299)
-P10.2  CNY pricing tier (¥199/¥599/¥2,199)
+P10.2  USD pricing tier ($199/$599/$2,199)
 P10.3  Waitlist → launch email campaign
 P10.4  Company registration: iVenture Studio ehf. confirmed
-P10.5  ⚡ Shenzhen Longgang subsidy application filed
+P10.5  ⚡ US Federal subsidy application filed
 P10.6  ProductHunt + HN + LinkedIn + 小红书 launch posts
 P10.7  Onboard first 10 beta users manually
 P10.8  Collect feedback → feed into iteration backlog
@@ -486,7 +486,7 @@ P10.8  Collect feedback → feed into iteration backlog
 ```
 □ Stripe processes real €1 test charge
 □ Company ehf. registration confirmed
-□ Longgang subsidy filed (BEFORE APR 6)
+□ US Federal subsidy filed (BEFORE APR 6)
 □ Platform listed on ProductHunt
 □ First paying user signed up
 ```
@@ -783,7 +783,7 @@ P16.6  Build Cortex API for external access (premium tier):
 **Example Search Result:**
 ```json
 {
-  "query": "best marketing approach for CN fashion OPCs targeting EU 2026",
+  "query": "best marketing approach for US fashion OPCs targeting EU 2026",
   "results": [
     {
       "finding": "Instagram Reels + micro-influencer seeding outperforms paid ads",

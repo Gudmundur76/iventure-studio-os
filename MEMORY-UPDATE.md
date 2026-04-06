@@ -183,3 +183,34 @@ None of it costs extra. All of it compounds forever."
 
 ---
 *Memory entry: 2026-04-06 | iVenture Studio ehf.*
+
+## SPRINT MEMORY ENTRY — 2026-04-06 — US/EU PIVOT & HARNESS PROTOTYPE
+
+### Session Type: Strategic Pivot & Core Development
+### Outcome: US/EU CORE v1.0 ESTABLISHED
+
+---
+
+### DECISION LOG
+
+**DECISION 9: US/EU Strategic Pivot**
+- Action: Removed all China/Shenzhen references from active configs (`AGENTS.yaml`, `MASTER-DEV-PLAN.md`).
+- Focus: Icelandic, US, and EU regulatory/tech markets.
+- Currency: Defaulted to USD/EUR ($/€).
+
+**DECISION 10: First "Harness" Prototype Live**
+- File: `harness_core.py` (The Base Build System).
+- File: `deep_research_harness.py` (Specific Implementation).
+- Logic: Implemented "Four Pillars" (Deterministic Chains, Persistent State, RAAL Filter, Progressive Disclosure).
+- DeepSeek-style Build: Optimized for high-efficiency, localized SLM kernels (Mini-Harnesses).
+
+---
+
+### SYSTEM STATUS (Synchronized)
+
+- **Pivot Target:** US/EU Markets (verified).
+- **Harness Standard:** Active (verified).
+- **GitHub Sync:** Scheduled for next commit.
+
+---
+*Memory entry: 2026-04-06 | iVenture Studio ehf.*
