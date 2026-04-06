@@ -4,7 +4,7 @@ import time
 import httpx
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 # Standardized Imports
 from reward_client import GRPORewardComposer
@@ -28,8 +28,9 @@ class TaskRequest(BaseModel):
     task: str
 
 class SwarmRequest(BaseModel):
-    mission: str
-    sequence: List[str] # List of agent_ids in order
+    mission: Optional[str] = None
+    mission_id: Optional[str] = None
+    sequence: Optional[List[str]] = None
 
 # ── FACTORY ENDPOINTS ────────────────────────────────────────
 @app.get("/factory/team")
@@ -37,8 +38,15 @@ async def get_team():
     """Hot-reload team from AGENTS.yaml"""
     return load_manifest()
 
+@app.get("/factory/missions")
+async def get_missions():
+    """Load missions from MISSIONS.yaml"""
+    with open("MISSIONS.yaml", "r") as f:
+        return yaml.safe_load(f)
+
 @app.post("/v1/execute")
 async def execute_task(req: TaskRequest):
+    # ... (rest of the code remains same)
     try:
         harness = get_harness(req.agent_id)
         start_time = time.time()
@@ -70,7 +78,24 @@ async def execute_task(req: TaskRequest):
 async def execute_swarm(req: SwarmRequest):
     """Execute a Harness Swarm mission."""
     try:
-        result = await swarm_engine.execute_swarm_mission(req.mission, req.sequence)
+        mission_goal = req.mission
+        sequence = req.sequence
+
+        # Resolve via Mission Library if mission_id provided
+        if req.mission_id:
+            with open("MISSIONS.yaml", "r") as f:
+                lib = yaml.safe_load(f)
+                mission_data = next((m for m in lib["missions"] if m["id"] == req.mission_id), None)
+                if mission_data:
+                    mission_goal = mission_data["goal"]
+                    sequence = mission_data["sequence"]
+                else:
+                    raise HTTPException(status_code=404, detail="Mission ID not found in library")
+
+        if not mission_goal or not sequence:
+            raise HTTPException(status_code=400, detail="Mission goal and sequence required")
+
+        result = await swarm_engine.execute_swarm_mission(mission_goal, sequence)
         if result.get("status") == "error":
             raise HTTPException(status_code=400, detail=result.get("error"))
         return result

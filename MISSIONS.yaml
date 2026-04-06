@@ -1,0 +1,30 @@
+# ============================================================
+# iVenture Studio — SWARM MISSION LIBRARY
+# "Pre-configured Factory Line Workflows"
+# Version: 1.0 | Date: 2026-04-06
+# ============================================================
+
+missions:
+  - id: "us-gtm-analysis"
+    name: "US Federal GTM Pulse"
+    goal: "Evaluate US market readiness and federal subsidy eligibility."
+    sequence: ["researcher", "subsidy-advisor", "financial-v1"]
+
+  - id: "tech-audit-sync"
+    name: "Systemic Tech Audit"
+    goal: "Review codebase for security, scalability, and GitHub alignment."
+    sequence: ["sea-v1", "qaa-v1", "mda-v1"]
+
+  - id: "biotech-patent-sweep"
+    name: "Biotech Intel Scan"
+    goal: "Identify high-value patent expirations in the US/EU market."
+    sequence: ["researcher", "kady-researcher", "financial-v1"]
+
+  - id: "frontend-ux-hardening"
+    name: "Visual OS Hardening"
+    goal: "Audit the dashboard UI/UX and prepare for Next.js deployment."
+    sequence: ["vision-researcher", "fda-v1", "qaa-v1"]
+
+# ── Mission Logic ──────────────────────────────────────────
+# Each mission triggers the sequential passage of Artifacts.
+# Results are automatically committed to the Genspark AI Drive.
