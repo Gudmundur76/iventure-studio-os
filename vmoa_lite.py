@@ -4,18 +4,19 @@ import time
 import httpx
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict
+from typing import List, Dict, Any
 
 # Standardized Imports
 from reward_client import GRPORewardComposer
 import cortex_contributor
 import a2a_card
 from harness_factory import get_harness
+from swarm_orchestrator import swarm_engine
 
 # ── FACTORY CONFIG ──────────────────────────────────────────
 MANIFEST_PATH = "AGENTS.yaml"
 
-app = FastAPI(title="iVenture OS — VMOA Core (Harness Enabled)", version="2.1.0")
+app = FastAPI(title="iVenture OS — VMOA Core (Swarm Enabled)", version="2.2.0")
 
 def load_manifest():
     with open(MANIFEST_PATH, "r") as f:
@@ -26,6 +27,10 @@ class TaskRequest(BaseModel):
     agent_id: str
     task: str
 
+class SwarmRequest(BaseModel):
+    mission: str
+    sequence: List[str] # List of agent_ids in order
+
 # ── FACTORY ENDPOINTS ────────────────────────────────────────
 @app.get("/factory/team")
 async def get_team():
@@ -35,23 +40,14 @@ async def get_team():
 @app.post("/v1/execute")
 async def execute_task(req: TaskRequest):
     try:
-        # 1. Spawn the specialized Industrial Harness
         harness = get_harness(req.agent_id)
-        
         start_time = time.time()
-        
-        # 2. Execute via the Harness Build System
-        # This handles: Causal Chains, Progressive Disclosure, Gateway Call, and RAAL Filter
         result = await harness.execute(req.task)
-        
         latency = int((time.time() - start_time) * 1000)
         
         if result.get("status") == "error":
             raise HTTPException(status_code=400, detail=result.get("error"))
 
-        # 3. Cortex Feedback Loop (Integrated in Harness or handled here)
-        # Note: harness_core already pushes signals via GRPORewardComposer if needed, 
-        # but we maintain the explicit pulse here for v2 parity.
         await cortex_contributor.contribute_to_cortex(
             node_id=load_manifest()["meta"]["node_id"],
             domain_hint=req.agent_id,
@@ -67,11 +63,24 @@ async def execute_task(req: TaskRequest):
             "status": result.get("status"),
             "latency_ms": latency
         }
-        
-    except ValueError as ve:
-        raise HTTPException(status_code=404, detail=str(ve))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Factory Execution Error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Factory Error: {str(e)}")
+
+@app.post("/v1/swarm")
+async def execute_swarm(req: SwarmRequest):
+    """Execute a Harness Swarm mission."""
+    try:
+        result = await swarm_engine.execute_swarm_mission(req.mission, req.sequence)
+        if result.get("status") == "error":
+            raise HTTPException(status_code=400, detail=result.get("error"))
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Swarm Error: {str(e)}")
+
+if __name__ == "__main__":
+    import uvicorn
+    print(f"🏭 iVenture Factory (Swarm Edition) starting on Port 8002...")
+    uvicorn.run(app, host="0.0.0.0", port=8002)
 
 if __name__ == "__main__":
     import uvicorn
