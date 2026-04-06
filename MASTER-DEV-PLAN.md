@@ -36,7 +36,7 @@
 | P1 | OS | Infrastructure Bedrock | 1–2 | 6h | None |
 | P2 | OS | Model Gateway | 2–3 | 4h | P1 |
 | P3 | OS | VIC Engine + VMOA + Hooks | 3–7 | 12h | P2 |
-| P4 | OS | Skywork Intelligence Layer | 7–10 | 10h | P3 |
+| P4 | OS | Genspark Intelligence Layer | 7–10 | 10h | P3 |
 | P5 | OS | OpenManus-RL Training Loop | 10–12 | 8h | P4 |
 | P6 | OS | Frontend Dashboard | 7–14 | 12h | P3 *(parallel P4)* |
 | P7 | OS | Workspace Integrations | 14–17 | 8h | P6 |
@@ -252,7 +252,7 @@ async def contribute_to_cortex(
 
 ---
 
-### P4 — SKYWORK INTELLIGENCE LAYER
+### P4 — GENSPARK INTELLIGENCE LAYER
 **Days 7–10 | 10h | Requires P3 | Parallel with P6**
 
 **Goal:** Replace VIC's custom reward with Skywork SOTA models.

@@ -54,8 +54,8 @@ agents:
 
   - id: "researcher"
     name: "Deep Research Lead"
-    role: "Market Intelligence (Genspark Research)"
-    model: "skywork-deepresearch-v2"
+    role: "Market Intelligence (Genspark Deep Research)"
+    model: "genspark-research-v1"
     description: "High-performance market research using Genspark's deep-research engine."
 
   - id: "kady-researcher"
@@ -67,7 +67,7 @@ agents:
   - id: "vision-researcher"
     name: "Multimodal Analyst"
     role: "Vision & OCR"
-    model: "gpt-5"
+    model: "genspark-vision-v1"
     description: "Image analysis, UI/UX audits via screenshots, and OCR."
 
 # ── Metadata ────────────────────────────────────────────────

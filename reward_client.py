@@ -4,7 +4,7 @@ iVenture Studio — OpenManus-RL GRPO Integration
 VIC Engine reward client + GRPO training config
 
 File: /vic_engine_v5/grpo_training/reward_client.py
-Phase 27 — Skywork-Reward-V2 + Skywork-O1-PRM (Bridge Priority Active)
+Phase 27 — Genspark Bridge (Intelligence Layer Upgrade)
 """
 
 import os
@@ -36,7 +36,7 @@ class RewardScore:
     score: float          # 0.0 → 1.0
     model_id: str
     raw_logit: float
-    benchmark: str = "RewardBench-v1: 97.8 (Bridge Priority)"
+    benchmark: str = "Genspark Frontier Score (Bridge)"
 
 @dataclass
 class PRMScore:
@@ -66,7 +66,7 @@ class RewardClient:
     
     async def score_remote(self, prompt: str, response: str) -> RewardScore:
         payload = {
-            "model": "Skywork-Reward-V2",
+            "model": "Genspark-Reward-Proxy",
             "conversations": [
                 {"role": "user", "content": prompt},
                 {"role": "assistant", "content": response}
@@ -106,7 +106,7 @@ class RewardClient:
         try:
             import torch
             from transformers import AutoTokenizer, AutoModelForSequenceClassification
-            model_id = "Skywork/Skywork-Reward-V2-Llama-3.1-8B-40M"
+            model_id = "Skywork/Genspark-Reward-Proxy-Llama-3.1-8B-40M"
             if self._local_model is None:
                 self._local_tokenizer = AutoTokenizer.from_pretrained(model_id)
                 self._local_model = AutoModelForSequenceClassification.from_pretrained(model_id, torch_dtype=torch.bfloat16, device_map="cpu")

@@ -161,23 +161,27 @@ model_list:
   # Direct API: https://api.skyworkmodel.ai
   # ──────────────────────────────────────────────
 
-  - model_name: skywork-r1v4-lite
-    litellm_params:
-      model: skywork-r1v4-lite
-      api_base: http://localhost:7055/v1
-      api_key: os.environ/GENSPARK2API_SECRET
-    model_info:
-      provider: genspark2api
-      use_case: vision + search (Bridge Mode)
+  # ──────────────────────────────────────────────
+  # TIER 3: GENSPARK SPECIALIST MODELS (Bridge)
+  # ──────────────────────────────────────────────
 
-  - model_name: skywork-deepresearch-v2
+  - model_name: genspark-research-v1
     litellm_params:
       model: skywork-deepresearch-v2
       api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
-      use_case: "Deep Research (Bridge Mode)"
+      use_case: "Deep Research (via Genspark Gateway)"
+
+  - model_name: genspark-vision-v1
+    litellm_params:
+      model: gpt-5
+      api_base: http://localhost:7055/v1
+      api_key: os.environ/GENSPARK2API_SECRET
+    model_info:
+      provider: genspark2api
+      use_case: "Vision & Multimodal (via Genspark Gateway)"
 
   # ──────────────────────────────────────────────
   # TIER 4: OPEN-WEIGHT MODELS (self-hosted via vLLM)
