@@ -10,14 +10,12 @@ from typing import List, Dict
 from reward_client import GRPORewardComposer
 import cortex_contributor
 import a2a_card
+from harness_factory import get_harness
 
 # ── FACTORY CONFIG ──────────────────────────────────────────
 MANIFEST_PATH = "AGENTS.yaml"
-ORCHESTRATOR_URL = "http://localhost:8000/v1/chat/completions"
-LITELLM_MASTER_KEY = os.getenv("LITELLM_MASTER_KEY", "sk-iventure-master")
 
-app = FastAPI(title="iVenture OS — VMOA Core", version="2.0.0")
-reward_composer = GRPORewardComposer()
+app = FastAPI(title="iVenture OS — VMOA Core (Harness Enabled)", version="2.1.0")
 
 def load_manifest():
     with open(MANIFEST_PATH, "r") as f:
@@ -36,50 +34,46 @@ async def get_team():
 
 @app.post("/v1/execute")
 async def execute_task(req: TaskRequest):
-    manifest = load_manifest()
-    agent_data = next((a for a in manifest["agents"] if a["id"] == req.agent_id), None)
-    
-    if not agent_data:
-        raise HTTPException(status_code=404, detail="Agent not found in Manifest")
+    try:
+        # 1. Spawn the specialized Industrial Harness
+        harness = get_harness(req.agent_id)
+        
+        start_time = time.time()
+        
+        # 2. Execute via the Harness Build System
+        # This handles: Causal Chains, Progressive Disclosure, Gateway Call, and RAAL Filter
+        result = await harness.execute(req.task)
+        
+        latency = int((time.time() - start_time) * 1000)
+        
+        if result.get("status") == "error":
+            raise HTTPException(status_code=400, detail=result.get("error"))
 
-    start_time = time.time()
-    
-    async with httpx.AsyncClient(timeout=120.0) as client:
-        # 1. Gateway Call (Genspark Powered)
-        resp = await client.post(
-            ORCHESTRATOR_URL,
-            json={
-                "model": agent_data["model"],
-                "messages": [
-                    {"role": "system", "content": f"Role: {agent_data['role']}\nInstructions: {agent_data['description']}"},
-                    {"role": "user", "content": req.task}
-                ]
-            },
-            headers={"Authorization": f"Bearer {LITELLM_MASTER_KEY}"}
-        )
-        data = resp.json()
-        content = data["choices"][0]["message"]["content"]
-        
-        # 2. Industrial Scorer (GRPO Bridge)
-        reward = await reward_composer.score(req.task, content)
-        
-        # 3. Cortex Feedback Loop
+        # 3. Cortex Feedback Loop (Integrated in Harness or handled here)
+        # Note: harness_core already pushes signals via GRPORewardComposer if needed, 
+        # but we maintain the explicit pulse here for v2 parity.
         await cortex_contributor.contribute_to_cortex(
-            node_id=manifest["meta"]["node_id"],
-            domain_hint=agent_data["role"],
-            skills_used=["factory-standard-v2"],
-            grpo_score=reward.composite,
+            node_id=load_manifest()["meta"]["node_id"],
+            domain_hint=req.agent_id,
+            skills_used=["industrial-harness-v1"],
+            grpo_score=result.get("grpo", 0.0),
             agent_type=req.agent_id
         )
         
         return {
-            "agent": agent_data["name"],
-            "response": content,
-            "grpo": round(reward.composite, 6),
-            "latency_ms": int((time.time() - start_time) * 1000)
+            "agent": result.get("agent_id", req.agent_id),
+            "response": result.get("response"),
+            "grpo": round(result.get("grpo", 0.0), 6),
+            "status": result.get("status"),
+            "latency_ms": latency
         }
+        
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Factory Execution Error: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
-    print(f"🏭 iVenture Factory starting on Port 8002 (Genspark Engine)...")
+    print(f"🏭 iVenture Factory (Harness Edition) starting on Port 8002...")
     uvicorn.run(app, host="0.0.0.0", port=8002)

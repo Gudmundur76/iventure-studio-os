@@ -33,20 +33,26 @@ class iVentureHarness:
 
     async def call_gateway(self, task: str, context: str) -> str:
         """Execution via Genspark Powered LiteLLM"""
-        async with httpx.AsyncClient(timeout=120.0) as client:
-            resp = await client.post(
-                self.gateway_url + "/chat/completions",
-                json={
-                    "model": self.model,
-                    "messages": [
-                        {"role": "system", "content": f"Context: {context}\nExecute precisely."},
-                        {"role": "user", "content": task}
-                    ]
-                },
-                headers={"Authorization": f"Bearer {self.api_key}"}
-            )
-            data = resp.json()
-            return data["choices"][0]["message"]["content"]
+        try:
+            async with httpx.AsyncClient(timeout=120.0) as client:
+                resp = await client.post(
+                    self.gateway_url + "/chat/completions",
+                    json={
+                        "model": self.model,
+                        "messages": [
+                            {"role": "system", "content": f"Context: {context}\nExecute precisely."},
+                            {"role": "user", "content": task}
+                        ]
+                    },
+                    headers={"Authorization": f"Bearer {self.api_key}"}
+                )
+                data = resp.json()
+                if "choices" not in data:
+                    print(f"GATEWAY ERROR: {data}")
+                    return f"Gateway Error: {json.dumps(data)}"
+                return data["choices"][0]["message"]["content"]
+        except Exception as e:
+            return f"Harness Network Error: {str(e)}"
 
     async def execute(self, task: str) -> Dict[str, Any]:
         # 1. Deterministic Chain Check
