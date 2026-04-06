@@ -1,0 +1,39 @@
+{
+  "schema": "iventure-a2a/v1",
+  "node_id": "ivs-genesis-01",
+  "name": "iVenture Genesis Node (US)",
+  "registered": "2026-03-23T12:20:00.566600",
+  "jurisdiction": "US",
+  "grpo_score": 0.991337,
+  "capabilities": {
+    "skills": [
+      "finance",
+      "marketing",
+      "legal",
+      "research",
+      "technical"
+    ],
+    "languages": [
+      "en-US"
+    ],
+    "agents": [
+      "mda-v1",
+      "bda-v1",
+      "doa-v1",
+      "qaa-v1",
+      "sea-v1",
+      "fda-v1",
+      "pma-v1"
+    ],
+    "specialisations": [
+      "us-solopreneur",
+      "ai-native-agency"
+    ]
+  },
+  "a2a_endpoint": "http://localhost:8001/a2a",
+  "pricing": {
+    "per_task": 0.05,
+    "currency": "USD"
+  },
+  "public_key": "sha256:0553a3db2e8ae21d3811bc615064526f7ff620271b56658e89a23be67476cec3"
+}

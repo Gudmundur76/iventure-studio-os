@@ -1,0 +1,33 @@
+# iVenture Studio OS — .gitignore
+
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Large Model Binaries / Checkpoints
+factory/checkpoints/
+*.pth
+*.bin
+*.onnx
+*.weights
+
+# Logs and Temps
+*.log
+*.bak
+*.tmp
+__pycache__/
+.ipynb_checkpoints/
+
+# Node Modules (if any)
+node_modules/
+
+# Environment Secrets
+.env
+*.secret
+*.key
+ghp_*
+
+# System
+.DS_Store
+Thumbs.db

@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iVenture Studio - Product Requirements Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --volcanic-black: #0a0a0f;
+        --deep-navy: #1a1a2e;
+        --dark-blue: #16213e;
+        --electric-cyan: #00d4ff;
+        --volcanic-orange: #ff6b35;
+        --deep-purple: #7b2fbe;
+        --matrix-green: #00ff88;
+        --text-primary: #e0e0e0;
+        --text-secondary: #a0a0a0;
+      }
+
+      body {
+        background-color: var(--volcanic-black);
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0;
+        line-height: 1.6;
+      }
+
+      /* HEADER STYLES */
+      header {
+        background: linear-gradient(135deg, #000000 0%, #16213e 100%);
+        padding: 60px 40px;
+        border-bottom: 4px solid var(--volcanic-orange);
+        position: relative;
+        overflow: hidden;
+      }
+
+      header::before {
+        content: 'CONFIDENTIAL';
+        position: absolute;
+        top: 20px;
+        right: -30px;
+        transform: rotate(45deg);
+        font-size: 80px;
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.03);
+        pointer-events: none;
+      }
+
+      h1.main-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, #ffffff, var(--electric-cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+      }
+
+      .tagline {
+        font-size: 1.5rem;
+        color: var(--volcanic-orange);
+        font-weight: 600;
+        margin-bottom: 30px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 20px;
+      }
+
+      .meta-item {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .meta-item strong {
+        color: #fff;
+        display: block;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-right: 10px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .badge-active {
+        background: rgba(0, 255, 136, 0.2);
+        color: var(--matrix-green);
+        border: 1px solid var(--matrix-green);
+      }
+      .badge-deployed {
+        background: rgba(0, 212, 255, 0.2);
+        color: var(--electric-cyan);
+        border: 1px solid var(--electric-cyan);
+      }
+      .badge-metric {
+        background: rgba(255, 107, 53, 0.2);
+        color: var(--volcanic-orange);
+        border: 1px solid var(--volcanic-orange);
+      }
+
+      /* NAVIGATION */
+      nav.toc {
+        background: var(--deep-navy);
+        padding: 20px 40px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      nav.toc a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.8rem;
+        font-family: 'JetBrains Mono', monospace;
+        transition: color 0.2s;
+      }
+
+      nav.toc a:hover {
+        color: var(--electric-cyan);
+      }
+
+      /* SECTION STYLES */
+      section {
+        padding: 60px 40px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      section:nth-of-type(even) {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      h2 {
+        font-size: 2rem;
+        color: #fff;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+      }
+
+      h2::before {
+        counter-increment: section;
+        content: '0' counter(section);
+        color: var(--volcanic-orange);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.2rem;
+        margin-right: 15px;
+        opacity: 0.8;
+      }
+
+      body {
+        counter-reset: section;
+      }
+
+      /* BOXES & CARDS */
+      .highlight-box {
+        background: rgba(255, 107, 53, 0.1);
+        border-left: 4px solid var(--volcanic-orange);
+        padding: 30px;
+        margin: 30px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .vision-text {
+        font-size: 1.4rem;
+        font-weight: 300;
+        color: #fff;
+        font-style: italic;
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .metric-card {
+        background: var(--deep-navy);
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .metric-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--electric-cyan);
+        display: block;
+        margin-bottom: 5px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .metric-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* TABLES */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 30px 0;
+        font-size: 0.9rem;
+      }
+
+      th {
+        background: var(--deep-navy);
+        color: var(--electric-cyan);
+        text-align: left;
+        padding: 15px;
+        font-family: 'JetBrains Mono', monospace;
+        border-bottom: 2px solid var(--volcanic-orange);
+      }
+
+      td {
+        padding: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        vertical-align: top;
+      }
+
+      tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      /* ARCHITECTURE DIAGRAM */
+      .arch-layer {
+        background: var(--deep-navy);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .arch-layer::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--deep-purple);
+      }
+
+      .arch-title {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--matrix-green);
+        font-weight: 700;
+        display: block;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+      }
+
+      .arch-components {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .component {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* FOUNDER STORY */
+      .founder-profile {
+        display: flex;
+        align-items: flex-start;
+        gap: 30px;
+        background: linear-gradient(90deg, var(--deep-navy) 0%, transparent 100%);
+        padding: 30px;
+        border-radius: 8px;
+      }
+
+      .founder-text h3 {
+        color: var(--volcanic-orange);
+        margin-bottom: 10px;
+      }
+
+      /* ROADMAP */
+      .sprint-row {
+        display: flex;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 15px 0;
+      }
+
+      .sprint-id {
+        width: 120px;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--volcanic-orange);
+        font-weight: 700;
+      }
+
+      .sprint-content {
+        flex: 1;
+      }
+
+      /* FOOTER */
+      footer {
+        background: #000;
+        padding: 40px;
+        text-align: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        border-top: 4px solid var(--volcanic-orange);
+      }
+
+      /* UTILITIES */
+      .text-orange {
+        color: var(--volcanic-orange);
+      }
+      .text-cyan {
+        color: var(--electric-cyan);
+      }
+      .text-green {
+        color: var(--matrix-green);
+      }
+      .mono {
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .status-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+      .dot-green {
+        background: var(--matrix-green);
+        box-shadow: 0 0 8px var(--matrix-green);
+      }
+      .dot-yellow {
+        background: #ffd700;
+      }
+
+      .moat-layer {
+        padding: 15px;
+        margin: 5px 0;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .moat-1 {
+        width: 100%;
+        border-color: var(--volcanic-orange);
+      }
+      .moat-2 {
+        width: 90%;
+        margin-left: 5%;
+        border-color: var(--volcanic-orange);
+        opacity: 0.9;
+      }
+      .moat-3 {
+        width: 80%;
+        margin-left: 10%;
+        border-color: var(--volcanic-orange);
+        opacity: 0.8;
+      }
+      .moat-4 {
+        width: 70%;
+        margin-left: 15%;
+        border-color: var(--electric-cyan);
+        opacity: 0.7;
+      }
+      .moat-5 {
+        width: 60%;
+        margin-left: 20%;
+        border-color: var(--electric-cyan);
+        opacity: 0.6;
+      }
+      .moat-6 {
+        width: 50%;
+        margin-left: 25%;
+        border-color: var(--deep-purple);
+        opacity: 0.5;
+      }
+      .moat-7 {
+        width: 40%;
+        margin-left: 30%;
+        border-color: var(--deep-purple);
+        opacity: 0.4;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <h1 class="main-title">iVenture Studio</h1>
+        <div class="tagline">The One-Person Company Operating System</div>
+        <div class="subtitle">Product Requirements Document v1.0 — Phase 27 Build</div>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <strong>Date</strong>
+            March 17, 2026
+          </div>
+          <div class="meta-item">
+            <strong>Location</strong>
+            Vestmannaeyjar, Iceland
+          </div>
+          <div class="meta-item">
+            <strong>Confidentiality</strong>
+            Strictly Confidential
+          </div>
+          <div class="meta-item">
+            <strong>Status</strong>
+            <span class="status-badge badge-active">PHASE 27 ACTIVE</span>
+            <span class="status-badge badge-metric">GRPO 0.991337</span>
+            <span class="status-badge badge-deployed">VIC v4.2 DEPLOYED</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="toc">
+      <a href="#executive-summary">01 EXEC SUMMARY</a>
+      <a href="#problem">02 PROBLEM</a>
+      <a href="#solution">03 SOLUTION</a>
+      <a href="#founder-story">04 FOUNDER STORY</a>
+      <a href="#market">05 MARKET</a>
+      <a href="#architecture">06 ARCHITECTURE</a>
+      <a href="#intelligence">07 INTELLIGENCE MOAT</a>
+      <a href="#skills">08 SKILLS CREATOR</a>
+      <a href="#iceland">09 ICELAND STRATEGY</a>
+      <a href="#roadmap">10 ROADMAP</a>
+      <a href="#moat">11 MOAT</a>
+      <a href="#business">12 BUSINESS</a>
+      <a href="#sprint011">13 SPRINT 011</a>
+      <a href="#litellm-config">14 LITELLM</a>
+      <a href="#partnership">15 PARTNERSHIP</a>
+      <a href="#assets">16 ASSETS</a>
+    </nav>
+
+    <section id="executive-summary">
+      <h2>Executive Summary</h2>
+
+      <div class="highlight-box">
+        <p class="vision-text">
+          "Deploy a VIC-quality intelligence agent in under 10 minutes. No code. No server. No technical background
+          required."
+        </p>
+      </div>
+
+      <p>
+        iVenture Studio represents a paradigm shift in how companies are built. We are betting on three fundamental
+        truths:
+      </p>
+      <ol>
+        <li>
+          <strong>One-person companies (OPCs) are the future of work</strong> — Validated by 16 million registered OPCs
+          in China (+47% YoY).
+        </li>
+        <li>
+          <strong>AI agents are the new workforce</strong> — Not just chat assistants, but autonomous employees capable
+          of complex execution.
+        </li>
+        <li>
+          <strong>Iceland is the strategic bridge</strong> — The only jurisdiction offering simultaneous access to EU
+          markets (EEA) and China (FTA), powered by 100% renewable energy.
+        </li>
+      </ol>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-value">16M+</span>
+          <span class="metric-label">Chinese OPC Market</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">$1.4M</span>
+          <span class="metric-label">Gov Subsidies Available</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">0.991337</span>
+          <span class="metric-label">GRPO Accuracy Score</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">18+</span>
+          <span class="metric-label">Skills Library</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">8</span>
+          <span class="metric-label">VIC Agents Deployed</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-value">92%</span>
+          <span class="metric-label">Prediction Accuracy</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="problem">
+      <h2>The Problem</h2>
+
+      <h3>The "OpenClaw Gap"</h3>
+      <p>
+        The explosion of open-source agent frameworks like OpenClaw, AutoGen, and LangGraph has created a massive
+        capability gap. These tools are powerful but fundamentally inaccessible to the people who need them most:
+        non-technical solo founders.
+      </p>
+
+      <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 6px; margin: 20px 0">
+        <h4 style="margin-top: 0; color: var(--volcanic-orange)">The Founder's Dilemma</h4>
+        <p>Consider "Arnar", a 49-year-old entrepreneur in Vestmannaeyjar. He has deep domain expertise but cannot:</p>
+        <ul style="color: var(--text-secondary)">
+          <li>Configure a Docker container</li>
+          <li>Manage API keys and secrets</li>
+          <li>Set up a vector database</li>
+          <li>Debug Python runtime errors</li>
+        </ul>
+      </div>
+
+      <p>
+        Current solutions demand technical fluency. Cloud consoles are complex. Local deployment requires command-line
+        skills. The market demand is massive, but the supply of accessible tools is zero.
+      </p>
+
+      <div class="highlight-box" style="border-left-color: var(--electric-cyan); background: rgba(0, 212, 255, 0.1)">
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin: 0">
+          "16 million one-person companies in China. 0 of them can deploy a VIC-quality agent today without a computer
+          science degree."
+        </p>
+      </div>
+    </section>
+
+    <section id="solution">
+      <h2>The Solution</h2>
+
+      <p>
+        iVenture Studio acts as the <strong>"One-Person Company Operating System"</strong>. It combines three core
+        components into a unified, no-code platform:
+      </p>
+
+      <div style="display: flex; gap: 20px; margin-top: 30px">
+        <div
+          style="
+            flex: 1;
+            background: var(--deep-navy);
+            padding: 20px;
+            border-radius: 8px;
+            border-top: 3px solid var(--volcanic-orange);
+          "
+        >
+          <h3 style="color: #fff; font-size: 1.2rem">01. Agent Builder</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary)">
+            A 6-step no-code wizard that replaces complex coding with a simple questionnaire. Maps directly to the Eight
+            Pillar Framework.
+          </p>
+        </div>
+        <div
+          style="
+            flex: 1;
+            background: var(--deep-navy);
+            padding: 20px;
+            border-radius: 8px;
+            border-top: 3px solid var(--electric-cyan);
+          "
+        >
+          <h3 style="color: #fff; font-size: 1.2rem">02. Skills Creator</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary)">
+            An app-store for intelligence. Browse, customize, and attach capabilities (Research, Finance, Coding) to
+            agents.
+          </p>
+        </div>
+        <div
+          style="
+            flex: 1;
+            background: var(--deep-navy);
+            padding: 20px;
+            border-radius: 8px;
+            border-top: 3px solid var(--deep-purple);
+          "
+        >
+          <h3 style="color: #fff; font-size: 1.2rem">03. Company Dashboard</h3>
+          <p style="font-size: 0.9rem; color: var(--text-secondary)">
+            The IntelliAgent Pro interface. Managing AI employees like human staff. Analytics, logs, and performance
+            metrics.
+          </p>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 40px">The 6-Step Creation Wizard</h3>
+      <div
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 20px;
+          background: rgba(255, 255, 255, 0.02);
+          padding: 20px;
+          border-radius: 50px;
+        "
+      >
+        <div style="text-align: center"><span class="mono text-orange">01</span><br />Identity</div>
+        <div style="color: var(--text-secondary)">→</div>
+        <div style="text-align: center"><span class="mono text-orange">02</span><br />Knowledge</div>
+        <div style="color: var(--text-secondary)">→</div>
+        <div style="text-align: center"><span class="mono text-orange">03</span><br />Reasoning</div>
+        <div style="color: var(--text-secondary)">→</div>
+        <div style="text-align: center"><span class="mono text-orange">04</span><br />Guardrails</div>
+        <div style="color: var(--text-secondary)">→</div>
+        <div style="text-align: center"><span class="mono text-orange">05</span><br />Tools</div>
+        <div style="color: var(--text-secondary)">→</div>
+        <div style="text-align: center"><span class="text-cyan mono">DEPLOY</span></div>
+      </div>
+    </section>
+
+    <section id="founder-story">
+      <h2>The Founder Story</h2>
+
+      <div class="founder-profile">
+        <div class="founder-text">
+          <h3>Arnar from Vestmannaeyjar</h3>
+          <p>
+            <strong>Age:</strong> 49 &nbsp;|&nbsp; <strong>Location:</strong> Westman Islands, Iceland &nbsp;|&nbsp;
+            <strong>Background:</strong> Non-technical
+          </p>
+          <p>
+            Raised on an island that was nearly destroyed by a volcanic eruption in 1973, Arnar embodies resilience. He
+            is a father of two and a grandfather, living in a community of 4,400 people isolated in the North Atlantic.
+          </p>
+          <p>
+            "I realized that the future of work wasn't in massive corporations, but in empowered individuals. But when I
+            tried to use AI agents, I hit a wall of code. I decided to build the bridge I needed to cross."
+          </p>
+          <p>
+            Vestmannaeyjar is home to Iceland's first Fab Lab—a place of making and innovation. iVenture Studio is the
+            digital equivalent: a workshop where anyone can build a billion-dollar company from a laptop.
+          </p>
+          <div style="margin-top: 20px; font-style: italic; color: var(--electric-cyan)">
+            "Raised on an island built by fire. Building a platform for the next eruption of human potential."
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="market">
+      <h2>Market Opportunity</h2>
+
+      <table>
+        <tr>
+          <th>Market Segment</th>
+          <th>Size / Metric</th>
+          <th>Opportunity Driver</th>
+        </tr>
+        <tr>
+          <td><strong>China OPC Market</strong></td>
+          <td>16 Million Entities</td>
+          <td>Shenzhen "Ten Lobster Measures" subsidies (up to 10M CNY). ¥3.5B Currency Swap.</td>
+        </tr>
+        <tr>
+          <td><strong>Global Solopreneurs</strong></td>
+          <td>$1.4T Estimate</td>
+          <td>Sam Altman's prediction: "The first one-person unicorn will appear in 2026."</td>
+        </tr>
+        <tr>
+          <td><strong>Icelandic Bridge</strong></td>
+          <td>Unique Gateway</td>
+          <td>Only country with full EU access (EEA) AND China Free Trade Agreement (2014).</td>
+        </tr>
+      </table>
+
+      <h3>Competitive Positioning</h3>
+      <table style="font-size: 0.8rem">
+        <tr>
+          <th>Feature</th>
+          <th>iVenture Studio</th>
+          <th>LangChain</th>
+          <th>AutoGen</th>
+          <th>Vertex AI</th>
+          <th>OpenClaw</th>
+        </tr>
+        <tr>
+          <td><strong>Target User</strong></td>
+          <td class="text-cyan"><strong>Non-Technical Founder</strong></td>
+          <td>Developer</td>
+          <td>Developer</td>
+          <td>Enterprise Data Scientist</td>
+          <td>Technical Hacker</td>
+        </tr>
+        <tr>
+          <td><strong>Setup Time</strong></td>
+          <td class="text-cyan"><strong>10 Minutes</strong></td>
+          <td>Days</td>
+          <td>Hours</td>
+          <td>Weeks</td>
+          <td>Hours</td>
+        </tr>
+        <tr>
+          <td><strong>Self-Improvement</strong></td>
+          <td class="text-green"><strong>Auto (GRPO)</strong></td>
+          <td>Manual</td>
+          <td>Manual</td>
+          <td>Manual</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td><strong>Jurisdiction</strong></td>
+          <td class="text-orange"><strong>Iceland (EU+China)</strong></td>
+          <td>US</td>
+          <td>US</td>
+          <td>US</td>
+          <td>Decentralized</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="architecture">
+      <h2>Technical Architecture</h2>
+
+      <div class="arch-layer">
+        <span class="arch-title">01. FRONTEND LAYER</span>
+        <div class="arch-components">
+          <span class="component">IntelliAgent Pro Dashboard</span>
+          <span class="component">Rewyo-style Wizard</span>
+          <span class="component">Next.js Shell</span>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <span class="arch-title">02. ORCHESTRATION LAYER</span>
+        <div class="arch-components">
+          <span class="component">VMOA (8 Agents)</span>
+          <span class="component">OpenManus Multi-Agent Flow</span>
+          <span class="component">Mixture-of-Agents</span>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <span class="arch-title">03. INTELLIGENCE LAYER</span>
+        <div class="arch-components">
+          <span class="component text-cyan">VIC Architect v4.2</span>
+          <span class="component">Eight Pillars</span>
+          <span class="component">18+ Skills</span>
+          <span class="component">GRPO 0.991337</span>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <span class="arch-title">04. REWARD & CALIBRATION</span>
+        <div class="arch-components">
+          <span class="component text-green">Skywork-Reward-V2 (97.8)</span>
+          <span class="component">Skywork-O1-PRM</span>
+          <span class="component">OpenManus-RL Training</span>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <span class="arch-title">05. MODEL GATEWAY</span>
+        <div class="arch-components">
+          <span class="component">genspark2api</span>
+          <span class="component">LiteLLM</span>
+          <span class="component">GPT-5 / Claude-opus-4</span>
+          <span class="component">Skywork-R1V4 (Vision)</span>
+          <span class="component">Skywork-OR1 (Math)</span>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <span class="arch-title">06. TOOL LAYER</span>
+        <div class="arch-components">
+          <span class="component">Skywork-Super-Agents (Office)</span>
+          <span class="component">Composio SDK (100+ Apps)</span>
+          <span class="component">Google Workspace</span>
+        </div>
+      </div>
+
+      <div class="arch-layer">
+        <span class="arch-title">07. RUNTIME & INFRASTRUCTURE</span>
+        <div class="arch-components">
+          <span class="component">Tesslate Studio Docker</span>
+          <span class="component">atNorth Data Center</span>
+          <span class="component">PostgreSQL</span>
+          <span class="component">Memory System (207KB)</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="intelligence">
+      <h2>The Intelligence Moat (VIC Architect)</h2>
+
+      <div class="highlight-box">
+        <h4 style="margin: 0 0 10px 0">Performance Metrics (Phase 26)</h4>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem">
+          <div>GRPO Score: <span class="text-green">0.991337</span> (Target ≥0.9913 MET)</div>
+          <div>Brier Score: <span class="text-green">0.000270</span> (Target ≤0.00123 MET)</div>
+          <div>Accuracy: <span class="text-cyan">92%</span></div>
+          <div>Adversary Challenges: <span class="text-orange">481</span> (Robustness Verified)</div>
+        </div>
+      </div>
+
+      <p>
+        VIC Architect is not just a prompt; it is a self-reinforcing intelligence system built on the Eight Pillar
+        Framework and calibrated against the world's best reward models.
+      </p>
+
+      <table>
+        <tr>
+          <th>Pillar</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td class="mono">01. Identity</td>
+          <td>Operational Roles (Proposer, Coder, Solver). 3+ Tier-1 Source requirement.</td>
+        </tr>
+        <tr>
+          <td class="mono">02. Epistemic</td>
+          <td>QDF Scoring (0-5). Explicit gap handling. Knowledge cutoff management.</td>
+        </tr>
+        <tr>
+          <td class="mono">03. Reasoning</td>
+          <td>7-Step Protocol (Open -> Propose -> Code -> Solve -> Reward -> Evolve -> Close).</td>
+        </tr>
+        <tr>
+          <td class="mono">04. Reward</td>
+          <td>GRPO Evaluation (Logic, Evidence, Calibration). Now powered by Skywork-Reward-V2.</td>
+        </tr>
+        <tr>
+          <td class="mono">05. Constraints</td>
+          <td>Immutable safety rails. Hallucination prohibition.</td>
+        </tr>
+        <tr>
+          <td class="mono">06. Tools</td>
+          <td>Knowledge Graph I/O. Hierarchy management. 5 parallel calls.</td>
+        </tr>
+        <tr>
+          <td class="mono">07. Output</td>
+          <td>Standardized research cycle blocks. JSON/Markdown formats.</td>
+        </tr>
+        <tr>
+          <td class="mono">08. Evolution</td>
+          <td>Self-mutation protocol triggered by GRPO < 0.75. Convergence targets.</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="skills">
+      <h2>Skills Creator</h2>
+      <p>The "App Store" for AI capabilities. A no-code interface to package, share, and monetize agent skills.</p>
+
+      <div
+        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px"
+      >
+        <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 6px; text-align: center">
+          <div style="font-size: 2rem; margin-bottom: 10px">🧠</div>
+          <strong>Domain Expert</strong>
+          <div style="font-size: 0.7rem; color: var(--text-secondary)">Vertical Knowledge</div>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 6px; text-align: center">
+          <div style="font-size: 2rem; margin-bottom: 10px">💾</div>
+          <strong>Memory Architect</strong>
+          <div style="font-size: 0.7rem; color: var(--text-secondary)">Long-term Recall</div>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 6px; text-align: center">
+          <div style="font-size: 2rem; margin-bottom: 10px">⚡</div>
+          <strong>Analysis Engine</strong>
+          <div style="font-size: 0.7rem; color: var(--text-secondary)">Data Processing</div>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.03); padding: 15px; border-radius: 6px; text-align: center">
+          <div style="font-size: 2rem; margin-bottom: 10px">📝</div>
+          <strong>Output Formatter</strong>
+          <div style="font-size: 0.7rem; color: var(--text-secondary)">Document Gen</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="iceland">
+      <h2>Iceland Strategic Advantage</h2>
+
+      <p>
+        Iceland is not just a location; it is a competitive moat. iVenture Studio leverages the unique geopolitical and
+        physical assets of Vestmannaeyjar.
+      </p>
+
+      <div style="display: flex; gap: 30px; margin-top: 30px">
+        <div style="flex: 1">
+          <h4 style="color: var(--electric-cyan)">Geopolitical Bridge</h4>
+          <p>The only nation with:</p>
+          <ul>
+            <li>EEA Membership (Access to EU Market)</li>
+            <li>China Free Trade Agreement (Zero Tariffs)</li>
+            <li>CNY Currency Swap (Low friction payments)</li>
+          </ul>
+        </div>
+        <div style="flex: 1">
+          <h4 style="color: var(--matrix-green)">Green Infrastructure</h4>
+          <p>Powered by the earth itself:</p>
+          <ul>
+            <li>100% Renewable Energy (Hydro + Geo)</li>
+            <li>Free-Air Cooling (PUE 1.1-1.2)</li>
+            <li>72% Lower Compute Costs vs US</li>
+          </ul>
+        </div>
+      </div>
+
+      <table>
+        <tr>
+          <th>Factor</th>
+          <th>Iceland</th>
+          <th>USA</th>
+          <th>Singapore</th>
+          <th>Ireland</th>
+        </tr>
+        <tr>
+          <td><strong>China FTA</strong></td>
+          <td class="text-green">YES</td>
+          <td class="text-orange">NO</td>
+          <td class="text-green">YES</td>
+          <td class="text-orange">NO</td>
+        </tr>
+        <tr>
+          <td><strong>EU Market Access</strong></td>
+          <td class="text-green">YES</td>
+          <td class="text-orange">NO</td>
+          <td class="text-orange">NO</td>
+          <td class="text-green">YES</td>
+        </tr>
+        <tr>
+          <td><strong>Renewable Energy</strong></td>
+          <td class="text-green">100%</td>
+          <td>~20%</td>
+          <td>~5%</td>
+          <td>~40%</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="roadmap">
+      <h2>Product Roadmap (Phase 27)</h2>
+
+      <div class="sprint-row">
+        <div class="sprint-id">SPRINT 011</div>
+        <div class="sprint-content">
+          <strong>Prompt Compiler & Foundation</strong><br />
+          <span class="text-secondary">Integrate Skywork-Reward-V2 + genspark2api. Fork API Gateway.</span>
+        </div>
+      </div>
+      <div class="sprint-row">
+        <div class="sprint-id">SPRINT 012</div>
+        <div class="sprint-content">
+          <strong>Dashboard & Tools</strong><br />
+          <span class="text-secondary"
+            >Fork IntelliAgent Pro dashboard. Wire Skywork-Super-Agents MCP (Office Tools).</span
+          >
+        </div>
+      </div>
+      <div class="sprint-row">
+        <div class="sprint-id">SPRINT 013</div>
+        <div class="sprint-content">
+          <strong>Runtime & Training</strong><br />
+          <span class="text-secondary">Bridge Tesslate Studio. Configure OpenManus-RL GRPO training loop.</span>
+        </div>
+      </div>
+      <div class="sprint-row">
+        <div class="sprint-id">SPRINT 014</div>
+        <div class="sprint-content">
+          <strong>Templates & Content</strong><br />
+          <span class="text-secondary">Create 5 OPC vertical templates (E-com, Research, Finance, Content, Code).</span>
+        </div>
+      </div>
+      <div class="sprint-row">
+        <div class="sprint-id">SPRINT 015</div>
+        <div class="sprint-content">
+          <strong>Skills UI</strong><br />
+          <span class="text-secondary">Build Skills Creator interface. Integrate Composio SDK.</span>
+        </div>
+      </div>
+      <div class="sprint-row">
+        <div class="sprint-id">SPRINT 016</div>
+        <div class="sprint-content">
+          <strong class="text-green">PUBLIC LAUNCH</strong><br />
+          <span class="text-secondary">China market entry. Marketplace go-live.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="moat">
+      <h2>Competitive Moat Summary</h2>
+      <p>Seven layers of defense that make iVenture Studio impossible to replicate.</p>
+
+      <div class="moat-layer moat-1">01. VIC ARCHITECT IP (3+ Years R&D)</div>
+      <div class="moat-layer moat-2">02. GRPO SELF-CALIBRATION (0.991337)</div>
+      <div class="moat-layer moat-3">03. SKYWORK INTEGRATION (SOTA Reward)</div>
+      <div class="moat-layer moat-4">04. ICELAND JURISDICTION (EU+China)</div>
+      <div class="moat-layer moat-5">05. OPENMANUS-RL TRAINING LOOP</div>
+      <div class="moat-layer moat-6">06. FAB LAB PHYSICAL HUB</div>
+      <div class="moat-layer moat-7">07. NON-TECHNICAL FOUNDER DNA</div>
+    </section>
+
+    <section id="business">
+      <h2>Business Model</h2>
+
+      <table>
+        <tr>
+          <th>Tier</th>
+          <th>Pricing</th>
+          <th>Includes</th>
+          <th>Target</th>
+        </tr>
+        <tr>
+          <td><strong>Freemium</strong></td>
+          <td>$0 / mo</td>
+          <td>1 Agent, 3 Skills, 1K API Calls</td>
+          <td>Explorers</td>
+        </tr>
+        <tr>
+          <td><strong>Solo Founder</strong></td>
+          <td>$29 / mo</td>
+          <td>5 Agents, 20 Skills, 50K API Calls</td>
+          <td>Early Stage OPC</td>
+        </tr>
+        <tr>
+          <td><strong>OPC Pro</strong></td>
+          <td>$99 / mo</td>
+          <td>20 Agents, Unlimited Skills, GRPO Dashboard</td>
+          <td>Scaled OPC</td>
+        </tr>
+        <tr>
+          <td><strong>Enterprise</strong></td>
+          <td>$499+ / mo</td>
+          <td>White-label, Custom Training, SLA</td>
+          <td>Agencies</td>
+        </tr>
+      </table>
+      <p><em>*China market pricing adjusted for local PPP and subsidy eligibility.</em></p>
+    </section>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- SPRINT 011 EXECUTION PLAN                   -->
+    <!-- ════════════════════════════════════════════ -->
+    <section id="sprint011" style="background: rgba(0,212,255,0.03);">
+      <h2>Sprint 011 — Execution Checklist</h2>
+      <p style="color: var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.9rem;">
+        📅 Target: Complete within 1 sprint cycle (6 hours) &nbsp;|&nbsp; Phase 27, Week 1
+      </p>
+
+      <div style="background:var(--deep-navy); border-radius:8px; padding:30px; margin:20px 0;">
+        <h3 style="color:var(--electric-cyan); margin-top:0;">Priority 1 — Model Gateway (Est. 30 min)</h3>
+        <p style="font-size:0.9rem; color:var(--text-secondary);">Add <code style="color:var(--matrix-green);">genspark2api</code> to <code style="color:var(--matrix-green);">/iventure.studio/deployment/docker-compose.yml</code>. Unlocks GPT-5, Claude-opus-4, Gemini-2.5-pro, DeepSeek-R1, Grok-4, Sora-2.</p>
+        <pre style="background:#000; padding:20px; border-radius:6px; font-size:0.8rem; color:var(--matrix-green); overflow-x:auto;">
+# Add to docker-compose.yml
+genspark2api:
+  image: deanxv/genspark2api:latest
+  container_name: genspark2api
+  environment:
+    - API_SECRET=${GENSPARK_API_SECRET}
+    - GS_COOKIE=${GENSPARK_COOKIE}
+  ports:
+    - "8080:8080"
+  restart: unless-stopped
+  networks:
+    - ivs-network</pre>
+        <div style="margin-top:15px;">
+          <span class="status-badge badge-active">✓ 30 MIN</span>
+          <span class="status-badge badge-deployed">UNLOCKS: 30+ MODELS</span>
+        </div>
+      </div>
+
+      <div style="background:var(--deep-navy); border-radius:8px; padding:30px; margin:20px 0;">
+        <h3 style="color:var(--volcanic-orange); margin-top:0;">Priority 2 — Reward Model Upgrade (Est. 1 hour)</h3>
+        <p style="font-size:0.9rem; color:var(--text-secondary);">Deploy <code style="color:var(--matrix-green);">Skywork-Reward-V2-Llama-3.1-8B</code> via SGLang. Wire as GRPO critic endpoint. Replaces custom reward function with world's #1 reward model (97.8 RewardBench).</p>
+        <pre style="background:#000; padding:20px; border-radius:6px; font-size:0.8rem; color:var(--matrix-green); overflow-x:auto;">
+# 1. Pull model
+huggingface-cli download Skywork/Skywork-Reward-V2-Llama-3.1-8B
+
+# 2. Launch SGLang server
+python -m sglang.launch_server \
+  --model-path Skywork/Skywork-Reward-V2-Llama-3.1-8B \
+  --mem-fraction-static 0.9 --tp 1 \
+  --host 0.0.0.0 --port 8090 \
+  --context-length 16384 --is-embedding
+
+# 3. Add to VIC Engine environment
+SKYWORK_REWARD_ENDPOINT=http://localhost:8090/classify</pre>
+        <div style="margin-top:15px;">
+          <span class="status-badge badge-metric">IMPACT: GRPO → INSTITUTIONAL GRADE</span>
+        </div>
+      </div>
+
+      <div style="background:var(--deep-navy); border-radius:8px; padding:30px; margin:20px 0;">
+        <h3 style="color:var(--matrix-green); margin-top:0;">Priority 3 — Skywork-Super-Agents MCP (Est. 30 min)</h3>
+        <p style="font-size:0.9rem; color:var(--text-secondary);">One JSON config block adds PPT, Word, Excel, and webpage generation to every VIC agent. No code required.</p>
+        <pre style="background:#000; padding:20px; border-radius:6px; font-size:0.8rem; color:var(--matrix-green); overflow-x:auto;">
+# Add to VIC Engine MCP servers config
+{
+  "mcpServers": {
+    "office": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/Skywork-ai/Skywork-Super-Agents.git",
+        "office-tool"
+      ],
+      "env": {
+        "SKYWORK_API_KEY": "${SKYWORK_API_KEY}"
+      }
+    }
+  }
+}</pre>
+        <div style="margin-top:15px;">
+          <span class="status-badge badge-active">✓ 30 MIN</span>
+          <span class="status-badge badge-deployed">UNLOCKS: PPT / DOCS / SHEETS / WEBPAGES</span>
+        </div>
+      </div>
+
+      <div style="background:var(--deep-navy); border-radius:8px; padding:30px; margin:20px 0;">
+        <h3 style="color:var(--deep-purple); filter:brightness(1.5); margin-top:0;">Priority 4 — Skywork-R1V4 Vision Agent (Est. 20 min)</h3>
+        <p style="font-size:0.9rem; color:var(--text-secondary);">Register Skywork-R1V4-Lite via OpenRouter in litellm_config.yaml. Adds vision + web search to VMOA Agent pool.</p>
+        <pre style="background:#000; padding:20px; border-radius:6px; font-size:0.8rem; color:var(--matrix-green); overflow-x:auto;">
+# litellm_config.yaml addition
+- model_name: skywork-vision
+  litellm_params:
+    model: openrouter/skywork/skywork-r1v4
+    api_base: https://openrouter.ai/api/v1
+    api_key: ${OPENROUTER_API_KEY}
+    extra_body:
+      enable_search: true  # Autonomous web research</pre>
+      </div>
+
+      <div style="background:var(--deep-navy); border-radius:8px; padding:30px; margin:20px 0;">
+        <h3 style="color:var(--electric-cyan); margin-top:0;">Priority 5 — OpenManus-RL GRPO Training Loop (Est. 3 hours)</h3>
+        <p style="font-size:0.9rem; color:var(--text-secondary);">Clone OpenManus-RL, configure GRPO training on VIC agent outputs. This closes the training loop — agents that score badly automatically get fine-tuned.</p>
+        <pre style="background:#000; padding:20px; border-radius:6px; font-size:0.8rem; color:var(--matrix-green); overflow-x:auto;">
+# Clone OpenManus-RL
+git clone https://github.com/OpenManus/OpenManus-RL.git
+cd OpenManus-RL
+
+# Configure for VIC Engine outputs
+cp config/config.example.toml config/config.toml
+# Set base_url to VIC Engine v5 API endpoint
+# Set reward_endpoint to Skywork-Reward-V2 SGLang server
+# Set grpo_threshold to 0.9913
+
+# Launch GRPO training pipeline
+python train_grpo.py --agent-type vic --reward-model skywork-v2</pre>
+        <div style="margin-top:15px;">
+          <span class="status-badge badge-metric">🔴 CRITICAL: ENABLES AUTO SELF-IMPROVEMENT</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(0,255,136,0.05); border:1px solid var(--matrix-green); border-radius:8px; padding:20px; margin:20px 0;">
+        <h4 style="color:var(--matrix-green); margin:0 0 15px 0;">Sprint 011 Completion Summary</h4>
+        <table style="font-size:0.85rem;">
+          <tr><th>Task</th><th>Time</th><th>Impact</th><th>Status</th></tr>
+          <tr>
+            <td>genspark2api docker</td><td>30 min</td><td>30+ models available</td>
+            <td><span class="status-badge badge-active">READY</span></td>
+          </tr>
+          <tr>
+            <td>Skywork-Reward-V2</td><td>1 hr</td><td>GRPO institutional grade</td>
+            <td><span class="status-badge badge-deployed">PENDING</span></td>
+          </tr>
+          <tr>
+            <td>Skywork-Super-Agents MCP</td><td>30 min</td><td>Office doc generation</td>
+            <td><span class="status-badge badge-active">READY</span></td>
+          </tr>
+          <tr>
+            <td>Skywork-R1V4 OpenRouter</td><td>20 min</td><td>Vision + search agent</td>
+            <td><span class="status-badge badge-active">READY</span></td>
+          </tr>
+          <tr>
+            <td>OpenManus-RL setup</td><td>3 hrs</td><td>Auto GRPO fine-tuning</td>
+            <td><span class="status-badge badge-metric">CRITICAL PATH</span></td>
+          </tr>
+          <tr>
+            <td><strong>TOTAL</strong></td><td><strong>~5.3 hrs</strong></td><td><strong>Full intelligence upgrade</strong></td>
+            <td><span class="status-badge badge-active">1 SPRINT</span></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- LITELLM CONFIG                              -->
+    <!-- ════════════════════════════════════════════ -->
+    <section id="litellm-config">
+      <h2>litellm_config.yaml — Full Updated Config</h2>
+      <p style="color:var(--text-secondary);">Complete LiteLLM configuration incorporating all model integrations for iVenture Studio. Save to <code style="color:var(--matrix-green);">/iventure.studio/deployment/litellm_config.yaml</code></p>
+
+      <pre style="background:#000; padding:30px; border-radius:8px; font-size:0.78rem; color:var(--matrix-green); overflow-x:auto; border:1px solid rgba(0,255,136,0.2); line-height:1.7;">
+# ═══════════════════════════════════════════════════════
+# iVenture Studio — LiteLLM Configuration
+# Version: Phase 27 — Sprint 011
+# Location: /iventure.studio/deployment/litellm_config.yaml
+# ═══════════════════════════════════════════════════════
+
+model_list:
+
+  # ─── GENSPARK2API GATEWAY (30+ Models via OpenAI-compat) ───
+  - model_name: gpt-5
+    litellm_params:
+      model: openai/gpt-5
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: gpt-5-pro
+    litellm_params:
+      model: openai/gpt-5-pro
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: claude-opus-4
+    litellm_params:
+      model: openai/claude-opus-4
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: claude-sonnet-4.5
+    litellm_params:
+      model: openai/claude-sonnet-4.5
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: openai/gemini-2.5-pro
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: gemini-2.5-flash
+    litellm_params:
+      model: openai/gemini-2.5-flash
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: deepseek-v3
+    litellm_params:
+      model: openai/deepseek-v3
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: deepseek-r1
+    litellm_params:
+      model: openai/deepseek-r1
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: grok-4
+    litellm_params:
+      model: openai/grok-4
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: o3-pro
+    litellm_params:
+      model: openai/o3-pro
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  # ─── SKYWORK MODELS ───────────────────────────────────
+  - model_name: skywork-vision
+    litellm_params:
+      model: openrouter/skywork/skywork-r1v4
+      api_base: https://openrouter.ai/api/v1
+      api_key: os.environ/OPENROUTER_API_KEY
+      extra_body:
+        enable_search: true
+
+  - model_name: skywork-or1-32b
+    litellm_params:
+      model: openai/skywork-or1-32b
+      api_base: http://localhost:8091/v1   # Local vLLM server
+      api_key: EMPTY
+
+  - model_name: skywork-deepresearch
+    litellm_params:
+      model: openai/skywork-deepresearch-v2
+      api_base: https://api.skyworkmodel.ai/v1
+      api_key: os.environ/SKYWORK_API_KEY
+
+  # ─── IMAGE GENERATION (via genspark2api) ──────────────
+  - model_name: image-flux-pro
+    litellm_params:
+      model: openai/flux-pro/ultra
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: image-gpt-image-1
+    litellm_params:
+      model: openai/gpt-image-1
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: image-imagen4
+    litellm_params:
+      model: openai/imagen4
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  # ─── VIDEO GENERATION (via genspark2api) ──────────────
+  - model_name: video-sora-2
+    litellm_params:
+      model: openai/sora-2
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: video-sora-2-pro
+    litellm_params:
+      model: openai/sora-2-pro
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: video-veo3
+    litellm_params:
+      model: openai/gemini/veo3
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  - model_name: video-kling-v2.5
+    litellm_params:
+      model: openai/kling/v2.5-turbo/pro
+      api_base: http://genspark2api:8080/v1
+      api_key: os.environ/GENSPARK_API_SECRET
+
+  # ─── CHINA MARKET BACKEND ─────────────────────────────
+  - model_name: skywork-moe
+    litellm_params:
+      model: openai/skywork-moe-146b
+      api_base: http://localhost:8092/v1   # Local vLLM server
+      api_key: EMPTY
+
+  # ─── REWARD MODEL (Internal Use Only) ─────────────────
+  - model_name: skywork-reward-v2
+    litellm_params:
+      model: openai/skywork-reward-v2-8b
+      api_base: http://localhost:8090/classify
+      api_key: EMPTY
+
+router_settings:
+  routing_strategy: usage-based-routing-v2
+  model_group_alias:
+    "default": "gemini-2.5-flash"
+    "premium": "gpt-5-pro"
+    "research": "skywork-deepresearch"
+    "vision": "skywork-vision"
+    "math": "skywork-or1-32b"
+    "china": "deepseek-v3"
+
+litellm_settings:
+  cache: true
+  cache_params:
+    type: redis
+    host: redis
+    port: 6379
+  drop_params: true
+  set_verbose: false
+  max_budget: 500  # USD per month hard cap
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+
+# ═══════════════════════════════════════════════════════
+# ENV VARIABLES REQUIRED (.env file):
+# GENSPARK_API_SECRET   = your genspark2api secret key
+# GENSPARK_COOKIE       = your genspark.ai session cookie
+# OPENROUTER_API_KEY    = openrouter.ai API key
+# SKYWORK_API_KEY       = skywork API key (<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a2c6c7c7d2d0c7d1c7c3d0c1cae2d1c9dbd5cdd0c98cc3cb">[email&#160;protected]</a>)
+# OPENAI_API_KEY        = openai direct fallback
+# LITELLM_MASTER_KEY    = generated master key
+# DATABASE_URL          = postgresql://...
+# ═══════════════════════════════════════════════════════</pre>
+    </section>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- SKYWORK PARTNERSHIP PITCH                   -->
+    <!-- ════════════════════════════════════════════ -->
+    <section id="partnership" style="background:linear-gradient(135deg, rgba(123,47,190,0.08) 0%, rgba(0,212,255,0.05) 100%);">
+      <h2>Partnership Pitch — SkyworkAI</h2>
+
+      <div class="highlight-box" style="border-left-color:var(--deep-purple); background:rgba(123,47,190,0.1);">
+        <p style="font-size:1.1rem; color:#fff; margin:0;">
+          <strong>Proposal:</strong> iVenture Studio × SkyworkAI — Co-Deployment of Skywork Models as the Intelligence Engine for the China OPC Market.
+        </p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin:30px 0;">
+        <div style="background:var(--deep-navy); padding:25px; border-radius:8px; border-top:3px solid var(--deep-purple);">
+          <h4 style="color:var(--deep-purple); filter:brightness(1.5); margin-top:0;">What SkyworkAI Has Built</h4>
+          <ul style="font-size:0.9rem; color:var(--text-secondary);">
+            <li>Skywork-Reward-V2: #1 Reward Model on ALL 7 benchmarks (97.8 RewardBench)</li>
+            <li>Skywork-DeepResearch V2: 38.7% BrowseComp (beats Grok-4 by 6.1pp)</li>
+            <li>Skywork-OR1-32B: Beats DeepSeek-R1 on AIME24 (82.2 vs ~75)</li>
+            <li>Skywork-R1V4: Top multimodal vision + search (91.8 HIRbench-4K)</li>
+            <li>Skywork-Super-Agents: MCP office document generation</li>
+            <li>Skywork-MoE: 146B Chinese/English LLM</li>
+          </ul>
+        </div>
+        <div style="background:var(--deep-navy); padding:25px; border-radius:8px; border-top:3px solid var(--electric-cyan);">
+          <h4 style="color:var(--electric-cyan); margin-top:0;">What iVenture Studio Has Built</h4>
+          <ul style="font-size:0.9rem; color:var(--text-secondary);">
+            <li>VIC Architect v4.2: Eight-Pillar no-code agent framework</li>
+            <li>GRPO Production System: 0.991337 score, 481 adversary challenges</li>
+            <li>VMOA: 8-agent orchestration, FastAPI + MCP live</li>
+            <li>18+ Skills Library: Reusable intelligence modules</li>
+            <li>Iceland Jurisdiction: ONLY EU + China FTA access</li>
+            <li>16M OPC Market Access: Via Iceland-China FTA + CNY swap</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 style="color:var(--volcanic-orange);">The Alignment</h3>
+      <p>Skywork's published research trajectory (Reward-V2 → DeepResearch → OR1 → R1V) shows a clear convergence toward <strong>autonomous agent systems</strong>. iVenture Studio is the deployment layer that Skywork's infrastructure is missing — and Skywork is the intelligence substrate that makes iVenture's GRPO system unassailable.</p>
+
+      <table style="margin:20px 0;">
+        <tr>
+          <th>Skywork Asset</th>
+          <th>iVenture Integration</th>
+          <th>Market Impact</th>
+        </tr>
+        <tr>
+          <td>Skywork-Reward-V2</td>
+          <td>VIC GRPO critic — replaces custom reward</td>
+          <td>Institutional-grade calibration claims</td>
+        </tr>
+        <tr>
+          <td>Skywork-DeepResearch V2</td>
+          <td>VMOA Agent #9 — premium research</td>
+          <td>Best-in-class research for OPC agents</td>
+        </tr>
+        <tr>
+          <td>Skywork-OR1-32B</td>
+          <td>VMOA Agent #10 — math/code specialist</td>
+          <td>Financial modeling for OPC businesses</td>
+        </tr>
+          <tr>
+          <td>Skywork-R1V4</td>
+          <td>VMOA Agent #11 — vision + search</td>
+          <td>Document analysis, market research</td>
+        </tr>
+        <tr>
+          <td>Skywork-Super-Agents</td>
+          <td>OPC business document generation</td>
+          <td>Instant proposals, decks, reports</td>
+        </tr>
+        <tr>
+          <td>Skywork-MoE 146B</td>
+          <td>China market backend (Chinese-native)</td>
+          <td>16M OPC founders in CNY market</td>
+        </tr>
+      </table>
+
+      <h3 style="color:var(--electric-cyan);">Proposed Partnership Structure</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;">
+        <div style="background:rgba(255,255,255,0.03); padding:20px; border-radius:8px;">
+          <h4 style="color:var(--matrix-green); margin-top:0;">Option A — Revenue Share</h4>
+          <p style="font-size:0.85rem; color:var(--text-secondary);">iVenture Studio deploys Skywork models as premium agents. 15-20% of OPC subscription revenue attributed to Skywork model usage flows back to Skywork AI. China market revenue (CNY-billed) negotiated separately.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.03); padding:20px; border-radius:8px;">
+          <h4 style="color:var(--electric-cyan); margin-top:0;">Option B — Strategic Integration</h4>
+          <p style="font-size:0.85rem; color:var(--text-secondary);">Skywork AI invests in / co-develops iVenture Studio as the "Skywork Agent Deployment Platform". iVenture Studio becomes the exclusive no-code deployer for Skywork's China OPC market push. Joint go-to-market in Shenzhen, Hangzhou, Qingdao.</p>
+        </div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:30px;">
+        <h4 style="margin-top:0; color:#fff;">Contact for Partnership</h4>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:0.9rem; margin:0; color:var(--text-secondary);">
+          Skywork DeepResearch Team: <span style="color:var(--electric-cyan);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="adc9c8c8dddfc8dec8ccdfcec5eddec6d4dac2dfc683ccc4">[email&#160;protected]</a></span><br/>
+          Skywork Super-Agents: <span style="color:var(--electric-cyan);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="54243120312614273f2d233b263f7a353d">[email&#160;protected]</a></span><br/>
+          Subject: <span style="color:var(--volcanic-orange);">"iVenture Studio × SkyworkAI — China OPC Co-Deployment Proposal"</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════ -->
+    <!-- ASSET INVENTORY                             -->
+    <!-- ════════════════════════════════════════════ -->
+    <section id="assets">
+      <h2>Asset Inventory — AI Drive</h2>
+      <p style="color:var(--text-secondary); font-size:0.9rem;">All production assets currently live in AI Drive. Total intelligence infrastructure ready for Phase 27 build.</p>
+
+      <table style="font-size:0.82rem;">
+        <tr>
+          <th>Asset</th>
+          <th>Path</th>
+          <th>Size</th>
+          <th>Role</th>
+          <th>Status</th>
+        </tr>
+        <tr>
+          <td><strong>VIC Architect v4.2</strong></td>
+          <td class="mono">/VIC Architect/system-prompt-v4.2.md</td>
+          <td>51.7 KB</td>
+          <td>Intelligence engine core</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>VIC Architect Prompt (Compiled)</strong></td>
+          <td class="mono">/VIC Architect/vic_architect_v4_2_prompt.md</td>
+          <td>20.9 KB</td>
+          <td>Sprint 009 deployed prompt</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>VMOA System Prompt</strong></td>
+          <td class="mono">/iventure.studio/VMOA/docs/vmoa_system_prompt_v1.0.md</td>
+          <td>17.1 KB</td>
+          <td>8-agent orchestrator</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>IntelliAgent Pro Dashboard</strong></td>
+          <td class="mono">/intelliagent_pro_platform/index.html</td>
+          <td>50 KB</td>
+          <td>Frontend dashboard shell</td>
+          <td><span class="status-badge badge-deployed">READY</span></td>
+        </tr>
+        <tr>
+          <td><strong>Rewyo Platform</strong></td>
+          <td class="mono">/rewyo_platform/rewyo_platform.html</td>
+          <td>46.6 KB</td>
+          <td>Wizard UX reference</td>
+          <td><span class="status-badge badge-deployed">READY</span></td>
+        </tr>
+        <tr>
+          <td><strong>VIC Engine v5 (Phase 27)</strong></td>
+          <td class="mono">/VIC_Framework/vic_engine_v5_phase27/</td>
+          <td>Dir</td>
+          <td>FastAPI + MCP runtime</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Memory System</strong></td>
+          <td class="mono">/memory/MEMORY.md</td>
+          <td>207.3 KB</td>
+          <td>Sprint memory + state</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Next Actions</strong></td>
+          <td class="mono">/memory/NEXT-ACTIONS.md</td>
+          <td>3.7 KB</td>
+          <td>Current sprint queue</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Skills Library</strong></td>
+          <td class="mono">/VIC Architect/skills/</td>
+          <td>18+ files</td>
+          <td>Reusable skill modules</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Eight-Pillar Generator</strong></td>
+          <td class="mono">/VIC Architect/skills/memory/eight-pillar-prompt-generator.skill.md</td>
+          <td>13.1 KB</td>
+          <td>Auto prompt compilation</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Self-Evolution Framework</strong></td>
+          <td class="mono">/VIC Architect/SELF-EVOLUTION-FRAMEWORK-v2.md</td>
+          <td>18.8 KB</td>
+          <td>GRPO auto-improvement</td>
+          <td><span class="status-badge badge-active">LIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>LiteLLM Config</strong></td>
+          <td class="mono">/iventure.studio/deployment/litellm_config.yaml</td>
+          <td>9.0 KB</td>
+          <td>Model routing gateway</td>
+          <td><span class="status-badge badge-deployed">UPDATE SPRINT 011</span></td>
+        </tr>
+        <tr>
+          <td><strong>iVenture Architecture Diagram</strong></td>
+          <td class="mono">/iventure.studio/architecture/vic_architecture_v1.0.png</td>
+          <td>208.6 KB</td>
+          <td>Visual architecture reference</td>
+          <td><span class="status-badge badge-deployed">READY</span></td>
+        </tr>
+        <tr>
+          <td><strong>BiosimIntel Company</strong></td>
+          <td class="mono">/iventure.studio/companies/BiosimIntel/</td>
+          <td>33.2 KB</td>
+          <td>OPC template: Biotech</td>
+          <td><span class="status-badge badge-deployed">TEMPLATE</span></td>
+        </tr>
+        <tr>
+          <td><strong>ClinStage Company</strong></td>
+          <td class="mono">/iventure.studio/companies/ClinStage/</td>
+          <td>38 KB</td>
+          <td>OPC template: ClinTech</td>
+          <td><span class="status-badge badge-deployed">TEMPLATE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 26 Roadmap</strong></td>
+          <td class="mono">/memory/PHASE_26_ROADMAP.md</td>
+          <td>16.3 KB</td>
+          <td>Sprint planning reference</td>
+          <td><span class="status-badge badge-active">ACTIVE</span></td>
+        </tr>
+      </table>
+
+      <div style="margin-top:30px; padding:20px; background:rgba(0,255,136,0.05); border:1px solid rgba(0,255,136,0.2); border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--text-secondary);">
+        <div style="color:var(--matrix-green); font-weight:700; margin-bottom:10px;">OPEN SOURCE INTEGRATIONS — Phase 27</div>
+        <div>github.com/deanxv/genspark2api &nbsp;&nbsp;→ Model Gateway (30+ models)</div>
+        <div>github.com/SkyworkAI/Skywork-Reward-V2 &nbsp;&nbsp;→ GRPO Reward Critic (97.8 RewardBench)</div>
+        <div>github.com/SkyworkAI/skywork-o1-prm-inference &nbsp;&nbsp;→ Step-level verification</div>
+        <div>github.com/SkyworkAI/Skywork-DeepResearch &nbsp;&nbsp;→ VMOA Agent #9 (38.7% BrowseComp)</div>
+        <div>github.com/SkyworkAI/Skywork-OR1 &nbsp;&nbsp;→ VMOA Agent #10 (Math/Code)</div>
+        <div>github.com/SkyworkAI/Skywork-R1V &nbsp;&nbsp;→ VMOA Agent #11 (Vision+Search)</div>
+        <div>github.com/Skywork-ai/Skywork-Super-Agents &nbsp;&nbsp;→ MCP Office Tools</div>
+        <div>github.com/FoundationAgents/OpenManus &nbsp;&nbsp;→ Agent Execution Runtime</div>
+        <div>github.com/OpenManus/OpenManus-RL &nbsp;&nbsp;→ GRPO Training Loop (UIUC)</div>
+        <div>github.com/hexdocom/lemonai &nbsp;&nbsp;→ Docker VM sandbox reference</div>
+        <div>github.com/ComposioHQ/open-genspark &nbsp;&nbsp;→ Google Workspace Tools</div>
+        <div>github.com/TesslateAI/Studio &nbsp;&nbsp;→ Deployment Runtime</div>
+      </div>
+    </section>
+
+    <footer>
+      <div>iVenture Studio ehf. — Vestmannaeyjar, Iceland</div>
+      <div>Phase 27 Build — Confidential & Proprietary</div>
+      <div style="margin-top: 10px; color: var(--volcanic-orange)">
+        RAISED ON AN ISLAND. BUILT FOR ISLANDS EVERYWHERE.
+      </div>
+    </footer>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</html>

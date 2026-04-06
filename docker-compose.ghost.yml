@@ -1,0 +1,46 @@
+# iVenture Studio — Ghost.build Docker Compose Overlay
+# Version: 1.0 (Phase 3.9 Integration)
+# Updated: 2026-03-17
+# Usage: docker compose -f docker-compose.yml -f docker-compose.ghost.yml up -d
+
+services:
+
+  # ────────────────────────────────────────────────
+  # GHOST MCP SERVER — Database Provisioning
+  # Enables agents to create their own DBs on-demand
+  # ────────────────────────────────────────────────
+
+  ghost-mcp:
+    image: ghostbuild/mcp-server:latest
+    container_name: iventure-ghost-mcp
+    restart: unless-stopped
+    environment:
+      - GHOST_API_KEY=${GHOST_API_KEY}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    networks:
+      - iventure-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ghost.rule=Host(`ghost.localhost`)"
+      - "traefik.http.services.ghost.loadbalancer.server.port=3000"
+
+  # ────────────────────────────────────────────────
+  # UPDATE VIC ENGINE — Add Ghost MCP Capability
+  # ────────────────────────────────────────────────
+
+  vic-engine:
+    environment:
+      - GHOST_MCP_URL=http://ghost-mcp:3000
+      - DYNAMIC_INFRA_ENABLED=true
+    depends_on:
+      - ghost-mcp
+
+  # ────────────────────────────────────────────────
+  # UPDATE VMOA — Add Ghost MCP Capability
+  # ────────────────────────────────────────────────
+
+  vmoa:
+    environment:
+      - GHOST_MCP_URL=http://ghost-mcp:3000
+    depends_on:
+      - ghost-mcp

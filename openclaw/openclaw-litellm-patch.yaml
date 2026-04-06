@@ -1,0 +1,79 @@
+# ============================================================
+# LiteLLM Config Patch – OpenClaw Orchestrator Pool
+# Merge this into litellm_config.yaml
+# ============================================================
+#
+# ROUTING LOGIC:
+#  1. Request hits LiteLLM
+#  2. LiteLLM picks model alias → routes to openclaw-orchestrator
+#  3. Orchestrator picks best instance from N-node pool
+#  4. Instance forwards to its genspark2api node
+#  5. genspark2api uses its GS_COOKIE → Genspark AI
+#
+# Result: N users × 30+ models = N×30 effective capacity
+
+model_list:
+
+  # ── OpenClaw Pool (primary – all Genspark models) ────────
+  - model_name: genspark-pool
+    litellm_params:
+      model: openai/gpt-4o           # OpenAI-compatible endpoint
+      api_base: http://openclaw-orchestrator:8090/v1
+      api_key: "${INTERNAL_API_KEY}"
+    model_info:
+      description: "OpenClaw N-instance pool – auto-rotates across OPC nodes"
+      tier: "pool"
+
+  # ── Specific model aliases via pool ─────────────────────
+  - model_name: gpt-5
+    litellm_params:
+      model: openai/gpt-5
+      api_base: http://openclaw-orchestrator:8090/v1
+      api_key: "${INTERNAL_API_KEY}"
+
+  - model_name: claude-opus-4
+    litellm_params:
+      model: openai/claude-opus-4
+      api_base: http://openclaw-orchestrator:8090/v1
+      api_key: "${INTERNAL_API_KEY}"
+
+  - model_name: deepseek-r1
+    litellm_params:
+      model: openai/deepseek-r1
+      api_base: http://openclaw-orchestrator:8090/v1
+      api_key: "${INTERNAL_API_KEY}"
+
+  - model_name: grok-4
+    litellm_params:
+      model: openai/grok-4
+      api_base: http://openclaw-orchestrator:8090/v1
+      api_key: "${INTERNAL_API_KEY}"
+
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: openai/gemini-2.5-pro
+      api_base: http://openclaw-orchestrator:8090/v1
+      api_key: "${INTERNAL_API_KEY}"
+
+  # ── Fallback: direct genspark2api (single instance) ──────
+  - model_name: genspark-direct
+    litellm_params:
+      model: openai/gpt-4o
+      api_base: http://genspark2api:7055/v1
+      api_key: "${GS_COOKIE}"
+
+# ── Router Config ────────────────────────────────────────────
+router_settings:
+  routing_strategy: "least-busy"
+  num_retries: 3
+  timeout: 120
+  retry_after: 5
+  fallbacks:
+    - gpt-5:         ["claude-opus-4", "genspark-direct"]
+    - claude-opus-4: ["gpt-5", "deepseek-r1"]
+    - grok-4:        ["gpt-5", "claude-opus-4"]
+
+# ── Pool-aware headers (pass company slug for sticky routing)
+general_settings:
+  forward_headers:
+    - "X-Company-Slug"   # VIC Engine sets this per request

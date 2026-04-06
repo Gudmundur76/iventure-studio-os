@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iVenture MDA-v1 — Sprint Board v2.0 — Western Markets Pivot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #0d1117;
+        --card-bg: #161b22;
+        --border-color: #30363d;
+        --text-main: #e6edf3;
+        --text-muted: #8b949e;
+        --accent-green: #238636;
+        --accent-green-text: #3fb950;
+        --accent-amber: #d29922;
+        --accent-red: #da3633;
+        --accent-blue: #2f81f7;
+        --accent-purple: #8957e5;
+        --accent-teal: #1f6feb;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Helvetica,
+          Arial,
+          sans-serif;
+        line-height: 1.5;
+        font-size: 14px;
+        padding-bottom: 4rem;
+      }
+
+      /* STRATEGIC BANNER */
+      .strategic-banner {
+        background: linear-gradient(90deg, #7c3aed, #2563eb);
+        color: white;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .strategic-banner h1 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .strategic-banner p {
+        font-size: 1rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+      }
+
+      .strategic-banner a {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        transition: background 0.2s;
+      }
+
+      .strategic-banner a:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      /* MAIN CONTAINER */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+      }
+
+      /* BOARD HEADER */
+      .board-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 1.5rem;
+      }
+
+      .header-title h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .header-meta {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .live-badge {
+        background-color: #f78166;
+        color: #0d1117;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.75rem;
+        margin-left: 0.5rem;
+        vertical-align: middle;
+        text-transform: uppercase;
+      }
+
+      /* METRIC CARDS */
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .metric-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 1.25rem;
+      }
+
+      .metric-label {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+      }
+
+      .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .metric-sub {
+        font-size: 0.85rem;
+        color: var(--accent-green-text);
+        margin-top: 0.25rem;
+      }
+
+      /* PIVOT SUMMARY */
+      .pivot-summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        margin-bottom: 2.5rem;
+      }
+
+      .pivot-box {
+        padding: 1.5rem;
+      }
+
+      .pivot-dropped {
+        background: rgba(218, 54, 51, 0.1);
+        border-right: 1px solid var(--border-color);
+      }
+
+      .pivot-gained {
+        background: rgba(35, 134, 54, 0.1);
+      }
+
+      .pivot-title {
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      .dropped-title {
+        color: #f85149;
+      }
+      .gained-title {
+        color: #3fb950;
+      }
+
+      .pivot-list {
+        list-style: none;
+      }
+
+      .pivot-list li {
+        margin-bottom: 0.5rem;
+        padding-left: 1.25rem;
+        position: relative;
+        color: var(--text-main);
+      }
+
+      .pivot-list li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+
+      .pivot-dropped li::before {
+        color: #f85149;
+      }
+      .pivot-gained li::before {
+        color: #3fb950;
+      }
+
+      /* SECTION HEADERS */
+      .section-header {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      /* TABLES */
+      .data-table-wrapper {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 2.5rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+
+      th {
+        background-color: #21262d;
+        padding: 0.75rem 1rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-main);
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* SPRINT 3 DETAIL */
+      .sprint-detail {
+        margin-bottom: 3rem;
+      }
+
+      .agent-group {
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background-color: var(--bg-color);
+        overflow: hidden;
+      }
+
+      .agent-header {
+        padding: 1rem;
+        background-color: #21262d;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 4px solid transparent;
+      }
+
+      .agent-bda {
+        border-left-color: var(--accent-blue);
+      }
+      .agent-fda {
+        border-left-color: #a371f7;
+      } /* Purple for frontend */
+      .agent-sea {
+        border-left-color: var(--accent-red);
+      }
+      .agent-qaa {
+        border-left-color: var(--accent-amber);
+      }
+      .agent-doa {
+        border-left-color: var(--accent-green-text);
+      }
+      .agent-pma {
+        border-left-color: #f0883e;
+      } /* Orange */
+
+      .agent-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--text-main);
+      }
+
+      .agent-meta {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-family: monospace;
+      }
+
+      .task-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+        background-color: #0d1117;
+      }
+
+      .task-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .task-card:hover {
+        border-color: #8b949e;
+      }
+
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .task-id {
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .task-points {
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: rgba(110, 118, 129, 0.4);
+        padding: 2px 6px;
+        border-radius: 10px;
+        color: var(--text-main);
+      }
+
+      .task-title {
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 0.95rem;
+      }
+
+      /* BADGES */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 10px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border: 1px solid transparent;
+      }
+
+      .badge-complete {
+        background: rgba(35, 134, 54, 0.15);
+        color: #3fb950;
+        border-color: rgba(35, 134, 54, 0.4);
+      }
+      .badge-active {
+        background: rgba(210, 153, 34, 0.15);
+        color: #d29922;
+        border-color: rgba(210, 153, 34, 0.4);
+      }
+      .badge-planned {
+        background: rgba(56, 139, 253, 0.15);
+        color: #58a6ff;
+        border-color: rgba(56, 139, 253, 0.4);
+      }
+      .badge-cancelled {
+        background: rgba(248, 81, 73, 0.15);
+        color: #f85149;
+        border-color: rgba(248, 81, 73, 0.4);
+      }
+      .badge-new {
+        background: rgba(46, 160, 67, 0.2);
+        color: #7ee787;
+        border-color: rgba(46, 160, 67, 0.4);
+      }
+
+      .badge-activation {
+        background: linear-gradient(90deg, #a371f7, #2f81f7);
+        color: white;
+        font-weight: 700;
+        padding: 4px 12px;
+        font-size: 0.7rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border: none;
+        box-shadow: 0 0 10px rgba(163, 113, 247, 0.3);
+      }
+
+      /* CANCELLED SECTION */
+      .cancelled-section {
+        background-color: rgba(22, 27, 34, 0.5);
+        border: 1px dashed #f85149;
+        border-radius: 6px;
+        padding: 1.5rem;
+        margin-bottom: 2.5rem;
+        position: relative;
+      }
+
+      .cancelled-section::before {
+        content: '❌ DROPPED';
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: #0d1117;
+        color: #f85149;
+        padding: 0 10px;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .cancelled-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .cancelled-item {
+        color: #8b949e;
+        text-decoration: line-through;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .cancelled-badge {
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.7rem;
+        color: #f85149;
+        border: 1px solid #f85149;
+        border-radius: 4px;
+        padding: 1px 4px;
+        opacity: 0.8;
+      }
+
+      /* GOVERNANCE & FOOTER */
+      .governance-box {
+        background-color: #161b22;
+        border-left: 4px solid #8957e5;
+        padding: 1.5rem;
+        border-radius: 0 6px 6px 0;
+        margin-bottom: 3rem;
+      }
+
+      .governance-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+      }
+
+      .gov-item h4 {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+
+      .gov-item p {
+        color: var(--text-main);
+        font-size: 0.95rem;
+      }
+
+      footer {
+        text-align: center;
+        border-top: 1px solid var(--border-color);
+        padding-top: 2rem;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      footer a {
+        color: var(--accent-blue);
+        text-decoration: none;
+        margin: 0 0.5rem;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        .board-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .pivot-summary {
+          grid-template-columns: 1fr;
+        }
+        .pivot-dropped {
+          border-right: none;
+          border-bottom: 1px solid var(--border-color);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="strategic-banner">
+      <h1>⚡ STRATEGIC PIVOT: CHINA DROPPED · WESTERN MARKETS FULL FOCUS · FDA-v1 ACTIVATED</h1>
+      <p>Effective 2026-03-18 | Based on MiroFish Market Validation + PIPL/ICP Legal Assessment</p>
+      <a href="https://www.genspark.ai/api/files/s/Nr5kBP7L" target="_blank">View Strategy Document &rarr;</a>
+    </header>
+
+    <div class="container">
+      <!-- BOARD HEADER -->
+      <div class="board-header">
+        <div class="header-title">
+          <h2>iVenture MDA-v1 — Sprint Board v2.0</h2>
+          <div class="header-meta">Last Updated: 2026-03-18 <span class="live-badge">LIVE</span></div>
+        </div>
+      </div>
+
+      <!-- KEY METRICS -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Total Story Points</div>
+          <div class="metric-value">322</div>
+          <div class="metric-sub">241 active + 81 cancelled</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Active Agents</div>
+          <div class="metric-value">7</div>
+          <div class="metric-sub">FDA-v1 & PMA-v1 Activated</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Sprints Freed</div>
+          <div class="metric-value">3–4</div>
+          <div class="metric-sub">China work removed</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Est. Savings</div>
+          <div class="metric-value">~$100K</div>
+          <div class="metric-sub">China legal setup avoided</div>
+        </div>
+      </div>
+
+      <!-- STRATEGIC PIVOT SUMMARY -->
+      <div class="pivot-summary">
+        <div class="pivot-box pivot-dropped">
+          <div class="pivot-title dropped-title">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12"></path>
+            </svg>
+            DROPPED
+          </div>
+          <ul class="pivot-list">
+            <li>China cluster skills S-54–S-59 (81 pts removed)</li>
+            <li>WeChat Pay, ICP registration, PIPLRouter</li>
+            <li>Alibaba CN, CSL layer, China DynamoDB entries</li>
+            <li style="margin-top: 0.5rem; opacity: 0.8; font-style: italic">
+              Reason: ICP Commercial License requires Chinese entity (>50% ownership) — impossible for Icelandic solo
+              founder
+            </li>
+          </ul>
+        </div>
+        <div class="pivot-box pivot-gained">
+          <div class="pivot-title gained-title">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M5 13l4 4L19 7"></path>
+            </svg>
+            GAINED
+          </div>
+          <ul class="pivot-list">
+            <li>Sprint 3 fully reprioritised for Western markets</li>
+            <li>FDA-v1 and PMA-v1 ACTIVATED for first time</li>
+            <li>Path to first sale: 4–8 weeks vs 18–24 months</li>
+            <li>Compliance cost: €5K (GDPR only) vs $100K (China legal)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- TEAM ROSTER -->
+      <div class="section-header">Team Roster</div>
+      <div class="data-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Agent ID</th>
+              <th>Role</th>
+              <th>Model</th>
+              <th>Cost/Run</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>MDA-v1</strong></td>
+              <td>Master Dev Agent</td>
+              <td>Kimi K2.5</td>
+              <td>€0.01</td>
+              <td><span class="badge badge-complete">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>FDA-v1</strong></td>
+              <td>Frontend Dev Agent</td>
+              <td>Claude Opus 4</td>
+              <td>€0.02</td>
+              <td><span class="badge badge-new">NEWLY ACTIVATED</span></td>
+            </tr>
+            <tr>
+              <td><strong>BDA-v1</strong></td>
+              <td>Backend Dev Agent</td>
+              <td>Kimi K2.5</td>
+              <td>€0.01</td>
+              <td><span class="badge badge-complete">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>DOA-v1</strong></td>
+              <td>DevOps Agent</td>
+              <td>Nemotron-3-Super</td>
+              <td>€0.00</td>
+              <td><span class="badge badge-complete">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>QAA-v1</strong></td>
+              <td>QA Agent</td>
+              <td>Nemotron-3-Super</td>
+              <td>€0.00</td>
+              <td><span class="badge badge-complete">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>SEA-v1</strong></td>
+              <td>Security Agent</td>
+              <td>GPT-5</td>
+              <td>€0.03</td>
+              <td><span class="badge badge-complete">ACTIVE</span></td>
+            </tr>
+            <tr>
+              <td><strong>PMA-v1</strong></td>
+              <td>PM Agent</td>
+              <td>Qwen-turbo</td>
+              <td>€0.005</td>
+              <td><span class="badge badge-new">NEWLY ACTIVATED</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SPRINT OVERVIEW -->
+      <div class="section-header">Sprint Overview</div>
+      <div class="data-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Sprint</th>
+              <th>Points</th>
+              <th>Status</th>
+              <th>Focus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sprint 0</td>
+              <td>29 pts</td>
+              <td><span class="badge badge-complete">✅ COMPLETE</span></td>
+              <td>Team Infrastructure</td>
+            </tr>
+            <tr>
+              <td>Sprint 1</td>
+              <td>99 pts</td>
+              <td><span class="badge badge-complete">✅ COMPLETE</span></td>
+              <td>VentureClaw Core + Security + CI/CD</td>
+            </tr>
+            <tr>
+              <td>Sprint 2</td>
+              <td>63 pts</td>
+              <td><span class="badge badge-complete">✅ COMPLETE</span></td>
+              <td>VMOA Skills + CF Workers + E2E Tests</td>
+            </tr>
+            <tr style="background-color: rgba(210, 153, 34, 0.05)">
+              <td><strong>Sprint 3</strong></td>
+              <td><strong>139 pts</strong></td>
+              <td><span class="badge badge-active">🟡 ACTIVE</span></td>
+              <td><strong>Western Market Core (Stripe + Frontend + K8s + GTM)</strong></td>
+            </tr>
+            <tr>
+              <td>Sprint 4</td>
+              <td>~80 pts</td>
+              <td><span class="badge badge-planned">📋 PLANNED</span></td>
+              <td>Production Deploy + DACH Expansion</td>
+            </tr>
+            <tr>
+              <td style="color: #8b949e; text-decoration: line-through">[CANCELLED] China cluster</td>
+              <td style="color: #8b949e; text-decoration: line-through">81 pts</td>
+              <td><span class="badge badge-cancelled">❌ CANCELLED</span></td>
+              <td style="color: #8b949e">China Market (ICP legal barrier)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SPRINT 3 DETAIL -->
+      <div class="section-header">
+        Sprint 3: Western Market Core
+        <span class="badge badge-active">IN PROGRESS</span>
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400; margin-left: auto"
+          >Total: 139 pts | Cost: ~€8</span
+        >
+      </div>
+
+      <div class="sprint-detail">
+        <!-- FDA-v1 Section -->
+        <div class="agent-group agent-fda">
+          <div class="agent-header">
+            <div>
+              <span class="agent-name">FDA-v1 (Frontend)</span>
+              <span class="agent-meta"> — Claude Opus 4</span>
+            </div>
+            <span class="badge badge-activation">FIRST SPRINT — ACTIVATED</span>
+          </div>
+          <div class="task-grid">
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-FDA-01</span>
+                <span class="task-points">13 pts</span>
+              </div>
+              <div class="task-title">Company dashboard MVP</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">
+                Settings form, brick catalogue browser, OpenClaw provisioner button
+              </p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-FDA-02</span>
+                <span class="task-points">8 pts</span>
+              </div>
+              <div class="task-title">Skill runner UI</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">
+                Select skill → configure → run → result display
+              </p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-FDA-03</span>
+                <span class="task-points">13 pts</span>
+              </div>
+              <div class="task-title">Landing page</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">
+                Hero, bundle pricing cards, 3 use-case demos, Stripe CTA
+              </p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-FDA-04</span>
+                <span class="task-points">8 pts</span>
+              </div>
+              <div class="task-title">Onboarding flow</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">
+                Signup → company setup → first skill run → upgrade prompt
+              </p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BDA-v1 Section -->
+        <div class="agent-group agent-bda">
+          <div class="agent-header">
+            <div>
+              <span class="agent-name">BDA-v1 (Backend)</span>
+              <span class="agent-meta"> — Kimi K2.5</span>
+            </div>
+            <span class="badge badge-active">ACTIVE</span>
+          </div>
+          <div class="task-grid">
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-BDA-01</span>
+                <span class="task-points">8 pts</span>
+              </div>
+              <div class="task-title">Stripe Checkout integration</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">
+                SPARK €49, GROWTH €149, SCALE €299, EMPIRE €999
+              </p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-BDA-02</span>
+                <span class="task-points">5 pts</span>
+              </div>
+              <div class="task-title">Stripe webhook handler</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">
+                subscription.created, updated, cancelled, payment_failed
+              </p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-BDA-03</span>
+                <span class="task-points">5 pts</span>
+              </div>
+              <div class="task-title">Entitlement enforcement</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">
+                Stripe customer_id → company_id → user_entitlements_cache
+              </p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-BDA-04</span>
+                <span class="task-points">8 pts</span>
+              </div>
+              <div class="task-title">Freemium/trial tier</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">3 free skills, 14-day trial, no CC required</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PMA-v1 Section -->
+        <div class="agent-group agent-pma">
+          <div class="agent-header">
+            <div>
+              <span class="agent-name">PMA-v1 (Product/GTM)</span>
+              <span class="agent-meta"> — Qwen-turbo</span>
+            </div>
+            <span class="badge badge-activation">FIRST SPRINT — ACTIVATED</span>
+          </div>
+          <div class="task-grid">
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-PMA-01</span>
+                <span class="task-points">8 pts</span>
+              </div>
+              <div class="task-title">Nordic SMB go-to-market plan</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">Targeting IS, NO, SE, DK, FI</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-PMA-02</span>
+                <span class="task-points">5 pts</span>
+              </div>
+              <div class="task-title">Identify 5 beta users</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">Profile Icelandic accountants/consultants</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-PMA-03</span>
+                <span class="task-points">3 pts</span>
+              </div>
+              <div class="task-title">Cortex Partner onboarding</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">Email sequence for first Icelandic reseller</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEA-v1 Section -->
+        <div class="agent-group agent-sea">
+          <div class="agent-header">
+            <div>
+              <span class="agent-name">SEA-v1 (Security)</span>
+              <span class="agent-meta"> — GPT-5</span>
+            </div>
+            <span class="badge badge-active">ACTIVE</span>
+          </div>
+          <div class="task-grid">
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-SEA-01</span>
+                <span class="task-points">3 pts</span>
+              </div>
+              <div class="task-title">GDPR ADR-006 document</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">Replaces SSRF-China doc</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-SEA-02</span>
+                <span class="task-points">5 pts</span>
+              </div>
+              <div class="task-title">Anomaly detection</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">On /execute endpoint</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-SEA-03</span>
+                <span class="task-points">3 pts</span>
+              </div>
+              <div class="task-title">Slack security-alerts webhook</div>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-SEA-04</span>
+                <span class="task-points">5 pts</span>
+              </div>
+              <div class="task-title">Penetration test checklist</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">For EU hosting (eu-central-1)</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QAA-v1 Section -->
+        <div class="agent-group agent-qaa">
+          <div class="agent-header">
+            <div>
+              <span class="agent-name">QAA-v1 (QA)</span>
+              <span class="agent-meta"> — Nemotron-3-Super</span>
+            </div>
+            <span class="badge badge-active">ACTIVE</span>
+          </div>
+          <div class="task-grid">
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-QAA-01</span>
+                <span class="task-points">8 pts</span>
+              </div>
+              <div class="task-title">Chaos engineering scenarios</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">Container kill, Redis drop, DB failover</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-QAA-02</span>
+                <span class="task-points">5 pts</span>
+              </div>
+              <div class="task-title">Stripe webhook integration tests</div>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-QAA-03</span>
+                <span class="task-points">8 pts</span>
+              </div>
+              <div class="task-title">Cross-market E2E flows</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">UK, German, US company</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-QAA-04</span>
+                <span class="task-points">3 pts</span>
+              </div>
+              <div class="task-title">Grafana performance baselines</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">Establish baseline metrics for production monitoring</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOA-v1 Section -->
+        <div class="agent-group agent-doa">
+          <div class="agent-header">
+            <div>
+              <span class="agent-name">DOA-v1 (DevOps)</span>
+              <span class="agent-meta"> — Nemotron-3-Super</span>
+            </div>
+            <span class="badge badge-active">ACTIVE</span>
+          </div>
+          <div class="task-grid">
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-DOA-01</span>
+                <span class="task-points">8 pts</span>
+              </div>
+              <div class="task-title">Kubernetes manifests</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">eu-central-1, 3 replicas, HPA, PDB</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-DOA-02</span>
+                <span class="task-points">5 pts</span>
+              </div>
+              <div class="task-title">Grafana dashboard JSON</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">7 panels: task rate, cost, P95, errors, etc.</p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-DOA-03</span>
+                <span class="task-points">5 pts</span>
+              </div>
+              <div class="task-title">Push-button provision script</div>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+            <div class="task-card">
+              <div class="task-header">
+                <span class="task-id">S3-DOA-04</span>
+                <span class="task-points">3 pts</span>
+              </div>
+              <div class="task-title">Wrangler config</div>
+              <p style="font-size: 0.85rem; color: var(--text-muted)">
+                For Cloudflare Worker (openclaw.iventure.studio)
+              </p>
+              <div style="margin-top: auto">
+                <span class="badge badge-new">🆕 NEW</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CANCELLED WORK -->
+      <div class="cancelled-section">
+        <h3 style="color: #e6edf3; margin-bottom: 0.5rem">❌ CHINA CLUSTER — PERMANENTLY CANCELLED</h3>
+        <p style="color: #8b949e; margin-bottom: 1rem">
+          Reason: ICP Commercial License unavailable to non-Chinese entity. MiroFish Scenario B NPV: NEGATIVE. Decision
+          date: 2026-03-18.
+        </p>
+
+        <div class="cancelled-grid">
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> S-54: China cluster skill</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> S-55: China cluster skill</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> S-56: China cluster skill</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> S-57: China cluster skill</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> S-58: China cluster skill</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> S-59: China cluster skill</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> WeChat Pay integration</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> ICP registration workflow</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> PIPLRouter implementation</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> Alibaba Cloud China region</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> CSL compliance layer</div>
+          <div class="cancelled-item"><span class="cancelled-badge">CANCELLED</span> China DynamoDB brick entries</div>
+        </div>
+        <div style="margin-top: 1rem; color: #f85149; font-weight: 600; text-align: right">
+          Total cancelled: 81 story points removed
+        </div>
+      </div>
+
+      <!-- SPRINT 4 PREVIEW -->
+      <div class="section-header">Sprint 4 Preview (Planned)</div>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-bottom: 3rem;
+        "
+      >
+        <div class="task-card" style="opacity: 0.8">
+          <div class="task-title">FDA-v1</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted)">Trial conversion optimisation, A/B testing</p>
+        </div>
+        <div class="task-card" style="opacity: 0.8">
+          <div class="task-title">BDA-v1</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted)">
+            invoice-manager, fundraising-prep, proposal-generator
+          </p>
+        </div>
+        <div class="task-card" style="opacity: 0.8">
+          <div class="task-title">DOA-v1</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted)">
+            Production deployment to eu-central-1 + Cloudflare CDN
+          </p>
+        </div>
+        <div class="task-card" style="opacity: 0.8">
+          <div class="task-title">PMA-v1</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted)">DACH market expansion plan</p>
+        </div>
+        <div class="task-card" style="opacity: 0.8">
+          <div class="task-title">QAA-v1</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted)">Production smoke tests + monitoring</p>
+        </div>
+      </div>
+
+      <!-- GOVERNANCE BOX -->
+      <div class="governance-box">
+        <h3 style="margin-bottom: 1.5rem">Governance & Velocity</h3>
+        <div class="governance-grid">
+          <div class="gov-item">
+            <h4>Sprint Velocity</h4>
+            <p>60–80 pts/sprint (Sprint 3 is 139 pts — split across 6 agents in parallel)</p>
+          </div>
+          <div class="gov-item">
+            <h4>LLM Cost</h4>
+            <p>~€8–€25 per sprint</p>
+          </div>
+          <div class="gov-item">
+            <h4>Definition of Done</h4>
+            <p>TypeScript strict, 85%+ coverage, brick contract pass, GDPR compliant, no open CVEs</p>
+          </div>
+          <div class="gov-item">
+            <h4>China Re-entry</h4>
+            <p>Requires: €500K ARR, Chinese co-founder, $50K legal budget, dedicated ops team</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Document generated 2026-03-18 | iVenture Studio MDA-v1</p>
+      <p style="margin-top: 0.5rem">
+        <a href="https://www.genspark.ai/api/files/s/Nr5kBP7L" target="_blank">Strategy Document</a> •
+        <a href="https://www.genspark.ai/agents?id=654b781f-02db-44a6-a1ca-61722f4cf963" target="_blank"
+          >Sprint Board v1</a
+        >
+        •
+        <span>AI Drive: /iventure-studio/strategy/</span>
+      </p>
+    </footer>
+  </body>
+</html>

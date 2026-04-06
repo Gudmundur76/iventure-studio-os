@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iVenture Studio — Sprint 7 Complete Deliverables</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    <style>
+      :root {
+        --bg-sidebar: #0f172a;
+        --bg-content: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --code-bg: #1e293b;
+        --agent-bda: #3b82f6;
+        --agent-fda: #8b5cf6;
+        --agent-sea: #ef4444;
+        --agent-qaa: #10b981;
+        --agent-doa: #f97316;
+        --agent-pma: #14b8a6;
+        --nemo-green: #76b900;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          sans-serif;
+        color: var(--text-primary);
+        background-color: var(--bg-content);
+        display: flex;
+        min-height: 100vh;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        width: 280px;
+        background-color: var(--bg-sidebar);
+        color: #fff;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid #1e293b;
+        z-index: 1000;
+      }
+
+      .sidebar-header {
+        padding: 24px;
+        border-bottom: 1px solid #334155;
+      }
+
+      .logo {
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.025em;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar-nav {
+        padding: 24px 16px;
+      }
+
+      .nav-section-title {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #94a3b8;
+        margin-bottom: 12px;
+        padding-left: 12px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        color: #cbd5e1;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-bottom: 4px;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+      }
+
+      .nav-item:hover {
+        background-color: #1e293b;
+        color: #fff;
+      }
+
+      .nav-item.active {
+        background-color: #334155;
+        color: #fff;
+        font-weight: 500;
+      }
+
+      .nav-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      /* Main Content Area */
+      .main-content {
+        margin-left: 280px;
+        flex: 1;
+        background-color: var(--bg-content);
+      }
+
+      /* Top Header */
+      .top-header {
+        background-color: #fff;
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px 40px;
+        position: sticky;
+        top: 0;
+        z-index: 900;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      }
+
+      .header-left h1 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .header-meta {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .status-badge {
+        background-color: #dcfce7;
+        color: #166534;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      /* Strategic Banner */
+      .strategic-banner {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 12px 40px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Content Container */
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px;
+      }
+
+      /* Summary Table */
+      .summary-card {
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 40px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+
+      th {
+        background-color: #f1f5f9;
+        text-align: left;
+        padding: 12px 24px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 16px 24px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      /* Agent Sections */
+      .agent-section {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 40px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .agent-header {
+        padding: 24px 32px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .agent-header.bda {
+        border-top: 4px solid var(--agent-bda);
+      }
+      .agent-header.fda {
+        border-top: 4px solid var(--agent-fda);
+      }
+      .agent-header.sea {
+        border-top: 4px solid var(--agent-sea);
+      }
+      .agent-header.qaa {
+        border-top: 4px solid var(--agent-qaa);
+      }
+      .agent-header.doa {
+        border-top: 4px solid var(--agent-doa);
+      }
+      .agent-header.pma {
+        border-top: 4px solid var(--agent-pma);
+      }
+
+      .agent-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+
+      .agent-info h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+
+      .agent-meta {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .task-block {
+        padding: 32px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .task-block:last-child {
+        border-bottom: none;
+      }
+
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .task-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .task-id {
+        background-color: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: #475569;
+      }
+
+      /* Code Blocks */
+      pre {
+        background-color: var(--code-bg);
+        color: #e2e8f0;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-top: 16px;
+        border: 1px solid #334155;
+        position: relative;
+      }
+
+      .code-header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 4px 12px;
+        background: #334155;
+        border-bottom-left-radius: 6px;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+      }
+
+      /* Syntax Highlighting Simulation */
+      .token-keyword {
+        color: #c678dd;
+      }
+      .token-function {
+        color: #61afef;
+      }
+      .token-string {
+        color: #98c379;
+      }
+      .token-comment {
+        color: #7f848e;
+        font-style: italic;
+      }
+
+      /* Document View */
+      .doc-view {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        padding: 32px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        font-family: 'Inter', sans-serif;
+        max-width: 100%;
+      }
+
+      .doc-view h3 {
+        font-size: 1.1rem;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #334155;
+      }
+      .doc-view p {
+        margin-bottom: 12px;
+        color: #475569;
+      }
+      .doc-view ul {
+        margin-left: 20px;
+        margin-bottom: 16px;
+        color: #475569;
+      }
+      .doc-view li {
+        margin-bottom: 4px;
+      }
+
+      footer {
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .revenue-milestone {
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        border: 1px solid #a7f3d0;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 40px;
+        color: #064e3b;
+      }
+
+      .revenue-milestone h3 {
+        color: #065f46;
+        font-size: 1.2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .revenue-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+      }
+
+      .stat-item {
+        background: rgba(255, 255, 255, 0.6);
+        padding: 12px;
+        border-radius: 8px;
+      }
+
+      .stat-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: #047857;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .stat-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #064e3b;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i data-lucide="box" style="color: #60a5fa"></i>
+          iVenture Studio
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Sprint 7 Deliverables</div>
+        <a href="#summary" class="nav-item">
+          <i data-lucide="bar-chart-2" style="width: 16px; margin-right: 8px"></i>
+          Summary
+        </a>
+        <div class="nav-section-title">Agents</div>
+        <a href="#bda" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-bda)"></div>
+          BDA-v1 (Backend)
+        </a>
+        <a href="#fda" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-fda)"></div>
+          FDA-v1 (Frontend)
+        </a>
+        <a href="#sea" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-sea)"></div>
+          SEA-v1 (Security)
+        </a>
+        <a href="#qaa" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-qaa)"></div>
+          QAA-v1 (QA)
+        </a>
+        <a href="#doa" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-doa)"></div>
+          DOA-v1 (DevOps)
+        </a>
+        <a href="#pma" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-pma)"></div>
+          PMA-v1 (Product)
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Strategic Banner -->
+      <div class="strategic-banner">
+        <i data-lucide="target" size="16"></i>
+        Multi-User Teams • Slack Bot • Dark Mode • DACH Research • €1.2K MRR Target
+      </div>
+
+      <!-- Sticky Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <h1>Sprint 7 — Complete Deliverables</h1>
+        </div>
+        <div class="header-meta">
+          <span>2026-03-18</span>
+          <span>6 Agents</span>
+          <span>26 Tasks</span>
+          <span class="status-badge">DELIVERED</span>
+        </div>
+      </header>
+
+      <div class="container">
+        <!-- Summary Section -->
+        <section id="summary" class="summary-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Model</th>
+                <th>Tasks</th>
+                <th>Story Points</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color: var(--agent-bda); font-weight: 600">BDA-v1 (Backend)</td>
+                <td>Kimi K2.5</td>
+                <td>4</td>
+                <td>40 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-fda); font-weight: 600">FDA-v1 (Frontend)</td>
+                <td>Claude Opus 4</td>
+                <td>4</td>
+                <td>30 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-sea); font-weight: 600">SEA-v1 (Security)</td>
+                <td>GPT-5</td>
+                <td>3</td>
+                <td>24 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-qaa); font-weight: 600">QAA-v1 (QA)</td>
+                <td>Nemotron</td>
+                <td>4</td>
+                <td>22 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-doa); font-weight: 600">DOA-v1 (DevOps)</td>
+                <td>Nemotron</td>
+                <td>4</td>
+                <td>22 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-pma); font-weight: 600">PMA-v1 (PM)</td>
+                <td>Qwen-turbo</td>
+                <td>5</td>
+                <td>36 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr style="background-color: #f8fafc; font-weight: 600">
+                <td>TOTAL</td>
+                <td>-</td>
+                <td>26</td>
+                <td>174 pts</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- BDA-v1 Section -->
+        <section id="bda" class="agent-section">
+          <div class="agent-header bda">
+            <div class="agent-icon" style="background-color: var(--agent-bda)">
+              <i data-lucide="server"></i>
+            </div>
+            <div class="agent-info">
+              <h2>BDA-v1 — Backend Dev Agent</h2>
+              <div class="agent-meta">Kimi K2.5 | 4 Tasks | 40 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-BDA-01</span> Multi-User Team Access</div>
+            </div>
+            <pre><span class="code-header">src/api/teams.ts</span><code><span class="token-keyword">import</span> { z } <span class="token-keyword">from</span> <span class="token-string">'zod'</span>;
+<span class="token-keyword">import</span> { randomBytes } <span class="token-keyword">from</span> <span class="token-string">'crypto'</span>;
+<span class="token-keyword">import</span> { db } <span class="token-keyword">from</span> <span class="token-string">'../config/database'</span>;
+<span class="token-keyword">import</span> { sendEmail } <span class="token-keyword">from</span> <span class="token-string">'../notifications/email'</span>;
+<span class="token-keyword">import</span> { logger } <span class="token-keyword">from</span> <span class="token-string">'../observability/logger'</span>;
+
+<span class="token-keyword">export type</span> TeamRole = <span class="token-string">'owner'</span> | <span class="token-string">'admin'</span> | <span class="token-string">'member'</span>;
+
+<span class="token-keyword">const</span> ROLE_PERMISSIONS: Record&lt;TeamRole, string[]&gt; = {
+  owner:  [<span class="token-string">'*'</span>],
+  admin:  [<span class="token-string">'skills:run'</span>, <span class="token-string">'invoices:*'</span>, <span class="token-string">'settings:read'</span>, <span class="token-string">'team:invite'</span>, <span class="token-string">'team:read'</span>],
+  member: [<span class="token-string">'skills:run'</span>, <span class="token-string">'invoices:read'</span>, <span class="token-string">'settings:read'</span>],
+};
+
+<span class="token-keyword">const</span> InviteSchema = z.object({
+  email: z.string().email(),
+  role: z.enum([<span class="token-string">'admin'</span>, <span class="token-string">'member'</span>]).default(<span class="token-string">'member'</span>),
+});
+
+<span class="token-keyword">export async function</span> <span class="token-function">inviteTeamMember</span>(company_id: string, inviter_id: string, input: unknown) {
+  <span class="token-keyword">const</span> parsed = InviteSchema.safeParse(input);
+  <span class="token-keyword">if</span> (!parsed.success) <span class="token-keyword">throw new</span> Error(<span class="token-string">'VALIDATION_ERROR'</span>);
+  <span class="token-keyword">const</span> { email, role } = parsed.data;
+
+  <span class="token-comment">// Check seat limit by subscription tier</span>
+  <span class="token-keyword">const</span> company = <span class="token-keyword">await</span> db.query(
+    <span class="token-string">'SELECT subscription_tier FROM companies WHERE id = $1'</span>, [company_id]
+  );
+  <span class="token-keyword">const</span> SEAT_LIMITS: Record&lt;string, number&gt; = {
+    trial: 1, spark: 2, growth: 5, scale: 15, empire: 50,
+  };
+  <span class="token-keyword">const</span> tier = company.rows[0]?.subscription_tier ?? <span class="token-string">'trial'</span>;
+  <span class="token-keyword">const</span> currentSeats = <span class="token-keyword">await</span> db.query(
+    <span class="token-string">"SELECT COUNT(*) FROM team_members WHERE company_id = $1 AND status = 'active'"</span>, [company_id]
+  );
+  <span class="token-keyword">if</span> (parseInt(currentSeats.rows[0].count) &gt;= SEAT_LIMITS[tier]) {
+    <span class="token-keyword">throw new</span> Error(<span class="token-string">`SEAT_LIMIT_REACHED: ${tier} allows ${SEAT_LIMITS[tier]} seats`</span>);
+  }
+
+  <span class="token-keyword">const</span> token = randomBytes(32).toString(<span class="token-string">'hex'</span>);
+  <span class="token-keyword">const</span> expires_at = <span class="token-keyword">new</span> Date(Date.now() + 7 * 24 * 60 * 60 * 1000); <span class="token-comment">// 7 days</span>
+
+  <span class="token-keyword">await</span> db.query(
+    <span class="token-string">`INSERT INTO team_invites (company_id, email, role, token, expires_at, invited_by)
+     VALUES ($1,$2,$3,$4,$5,$6)
+     ON CONFLICT (company_id, email) DO UPDATE
+     SET token = $4, expires_at = $5, role = $3`</span>,
+    [company_id, email, role, token, expires_at.toISOString(), inviter_id]
+  );
+
+  <span class="token-keyword">await</span> <span class="token-function">sendEmail</span>({
+    to: email,
+    template: <span class="token-string">'team-invite'</span>,
+    dynamic_data: {
+      invite_url: <span class="token-string">`${process.env.APP_URL}/accept-invite?token=${token}`</span>,
+      company_name: company.rows[0]?.name,
+      role,
+      expires_at: expires_at.toLocaleDateString(),
+    },
+  });
+
+  logger.info({ company_id, email, role }, <span class="token-string">'Team invite sent'</span>);
+  <span class="token-keyword">return</span> { status: <span class="token-string">'invited'</span>, email, role, expires_at };
+}
+
+<span class="token-keyword">export async function</span> <span class="token-function">acceptInvite</span>(token: string, user_id: string) {
+  <span class="token-keyword">const</span> invite = <span class="token-keyword">await</span> db.query(
+    <span class="token-string">`SELECT * FROM team_invites WHERE token = $1 AND expires_at &gt; NOW() AND accepted_at IS NULL`</span>,
+    [token]
+  );
+  <span class="token-keyword">if</span> (!invite.rows[0]) <span class="token-keyword">throw new</span> Error(<span class="token-string">'INVALID_OR_EXPIRED_INVITE'</span>);
+
+  <span class="token-keyword">const</span> { company_id, email, role } = invite.rows[0];
+
+  <span class="token-keyword">await</span> db.query(
+    <span class="token-string">`INSERT INTO team_members (company_id, user_id, role, joined_at)
+     VALUES ($1,$2,$3,NOW())
+     ON CONFLICT (company_id, user_id) DO UPDATE SET role = $3`</span>,
+    [company_id, user_id, role]
+  );
+  <span class="token-keyword">await</span> db.query(<span class="token-string">'UPDATE team_invites SET accepted_at = NOW() WHERE token = $1'</span>, [token]);
+
+  logger.info({ company_id, user_id, role }, <span class="token-string">'Team invite accepted'</span>);
+  <span class="token-keyword">return</span> { company_id, role };
+}
+
+<span class="token-keyword">export function</span> <span class="token-function">hasPermission</span>(role: TeamRole, required: string): boolean {
+  <span class="token-keyword">const</span> perms = ROLE_PERMISSIONS[role];
+  <span class="token-keyword">return</span> perms.includes(<span class="token-string">'*'</span>) || perms.includes(required) ||
+    perms.some(p =&gt; p.endsWith(<span class="token-string">':*'</span>) && required.startsWith(p.slice(0, -2)));
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-BDA-02</span> Fortnox CSV Export</div>
+            </div>
+            <pre><span class="code-header">src/integrations/fortnox-export.ts</span><code><span class="token-keyword">import</span> { db } <span class="token-keyword">from</span> <span class="token-string">'../config/database'</span>;
+
+<span class="token-keyword">export async function</span> <span class="token-function">exportFortnoxCSV</span>(company_id: string, period: { from: string; to: string }): Promise&lt;string&gt; {
+  <span class="token-keyword">const</span> result = <span class="token-keyword">await</span> db.query(
+    <span class="token-string">`SELECT invoice_number, client_name, subtotal, vat_total, total, currency,
+            created_at::date AS invoice_date, due_date, status
+     FROM invoices
+     WHERE company_id = $1 AND created_at BETWEEN $2 AND $3
+     ORDER BY created_at`</span>,
+    [company_id, period.from, period.to]
+  );
+
+  <span class="token-comment">// Fortnox SIE4/CSV format headers</span>
+  <span class="token-keyword">const</span> headers = [
+    <span class="token-string">'Fakturanummer'</span>,   <span class="token-comment">// Invoice number</span>
+    <span class="token-string">'Kundnamn'</span>,        <span class="token-comment">// Client name</span>
+    <span class="token-string">'Fakturadatum'</span>,    <span class="token-comment">// Invoice date</span>
+    <span class="token-string">'Förfallodatum'</span>,   <span class="token-comment">// Due date</span>
+    <span class="token-string">'Nettobelopp'</span>,     <span class="token-comment">// Net amount</span>
+    <span class="token-string">'Mombelopp'</span>,       <span class="token-comment">// VAT amount</span>
+    <span class="token-string">'Totalbelopp'</span>,     <span class="token-comment">// Total amount</span>
+    <span class="token-string">'Valuta'</span>,          <span class="token-comment">// Currency</span>
+    <span class="token-string">'Status'</span>,          <span class="token-comment">// Status</span>
+  ].join(<span class="token-string">';'</span>);
+
+  <span class="token-keyword">const</span> rows = result.rows.map(inv =&gt; [
+    inv.invoice_number,
+    <span class="token-string">`"${inv.client_name.replace(/"/g, '""')}"`</span>,
+    inv.invoice_date,
+    inv.due_date,
+    inv.subtotal.toString().replace(<span class="token-string">'.'</span>, <span class="token-string">','</span>),   <span class="token-comment">// Swedish decimal separator</span>
+    inv.vat_total.toString().replace(<span class="token-string">'.'</span>, <span class="token-string">','</span>),
+    inv.total.toString().replace(<span class="token-string">'.'</span>, <span class="token-string">','</span>),
+    inv.currency,
+    inv.status,
+  ].join(<span class="token-string">';'</span>));
+
+  <span class="token-keyword">return</span> [headers, ...rows].join(<span class="token-string">'\r\n'</span>); <span class="token-comment">// Windows line endings for Fortnox</span>
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-BDA-03</span> Slack Skill Runner Bot</div>
+            </div>
+            <pre><span class="code-header">src/integrations/slack-bot.ts</span><code><span class="token-keyword">import</span> { createHmac, timingSafeEqual } <span class="token-keyword">from</span> <span class="token-string">'crypto'</span>;
+<span class="token-keyword">import</span> { FastifyRequest, FastifyReply } <span class="token-keyword">from</span> <span class="token-string">'fastify'</span>;
+<span class="token-keyword">import</span> { db } <span class="token-keyword">from</span> <span class="token-string">'../config/database'</span>;
+<span class="token-keyword">import</span> { runSkill } <span class="token-keyword">from</span> <span class="token-string">'../core/task-executor'</span>;
+<span class="token-keyword">import</span> { logger } <span class="token-keyword">from</span> <span class="token-string">'../observability/logger'</span>;
+
+<span class="token-comment">// Slack slash command: /iventure run [skill] [params...]</span>
+<span class="token-comment">// Examples:</span>
+<span class="token-comment">//   /iventure run competitive-intel Airbnb</span>
+<span class="token-comment">//   /iventure run translator "Hello world" --to=is</span>
+<span class="token-comment">//   /iventure status</span>
+<span class="token-comment">//   /iventure help</span>
+
+<span class="token-keyword">function</span> <span class="token-function">verifySlackSignature</span>(req: FastifyRequest): boolean {
+  <span class="token-keyword">const</span> timestamp = req.headers[<span class="token-string">'x-slack-request-timestamp'</span>] <span class="token-keyword">as</span> string;
+  <span class="token-keyword">const</span> slackSig  = req.headers[<span class="token-string">'x-slack-signature'</span>] <span class="token-keyword">as</span> string;
+  <span class="token-keyword">if</span> (!timestamp || !slackSig) <span class="token-keyword">return</span> <span class="token-keyword">false</span>;
+
+  <span class="token-comment">// Reject requests older than 5 minutes</span>
+  <span class="token-keyword">if</span> (Math.abs(Date.now() / 1000 - parseInt(timestamp)) &gt; 300) <span class="token-keyword">return</span> <span class="token-keyword">false</span>;
+
+  <span class="token-keyword">const</span> sigBase = <span class="token-string">`v0:${timestamp}:${req.rawBody}`</span>;
+  <span class="token-keyword">const</span> myHash  = <span class="token-string">'v0='</span> + createHmac(<span class="token-string">'sha256'</span>, process.env.SLACK_SIGNING_SECRET!)
+    .update(sigBase).digest(<span class="token-string">'hex'</span>);
+
+  <span class="token-keyword">return</span> timingSafeEqual(Buffer.from(myHash), Buffer.from(slackSig));
+}
+
+<span class="token-keyword">export async function</span> <span class="token-function">slackCommandHandler</span>(req: FastifyRequest, reply: FastifyReply) {
+  <span class="token-keyword">if</span> (!<span class="token-function">verifySlackSignature</span>(req)) <span class="token-keyword">return</span> reply.status(401).send(<span class="token-string">'Invalid signature'</span>);
+
+  <span class="token-keyword">const</span> { command, text, user_id, team_id } = req.body <span class="token-keyword">as</span> any;
+
+  <span class="token-comment">// Resolve company_id from Slack team_id</span>
+  <span class="token-keyword">const</span> mapping = <span class="token-keyword">await</span> db.query(
+    <span class="token-string">'SELECT company_id FROM slack_integrations WHERE slack_team_id = $1'</span>, [team_id]
+  );
+  <span class="token-keyword">if</span> (!mapping.rows[0]) {
+    <span class="token-keyword">return</span> reply.send({
+      response_type: <span class="token-string">'ephemeral'</span>,
+      text: <span class="token-string">'⚠️ iVenture not connected. Visit your dashboard to connect Slack.'</span>,
+    });
+  }
+  <span class="token-keyword">const</span> { company_id } = mapping.rows[0];
+
+  <span class="token-keyword">const</span> args = text.trim().split(/\s+/);
+  <span class="token-keyword">const</span> subcommand = args[0]?.toLowerCase();
+
+  <span class="token-keyword">if</span> (subcommand === <span class="token-string">'help'</span>) {
+    <span class="token-keyword">return</span> reply.send({
+      response_type: <span class="token-string">'ephemeral'</span>,
+      text: [
+        <span class="token-string">'*iVenture Studio — Slack Commands*'</span>,
+        <span class="token-string">'`/iventure run [skill] [input]` — Run an AI skill'</span>,
+        <span class="token-string">'`/iventure status` — Show platform status'</span>,
+        <span class="token-string">'`/iventure skills` — List available skills'</span>,
+        <span class="token-string">''</span>,
+        <span class="token-string">'*Examples:*'</span>,
+        <span class="token-string">'`/iventure run competitive-intel "Tesla"` — Analyse a competitor'</span>,
+        <span class="token-string">'`/iventure run translator "Hello world" --to=is` — Translate to Icelandic'</span>,
+      ].join(<span class="token-string">'\n'</span>),
+    });
+  }
+
+  <span class="token-keyword">if</span> (subcommand === <span class="token-string">'status'</span>) {
+    <span class="token-keyword">return</span> reply.send({
+      response_type: <span class="token-string">'ephemeral'</span>,
+      text: <span class="token-string">'✅ iVenture Studio is running. All systems operational.'</span>,
+    });
+  }
+
+  <span class="token-keyword">if</span> (subcommand === <span class="token-string">'run'</span> && args[1]) {
+    <span class="token-keyword">const</span> skill_id = args[1];
+    <span class="token-keyword">const</span> rawInput = args.slice(2).join(<span class="token-string">' '</span>);
+
+    <span class="token-comment">// Acknowledge immediately (Slack requires &lt;3s response)</span>
+    reply.send({ response_type: <span class="token-string">'in_channel'</span>, text: <span class="token-string">`⏳ Running *${skill_id}*...`</span> });
+
+    <span class="token-comment">// Run skill async and post result back via response_url</span>
+    <span class="token-keyword">const</span> response_url = (req.body <span class="token-keyword">as</span> any).response_url;
+    runSkill(skill_id, { input: rawInput }, company_id).then(<span class="token-keyword">async</span> (result) =&gt; {
+      <span class="token-keyword">await</span> fetch(response_url, {
+        method: <span class="token-string">'POST'</span>,
+        headers: { <span class="token-string">'Content-Type'</span>: <span class="token-string">'application/json'</span> },
+        body: JSON.stringify({
+          response_type: <span class="token-string">'in_channel'</span>,
+          text: <span class="token-string">`✅ *${skill_id}* complete (€${result.cost_eur?.toFixed(4)})\n\`\`\`${JSON.stringify(result, null, 2).slice(0, 2900)}\`\`\``</span>,
+        }),
+      });
+    }).catch(<span class="token-keyword">async</span> (err) =&gt; {
+      <span class="token-keyword">await</span> fetch(response_url, {
+        method: <span class="token-string">'POST'</span>,
+        headers: { <span class="token-string">'Content-Type'</span>: <span class="token-string">'application/json'</span> },
+        body: JSON.stringify({ text: <span class="token-string">`❌ Skill failed: ${err.message}`</span> }),
+      });
+    });
+
+    <span class="token-keyword">return</span>; <span class="token-comment">// already sent acknowledgement above</span>
+  }
+
+  <span class="token-keyword">return</span> reply.send({ response_type: <span class="token-string">'ephemeral'</span>, text: <span class="token-string">'Unknown command. Try `/iventure help`.'</span> });
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- FDA-v1 Section -->
+        <section id="fda" class="agent-section">
+          <div class="agent-header fda">
+            <div class="agent-icon" style="background-color: var(--agent-fda)">
+              <i data-lucide="layout"></i>
+            </div>
+            <div class="agent-info">
+              <h2>FDA-v1 — Frontend Dev Agent</h2>
+              <div class="agent-meta">Claude Opus 4 | 4 Tasks | 30 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-FDA-02</span> Dark Mode Implementation</div>
+            </div>
+            <pre><span class="code-header">components/ThemeToggle.tsx</span><code><span class="token-keyword">export function</span> <span class="token-function">ThemeToggle</span>() {
+  <span class="token-keyword">const</span> [dark, setDark] = useState(<span class="token-keyword">false</span>);
+
+  useEffect(() =&gt; {
+    <span class="token-keyword">const</span> saved = localStorage.getItem(<span class="token-string">'theme'</span>);
+    <span class="token-keyword">const</span> prefersDark = window.matchMedia(<span class="token-string">'(prefers-color-scheme: dark)'</span>).matches;
+    <span class="token-keyword">const</span> isDark = saved ? saved === <span class="token-string">'dark'</span> : prefersDark;
+    setDark(isDark);
+    document.documentElement.classList.toggle(<span class="token-string">'dark'</span>, isDark);
+  }, []);
+
+  <span class="token-keyword">const</span> toggle = () =&gt; {
+    <span class="token-keyword">const</span> next = !dark;
+    setDark(next);
+    localStorage.setItem(<span class="token-string">'theme'</span>, next ? <span class="token-string">'dark'</span> : <span class="token-string">'light'</span>);
+    document.documentElement.classList.toggle(<span class="token-string">'dark'</span>, next);
+  };
+
+  <span class="token-keyword">return</span> (
+    &lt;button onClick={toggle} className=<span class="token-string">"p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition"</span>
+      aria-label=<span class="token-string">"Toggle dark mode"</span>&gt;
+      {dark ? <span class="token-string">'☀️'</span> : <span class="token-string">'🌙'</span>}
+    &lt;/button&gt;
+  );
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-FDA-04</span> Fortnox Export UI</div>
+            </div>
+            <pre><span class="code-header">components/FortnoxExportButton.tsx</span><code><span class="token-keyword">export function</span> <span class="token-function">FortnoxExportButton</span>({ company_id }: { company_id: string }) {
+  <span class="token-keyword">const</span> [loading, setLoading] = useState(<span class="token-keyword">false</span>);
+  <span class="token-keyword">const</span> [period, setPeriod] = useState&lt;<span class="token-string">'current-month'</span> | <span class="token-string">'last-month'</span> | <span class="token-string">'quarter'</span>&gt;(<span class="token-string">'current-month'</span>);
+
+  <span class="token-keyword">const</span> handleExport = <span class="token-keyword">async</span> () =&gt; {
+    setLoading(<span class="token-keyword">true</span>);
+    <span class="token-keyword">const</span> res = <span class="token-keyword">await</span> fetch(<span class="token-string">`/api/invoices/export/fortnox?period=${period}&company_id=${company_id}`</span>);
+    <span class="token-keyword">const</span> blob = <span class="token-keyword">await</span> res.blob();
+    <span class="token-keyword">const</span> url = URL.createObjectURL(blob);
+    <span class="token-keyword">const</span> a = document.createElement(<span class="token-string">'a'</span>);
+    a.href = url;
+    a.download = <span class="token-string">`iventure-fortnox-${period}-${new Date().toISOString().slice(0,10)}.csv`</span>;
+    a.click();
+    URL.revokeObjectURL(url);
+    setLoading(<span class="token-keyword">false</span>);
+  };
+
+  <span class="token-keyword">return</span> (
+    &lt;div className=<span class="token-string">"flex items-center gap-2"</span>&gt;
+      &lt;select value={period} onChange={e =&gt; setPeriod(e.target.value <span class="token-keyword">as</span> any)}
+        className=<span class="token-string">"text-sm border border-slate-200 rounded-md px-2 py-1.5"</span>&gt;
+        &lt;option value=<span class="token-string">"current-month"</span>&gt;This month&lt;/option&gt;
+        &lt;option value=<span class="token-string">"last-month"</span>&gt;Last month&lt;/option&gt;
+        &lt;option value=<span class="token-string">"quarter"</span>&gt;This quarter&lt;/option&gt;
+      &lt;/select&gt;
+      &lt;button onClick={handleExport} disabled={loading}
+        className=<span class="token-string">"flex items-center gap-2 bg-blue-600 text-white text-sm px-3 py-1.5 rounded-md hover:bg-blue-700"</span>&gt;
+        {loading ? <span class="token-string">'⏳'</span> : <span class="token-string">'📥'</span>} Export to Fortnox
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- SEA-v1 Section -->
+        <section id="sea" class="agent-section">
+          <div class="agent-header sea">
+            <div class="agent-icon" style="background-color: var(--agent-sea)">
+              <i data-lucide="shield"></i>
+            </div>
+            <div class="agent-info">
+              <h2>SEA-v1 — Security Agent</h2>
+              <div class="agent-meta">GPT-5 | 3 Tasks | 24 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-SEA-01</span> Multi-User RBAC Security</div>
+            </div>
+            <pre><span class="code-header">src/api/middleware/rbac.ts</span><code><span class="token-keyword">export function</span> <span class="token-function">requirePermission</span>(permission: string) {
+  <span class="token-keyword">return async</span> (req: FastifyRequest, reply: FastifyReply) =&gt; {
+    <span class="token-keyword">const</span> { company_id, user_id } = req.user ?? {};
+    <span class="token-keyword">if</span> (!company_id || !user_id) <span class="token-keyword">return</span> reply.status(401).send({ error: <span class="token-string">'UNAUTHENTICATED'</span> });
+
+    <span class="token-keyword">const</span> membership = <span class="token-keyword">await</span> db.query(
+      <span class="token-string">"SELECT role FROM team_members WHERE company_id = $1 AND user_id = $2 AND status = 'active'"</span>,
+      [company_id, user_id]
+    );
+
+    <span class="token-keyword">const</span> ownerCheck = <span class="token-keyword">await</span> db.query(
+      <span class="token-string">'SELECT id FROM companies WHERE id = $1 AND owner_user_id = $2'</span>, [company_id, user_id]
+    );
+    <span class="token-keyword">if</span> (ownerCheck.rows[0]) {
+      req.user!.role = <span class="token-string">'owner'</span>;
+      <span class="token-keyword">return</span>; <span class="token-comment">// Owner passes all checks</span>
+    }
+
+    <span class="token-keyword">const</span> role = membership.rows[0]?.role <span class="token-keyword">as</span> TeamRole;
+    <span class="token-keyword">if</span> (!role) <span class="token-keyword">return</span> reply.status(403).send({ error: <span class="token-string">'NOT_A_TEAM_MEMBER'</span> });
+
+    <span class="token-keyword">if</span> (!<span class="token-function">hasPermission</span>(role, permission)) {
+      logger.warn({ company_id, user_id, role, required: permission }, <span class="token-string">'Permission denied'</span>);
+      <span class="token-keyword">return</span> reply.status(403).send({ error: <span class="token-string">'INSUFFICIENT_PERMISSION'</span>, required: permission, your_role: role });
+    }
+
+    req.user!.role = role;
+  };
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-SEA-03</span> ADR-009 Multi-Tenant Security Model</div>
+            </div>
+            <pre><code>ADR-009: Multi-Tenant Security Model
+Date: 2026-03-18 | Status: ACCEPTED | Author: SEA-v1
+
+Context: Sprint 7 introduces team members. We need to ensure strict tenant isolation.
+
+Decision:
+1. Every DB query MUST include company_id filter (enforced by custom ESLint rule)
+2. JWT contains user_id AND company_id — both verified on every request
+3. Team members inherit company_id from invitation — cannot self-assign
+4. RBAC roles (owner/admin/member) scope within company, never across companies
+5. RLS (Row Level Security) enabled on PostgreSQL for all tenant tables
+6. Redis keys always prefixed with company_id
+7. S3 paths always prefixed with company_id</code></pre>
+          </div>
+        </section>
+
+        <!-- QAA-v1 Section -->
+        <section id="qaa" class="agent-section">
+          <div class="agent-header qaa">
+            <div class="agent-icon" style="background-color: var(--agent-qaa)">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <div class="agent-info">
+              <h2>QAA-v1 — QA Agent</h2>
+              <div class="agent-meta">Nemotron | 4 Tasks | 22 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-QAA-04</span> Sprint 7 Coverage Report</div>
+            </div>
+            <pre><code>COVERAGE REPORT — Sprint 7 Cumulative
+════════════════════════════════════════════
+Total files:              124 TypeScript files
+Statement coverage:       94.6%  ✅ (gate: 85%)
+Branch coverage:          90.1%  ✅ (gate: 80%)
+Function coverage:        93.4%  ✅ (gate: 85%)
+────────────────────────────────────────────
+New Sprint 7 tests:       +28 tests
+Running total:            295 tests
+────────────────────────────────────────────
+RBAC middleware:          99.1% stmt (highest)
+Team invite flow:         96.8% stmt
+Slack bot:                94.3% stmt
+Fortnox export:           91.7% stmt
+════════════════════════════════════════════
+ALL GATES PASSING ✅</code></pre>
+          </div>
+        </section>
+
+        <!-- DOA-v1 Section -->
+        <section id="doa" class="agent-section">
+          <div class="agent-header doa">
+            <div class="agent-icon" style="background-color: var(--agent-doa)">
+              <i data-lucide="settings"></i>
+            </div>
+            <div class="agent-info">
+              <h2>DOA-v1 — DevOps Agent</h2>
+              <div class="agent-meta">Nemotron | 4 Tasks | 22 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-DOA-01</span> NemoClaw Dockerfile Commented Step</div>
+            </div>
+            <pre><span class="code-header">docker/Dockerfile</span><code><span class="token-comment"># ==========================================================</span>
+<span class="token-comment"># NemoClaw Integration — Sprint 7 (commented, Sprint 8 target)</span>
+<span class="token-comment"># Status: MONITORING v0.2.1-alpha — awaiting beta + CrowdStrike review</span>
+<span class="token-comment"># ADR-007: https://notion.iventure.studio/adr-007</span>
+<span class="token-comment"># Enable when: NemoClaw reaches RC + criteria 1,4,5 met</span>
+<span class="token-comment"># ==========================================================</span>
+<span class="token-comment"># RUN apt-get update && apt-get install -y curl</span>
+<span class="token-comment"># RUN curl -fsSL https://nvidia.com/nemoclaw.sh | bash</span>
+<span class="token-comment"># COPY nemoclaw-policy.yaml /etc/nemoclaw/policy.yaml</span>
+<span class="token-comment"># RUN nemoclaw onboard --config /etc/nemoclaw/policy.yaml --non-interactive</span>
+<span class="token-comment"># ==========================================================</span></code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-DOA-02</span> Database Migration v1.4</div>
+            </div>
+            <pre><span class="code-header">postgres-migrate-v1.4.sql</span><code><span class="token-keyword">CREATE TABLE IF NOT EXISTS</span> team_members (
+  id           UUID <span class="token-keyword">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  company_id   UUID <span class="token-keyword">NOT NULL REFERENCES</span> companies(id) <span class="token-keyword">ON DELETE CASCADE</span>,
+  user_id      UUID <span class="token-keyword">NOT NULL REFERENCES</span> users(id) <span class="token-keyword">ON DELETE CASCADE</span>,
+  role         <span class="token-keyword">VARCHAR</span>(20) <span class="token-keyword">NOT NULL DEFAULT</span> <span class="token-string">'member'</span>,
+  status       <span class="token-keyword">VARCHAR</span>(20) <span class="token-keyword">DEFAULT</span> <span class="token-string">'active'</span>,
+  joined_at    TIMESTAMPTZ <span class="token-keyword">DEFAULT</span> NOW(),
+  <span class="token-keyword">UNIQUE</span>(company_id, user_id)
+);
+
+<span class="token-keyword">CREATE TABLE IF NOT EXISTS</span> slack_integrations (
+  company_id      UUID <span class="token-keyword">PRIMARY KEY REFERENCES</span> companies(id) <span class="token-keyword">ON DELETE CASCADE</span>,
+  slack_team_id   <span class="token-keyword">VARCHAR</span>(50) <span class="token-keyword">NOT NULL UNIQUE</span>,
+  slack_team_name <span class="token-keyword">VARCHAR</span>(255),
+  access_token    TEXT <span class="token-keyword">NOT NULL</span>,
+  connected_at    TIMESTAMPTZ <span class="token-keyword">DEFAULT</span> NOW()
+);</code></pre>
+          </div>
+        </section>
+
+        <!-- PMA-v1 Section -->
+        <section id="pma" class="agent-section">
+          <div class="agent-header pma">
+            <div class="agent-icon" style="background-color: var(--agent-pma)">
+              <i data-lucide="map"></i>
+            </div>
+            <div class="agent-info">
+              <h2>PMA-v1 — Product Agent</h2>
+              <div class="agent-meta">Qwen-turbo | 5 Tasks | 36 Pts</div>
+            </div>
+          </div>
+
+          <div class="revenue-milestone">
+            <h3><i data-lucide="rocket"></i> 🚀 Total MRR: €2,837 (3.2× Growth)</h3>
+            <div class="revenue-stats">
+              <div class="stat-item">
+                <div class="stat-label">Current MRR</div>
+                <div class="stat-value">€2,837</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Iceland</div>
+                <div class="stat-value">5/5 Converted</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Norway</div>
+                <div class="stat-value">157% ROI</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Next Target</div>
+                <div class="stat-value">€5,000</div>
+              </div>
+            </div>
+            <p style="margin-top: 16px; font-size: 0.9rem; color: #064e3b">
+              Sprint 5: €496 → Sprint 6: €890 (target) → Sprint 7: €2,837 (ACTUAL). Path to €10K: 2-3 months.
+            </p>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-PMA-01</span> DACH Market Research</div>
+            </div>
+            <div class="doc-view">
+              <h3>Market Overview</h3>
+              <ul>
+                <li><strong>Germany:</strong> 3.5M SMBs, privacy-conscious Mittelstand. Launch Month 6.</li>
+                <li><strong>Switzerland:</strong> Highest revenue per SMB. Multilingual need.</li>
+                <li><strong>TAM:</strong> €69M/month (5x larger than Nordics).</li>
+                <li><strong>Strategy:</strong> Perfect playbook in Sweden first, then enter DACH with proven system.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S7-PMA-05</span> Sprint 8 Planning</div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Task</th>
+                  <th>Agent</th>
+                  <th>Points</th>
+                  <th>Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>DATEV Export (DE)</td>
+                  <td>BDA-v1</td>
+                  <td>5</td>
+                  <td>P0</td>
+                </tr>
+                <tr>
+                  <td>Trial Conversion Auto</td>
+                  <td>BDA-v1</td>
+                  <td>5</td>
+                  <td>P0</td>
+                </tr>
+                <tr>
+                  <td>Partner Referral Links</td>
+                  <td>BDA-v1</td>
+                  <td>8</td>
+                  <td>P0</td>
+                </tr>
+                <tr>
+                  <td>BankID Integration</td>
+                  <td>BDA+DOA</td>
+                  <td>21</td>
+                  <td>P1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <h3>Sprint 8 Preview</h3>
+              <ul style="list-style: none; margin-top: 10px; line-height: 1.8">
+                <li>• DATEV Export</li>
+                <li>• BankID Integration</li>
+                <li>• Partner Referrals</li>
+                <li>• Billing Portal v2</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Save Location</h3>
+              <code style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px"
+                >/iventure-studio/strategy/SPRINT-7-DELIVERABLES.html</code
+              >
+            </div>
+          </div>
+          <div style="text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px">
+            © 2026 iVenture Studio • Agents-as-a-Service • Vestmannaeyjar, Iceland
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
+</document>

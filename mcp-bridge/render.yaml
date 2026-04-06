@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: iventure-mcp-bridge
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python mcp_bridge_server.py
+    envVars:
+      - key: SKYWORK_MCP_TOKEN
+        sync: false        # set in Render dashboard — never commit to git
+      - key: GENSPARK2API_SESSION
+        sync: false        # set in Render dashboard
+      - key: GENSPARK_API_BASE
+        value: https://www.genspark.ai/api
+      - key: VIC_API_BASE
+        value: https://api.iventure.studio/v5
+      - key: PORT
+        value: "8080"

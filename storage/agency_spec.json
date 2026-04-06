@@ -1,0 +1,23 @@
+{
+  "title": "Vinland Security",
+  "hero": "<h1>Vinland Security</h1><p>Frontier Resilience for the US AI Economy</p>",
+  "description": "Hardening US Solopreneurs with NIST-compliant Autonomous Agents.",
+  "features": [
+    "NIST AI RMF 1.0 Implementation",
+    "NVIDIA NemoClaw-Hardened Infrastructure",
+    "Agents-as-a-Service (AaaS) for SMBs"
+  ],
+  "pricing": [
+    {
+      "tier": "Spark",
+      "price": "$49/mo",
+      "focus": "Basic Compliance"
+    },
+    {
+      "tier": "Growth",
+      "price": "$149/mo",
+      "focus": "Scaling Agencies"
+    }
+  ],
+  "cta": "Launch Your Hardened Node"
+}

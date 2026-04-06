@@ -1,0 +1,58 @@
+# NVIDIA NemoClaw — OpenShell Security Policy
+# [S4.5] Deny-by-Default Egress Configuration
+# Version: 1.0.0 (US Genesis Node 01)
+# 2026-03-23
+
+metadata:
+  name: ivs-genesis-security-substrate
+  namespace: iventure-studio
+
+spec:
+  # 1. SSRF PROTECTION: Block all private IP ranges
+  blocked_ips:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - 169.254.169.254/32  # AWS/Azure/GCP Metadata
+    - 127.0.0.1/32
+
+  # 2. ALLOWLIST: Explicit egress only
+  allowed_domains:
+    - api.skyworkmodel.ai
+    - api.stripe.com
+    - accounts.google.com
+    - sheets.googleapis.com
+    - docs.googleapis.com
+    - slack.com
+    - github.com
+    - openclaw.ai
+
+  # 3. LAYER 7 FILTERING (Method + Path matching)
+  rules:
+    - name: skywork-inference
+      domain: api.skyworkmodel.ai
+      methods: [POST]
+      paths: ["/v1/chat/completions", "/v1/embeddings"]
+    
+    - name: stripe-payments
+      domain: api.stripe.com
+      methods: [POST, GET]
+      paths: ["/v1/checkout/sessions", "/v1/subscriptions/*"]
+
+    - name: google-workspace
+      domain: "*.googleapis.com"
+      methods: [GET, PUT, POST]
+      paths: ["/v4/spreadsheets/*", "/v1/documents/*"]
+
+  # 4. PRIVACY ROUTER (Credential Stripping)
+  privacy:
+    strip_headers: ["Authorization", "X-Api-Key", "Cookie"]
+    inject_tokens: true
+    managed_by: iventure-orchestrator
+
+  # 5. ISOLATION
+  sandbox:
+    isolation_level: kernel-hardened
+    syscall_filter: seccomp-default
+    filesystem_mode: read-only
+    writable_paths: ["/app/memory", "/app/logs"]
