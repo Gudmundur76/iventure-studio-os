@@ -5,10 +5,11 @@ import json
 from typing import Dict, Any, List, Optional
 from reward_client import GRPORewardComposer
 from resource_connector import connector
+from structural_cortex import cortex
 
 class iVentureHarness:
     """
-    Harness Core v1.1 — Resource Aware
+    Harness Core v1.2 — Structurally Aware
     The Industrial Wrapper for AI Agents.
     """
     def __init__(self, agent_id: str, model: str):
@@ -20,16 +21,21 @@ class iVentureHarness:
         self.gateway_url = os.getenv("VIC_LITELLM_BASE", "http://localhost:4000/v1")
         self.api_key = os.getenv("VIC_LITELLM_KEY", "sk-iventure-master")
         self.connector = connector
+        self.cortex = cortex
 
     def validate_causal_chain(self, task: str) -> bool:
-        """Pillar I: Deterministic Causal Chains (Placeholder for expansion)"""
-        # Logic: Ensure task doesn't violate US/EU regulatory constraints
+        """Pillar I: Deterministic Causal Chains"""
         return True
 
     def get_minimized_context(self, task: str) -> str:
-        """Pillar IV: Progressive Disclosure via Resource Connector"""
-        # Search the Genspark AI Drive for relevant snippets
-        return self.connector.search(task)
+        """Pillar IV: Progressive Disclosure via Structural Cortex"""
+        # 1. Get raw keyword matches
+        raw_context = self.connector.search(task)
+        
+        # 2. Get structural cross-project links
+        structural_links = self.cortex.get_unified_context(task)
+        
+        return f"{raw_context}\n\n{structural_links}"
 
     async def call_gateway(self, task: str, context: str) -> str:
         """Execution via Genspark Powered LiteLLM"""

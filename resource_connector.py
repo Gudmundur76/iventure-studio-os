@@ -18,9 +18,9 @@ class GensparkResourceConnector:
         keywords = query.lower().split()
         results = []
         
-        # Scan all .md and .txt files in the Drive
-        files = glob.glob(os.path.join(self.base_path, "**/*.md"), recursive=True) + \
-                glob.glob(os.path.join(self.base_path, "**/*.txt"), recursive=True)
+        # Scan all .md and .txt files in the Drive, excluding venv
+        files = [f for f in glob.glob(os.path.join(self.base_path, "**/*.md"), recursive=True) if "/venv/" not in f] + \
+                [f for f in glob.glob(os.path.join(self.base_path, "**/*.txt"), recursive=True) if "/venv/" not in f]
 
         for file_path in files:
             try:

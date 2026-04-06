@@ -27,6 +27,11 @@ The realization of the iVenture Brain is that it can run **systematically foreve
 - **Logic:** How components communicate. Harnesses never "talk"—they **exchange state**. 
 - **Rule:** One harness produces an Artifact; another harness consumes it. This "Artifact-Driven" communication prevents context-drowning and ensures systematic reliability.
 
+### Layer D: The "Structural Cortex" (Unified Component)
+- **Component:** `StructuralCortex`
+- **Logic:** Identifies "Hidden Synapses" between projects. 
+- **Function:** It maps shared entities (e.g., "FDA" or "Harness Standards") across disparate directories. When an agent works on a Biotech task, the Structural Cortex automatically identifies related Architecture or Regulatory artifacts from other projects, creating a **Unified Intelligence Context**.
+
 ## 🛠️ 3. Systematic Development Protocol
 To expand the brain, we follow the "Compound Order":
 - **Step 1: Ingest Context** (Upload MD/PDF to AI Drive).
