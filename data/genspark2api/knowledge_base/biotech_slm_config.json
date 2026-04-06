@@ -1,0 +1,43 @@
+{
+	"dataset": {
+		"data_division": 0.9,
+		"load_from_file": true,
+		"path": "/iventure-studio/vic_zero/strawberry_biotech_slm/data/biotech_training.bin"
+	},
+	"checkpoints": {
+		"path": "/iventure-studio/vic_zero/strawberry_biotech_slm/checkpoints",
+		"interval": 1000,
+		"create_checkpoints": true
+	},
+	"model_hyperparams": {
+		"vocab_size": 16384,
+		"block_size": 2048,
+		"n_layer": 6,
+		"n_head": 8,
+		"n_embd": 128
+	},
+	"optimizer_hyperparams": {
+		"eps": 1e-10,
+		"beta1": 0.9,
+		"beta2": 0.95,
+		"weight_decay": 0.1,
+		"use_muon": true,
+		"momentum": 0.95
+	},
+	"model_path": "/iventure-studio/vic_zero/strawberry_biotech_slm/biotech_slm_v1.strawberry",
+	"encoder_path": "/iventure-studio/vic_zero/strawberry_biotech_slm/encoder.bin",
+	"init_from": "scratch",
+	"seed": 42,
+	"gradient_accumulation_steps": 4,
+	"batch_size": 8,
+	"max_iters": 20000,
+	"eval_interval": 1000,
+	"log_interval": 100,
+	"eval_iters": 100,
+	"decay_lr": true,
+	"lr_decay_iters": 20000,
+	"learning_rate": 5e-4,
+	"cooldown_frac": 0.2,
+	"warmup_iters": 1000,
+	"min_lr": 5e-5
+}
