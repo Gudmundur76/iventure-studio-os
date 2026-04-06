@@ -46,6 +46,12 @@ agents:
     model: "gpt-5-minimal"
     description: "Sprint planning, backlog management, and deadline tracking."
 
+  - id: "financial-v1"
+    name: "Financial Analyst"
+    role: "OPC Financials / Tax"
+    model: "deepseek-r1"
+    description: "US/EU tax compliance, cashflow modeling, and revenue optimization."
+
   - id: "subsidy-advisor"
     name: "GTM Consultant"
     role: "US/EU GTM / NIST Compliance"
