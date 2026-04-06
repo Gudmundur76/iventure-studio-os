@@ -1,0 +1,108 @@
+# ============================================================
+# iVenture Studio — LiteLLM Model Gateway Config (Phase 2)
+# Place at: /iventure.studio/deployment/config/litellm_config.yaml
+# ============================================================
+
+model_list:
+
+  # ── GENSPARK POOL (Primary — via OpenClaw) ──────────────────
+  - model_name: gpt-5
+    litellm_params:
+      model: openai/gpt-5
+      api_base: http://iventure-openclaw-orchestrator:8090/v1
+      api_key: os.environ/INTERNAL_API_KEY
+      
+  - model_name: claude-opus-4
+    litellm_params:
+      model: openai/claude-opus-4
+      api_base: http://iventure-openclaw-orchestrator:8090/v1
+      api_key: os.environ/INTERNAL_API_KEY
+
+  - model_name: deepseek-r1
+    litellm_params:
+      model: openai/deepseek-r1
+      api_base: http://iventure-openclaw-orchestrator:8090/v1
+      api_key: os.environ/INTERNAL_API_KEY
+
+  - model_name: grok-4
+    litellm_params:
+      model: openai/grok-4
+      api_base: http://iventure-openclaw-orchestrator:8090/v1
+      api_key: os.environ/INTERNAL_API_KEY
+
+  - model_name: gemini-2.5-pro
+    litellm_params:
+      model: openai/gemini-2.5-pro
+      api_base: http://iventure-openclaw-orchestrator:8090/v1
+      api_key: os.environ/INTERNAL_API_KEY
+
+  - model_name: o3
+    litellm_params:
+      model: openai/o3
+      api_base: http://iventure-openclaw-orchestrator:8090/v1
+      api_key: os.environ/INTERNAL_API_KEY
+
+  # ── GENSPARK POOL — simulation-optimised alias ──────────────
+  - model_name: genspark-pool
+    litellm_params:
+      model: openai/deepseek-r1
+      api_base: http://iventure-openclaw-orchestrator:8090/v1
+      api_key: os.environ/INTERNAL_API_KEY
+
+  # ── DIRECT FALLBACKS (fill API keys in .env) ────────────────
+  - model_name: openai/gpt-4o
+    litellm_params:
+      model: gpt-4o
+      api_key: os.environ/OPENAI_API_KEY
+
+  - model_name: anthropic/claude-3-5-sonnet
+    litellm_params:
+      model: claude-3-5-sonnet-20241022
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: groq/llama-3.3-70b
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+
+  - model_name: google/gemini-2.0-flash
+    litellm_params:
+      model: gemini/gemini-2.0-flash-exp
+      api_key: os.environ/GOOGLE_AI_API_KEY
+
+# ── Router Settings ──────────────────────────────────────────
+router_settings:
+  routing_strategy: least-busy
+  num_retries: 3
+  timeout: 120
+  retry_after: 5
+  allowed_fails: 2
+  fallbacks:
+    - gpt-5: ["claude-opus-4", "deepseek-r1", "openai/gpt-4o"]
+    - claude-opus-4: ["gpt-5", "anthropic/claude-3-5-sonnet"]
+    - deepseek-r1: ["gpt-5", "groq/llama-3.3-70b"]
+
+# ── General Settings ─────────────────────────────────────────
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+  store_model_in_db: true
+  request_timeout: 120
+  drop_params: false
+  set_verbose: false
+
+# ── Pass-through Headers ─────────────────────────────────────
+pass_through_endpoints:
+  - path: "/v1/chat/completions"
+    headers:
+      - "X-Company-Slug"
+      - "X-Node-ID"
+      - "X-Simulation-Mode"
+
+# ── Cache (Redis) ────────────────────────────────────────────
+cache:
+  type: redis
+  host: iventure-redis
+  port: 6379
+  password: os.environ/REDIS_PASSWORD
+  ttl: 3600

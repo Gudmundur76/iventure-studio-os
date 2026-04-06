@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iVenture MDA-v1 — Sprint Board v2.1</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+    <style>
+      :root {
+        --background-color: #0d1117;
+        --card-background: #161b22;
+        --text-color: #c9d1d9;
+        --border-color: #30363d;
+        --primary-color: #58a6ff;
+        --success-color: #238636;
+        --warning-color: #d29922;
+        --danger-color: #da3633;
+        --purple-color: #8957e5;
+        --gradient-pivot: linear-gradient(90deg, #8957e5 0%, #58a6ff 100%);
+        --gradient-nvidia: linear-gradient(90deg, #238636 0%, #2ea043 100%);
+      }
+
+      body {
+        background-color: var(--background-color);
+        color: var(--text-color);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+          'Segoe UI Emoji';
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+      }
+
+      .header-container {
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+
+      .header-title h1 {
+        font-size: 2.5rem;
+        margin-bottom: 5px;
+      }
+
+      .header-subtitle {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+
+      .header-meta {
+        text-align: right;
+        font-size: 0.9rem;
+        color: #8b949e;
+      }
+
+      .status-live {
+        background-color: var(--success-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+        font-size: 0.8rem;
+        margin-left: 10px;
+        vertical-align: middle;
+      }
+
+      /* Metrics Cards */
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .metric-card {
+        background-color: var(--card-background);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .metric-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .metric-label {
+        font-size: 0.9rem;
+        color: #8b949e;
+      }
+
+      /* Banners */
+      .banner {
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 20px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .banner-pivot {
+        background: var(--gradient-pivot);
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+      }
+
+      .banner-pivot a {
+        color: white;
+        text-decoration: underline;
+        margin-left: 10px;
+      }
+
+      .banner-nvidia {
+        background: var(--gradient-nvidia);
+        border: 1px solid #3fb950;
+      }
+
+      .banner-nvidia h3 {
+        margin-top: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nvidia-details {
+        background-color: rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        border-radius: 4px;
+        margin-top: 15px;
+        font-family: monospace;
+        font-size: 0.9rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        font-size: 0.95rem;
+      }
+
+      th {
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 2px solid var(--border-color);
+        color: #8b949e;
+        font-weight: 600;
+      }
+
+      td {
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+      }
+
+      /* Badges */
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      .badge-green {
+        background-color: rgba(35, 134, 54, 0.2);
+        color: #3fb950;
+        border: 1px solid rgba(35, 134, 54, 0.4);
+      }
+      .badge-yellow {
+        background-color: rgba(210, 153, 34, 0.2);
+        color: #d29922;
+        border: 1px solid rgba(210, 153, 34, 0.4);
+      }
+      .badge-blue {
+        background-color: rgba(56, 139, 253, 0.2);
+        color: #58a6ff;
+        border: 1px solid rgba(56, 139, 253, 0.4);
+      }
+      .badge-red {
+        background-color: rgba(218, 54, 51, 0.2);
+        color: #f85149;
+        border: 1px solid rgba(218, 54, 51, 0.4);
+      }
+      .badge-purple {
+        background-color: rgba(137, 87, 229, 0.2);
+        color: #bc8cff;
+        border: 1px solid rgba(137, 87, 229, 0.4);
+      }
+
+      /* Sprint Sections */
+      .sprint-section {
+        background-color: var(--card-background);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 25px;
+        margin-bottom: 30px;
+      }
+
+      .sprint-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+      }
+
+      .sprint-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .sprint-meta {
+        color: #8b949e;
+        font-size: 0.9rem;
+      }
+
+      /* Tasks */
+      .task-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .agent-group {
+        margin-bottom: 25px;
+      }
+
+      .agent-header {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .task-card {
+        background-color: #0d1117;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 12px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .task-content {
+        flex-grow: 1;
+      }
+
+      .task-id {
+        font-family: monospace;
+        color: #8b949e;
+        font-size: 0.85rem;
+        margin-right: 10px;
+      }
+
+      .task-desc {
+        color: #c9d1d9;
+        font-size: 0.95rem;
+      }
+
+      .task-points {
+        background-color: #21262d;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 2px 8px;
+        font-size: 0.8rem;
+        color: #8b949e;
+        white-space: nowrap;
+        margin-left: 15px;
+      }
+
+      /* Highlight Section */
+      .highlight-section {
+        background: linear-gradient(180deg, rgba(35, 134, 54, 0.05) 0%, rgba(13, 17, 23, 0) 100%);
+        border: 1px solid rgba(35, 134, 54, 0.3);
+        border-radius: 6px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .highlight-title {
+        color: #3fb950;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .alert-box {
+        background-color: rgba(210, 153, 34, 0.1);
+        border: 1px solid rgba(210, 153, 34, 0.4);
+        color: #d29922;
+        padding: 15px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        margin-top: 20px;
+      }
+
+      .governance-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        background-color: #161b22;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 20px;
+        font-size: 0.9rem;
+      }
+
+      .footer {
+        margin-top: 50px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+        text-align: center;
+        color: #8b949e;
+        font-size: 0.85rem;
+      }
+
+      .footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        margin: 0 10px;
+      }
+
+      .strikethrough {
+        text-decoration: line-through;
+        color: #484f58;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header-container">
+      <div class="header-title">
+        <h1>iVenture MDA-v1 — Sprint Board v2.1</h1>
+        <div class="header-subtitle">
+          Post-Pivot: Western Markets · NemoClaw Integration <span class="status-live">LIVE</span>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div>Date: 2026-03-18</div>
+        <div>Version: v2.1 (Updated from v2.0)</div>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-value">287 pts</span>
+        <span class="metric-label">Active Story Points (S3+S4)</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value">7 Agents</span>
+        <span class="metric-label">Full Team Active</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value" style="color: #3fb950">+8 pts</span>
+        <span class="metric-label">NemoClaw Prep Added</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-value" style="color: #3fb950">~$100K</span>
+        <span class="metric-label">China Legal Costs Avoided</span>
+      </div>
+    </div>
+
+    <!-- Pivot Banner -->
+    <div class="banner banner-pivot">
+      CHINA DROPPED · WESTERN MARKETS FULL FOCUS · FDA-v1 ACTIVATED · NVIDIA NEMOCLAW TAILWIND
+      <a href="https://www.genspark.ai/api/files/s/Nr5kBP7L" target="_blank">View Strategy Doc ↗</a>
+    </div>
+
+    <!-- NVIDIA Tailwind Banner -->
+    <div class="banner banner-nvidia">
+      <h3>🚀 NVIDIA TAILWIND</h3>
+      <p>
+        "On March 16, 2026, Jensen Huang declared at GTC 2026: 'OpenClaw is the most important software release probably
+        ever' and 'The future is agents-as-a-service, not software-as-a-service.' iVenture Studio was already building
+        this. NemoClaw gives us NVIDIA's security layer for free."
+      </p>
+      <div class="nvidia-details">
+        <div><strong>Status:</strong> ALPHA (2026-03-16) | Ubuntu 22.04+ | Docker</div>
+        <div><strong>Install:</strong> <code>curl -fsSL https://nvidia.com/nemoclaw.sh | bash</code></div>
+        <div>
+          <strong>GitHub:</strong>
+          <a href="https://github.com/NVIDIA/NemoClaw" style="color: white; text-decoration: underline"
+            >NVIDIA/NemoClaw</a
+          >
+        </div>
+        <div>
+          <strong>Official:</strong>
+          <a href="https://www.nvidia.com/en-us/ai/nemoclaw/" style="color: white; text-decoration: underline"
+            >nvidia.com/nemoclaw</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Roster -->
+    <h3>7-Agent Roster</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Role</th>
+          <th>Model</th>
+          <th>Cost/Run</th>
+          <th>Sprint 1</th>
+          <th>Sprint 2</th>
+          <th>Sprint 3</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>MDA-v1</strong></td>
+          <td>Master Dev Agent / PM</td>
+          <td>Kimi K2.5</td>
+          <td>€0.01</td>
+          <td><span class="badge badge-green">✅</span></td>
+          <td><span class="badge badge-green">✅</span></td>
+          <td><span class="badge badge-yellow">🟡 ACTIVE</span></td>
+          <td><span class="badge badge-green">ACTIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>BDA-v1</strong></td>
+          <td>Backend Dev Agent</td>
+          <td>Kimi K2.5</td>
+          <td>€0.01</td>
+          <td><span class="badge badge-green">✅ DONE</span></td>
+          <td><span class="badge badge-green">✅ DONE</span></td>
+          <td><span class="badge badge-yellow">🟡 ACTIVE</span></td>
+          <td><span class="badge badge-green">ACTIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>DOA-v1</strong></td>
+          <td>DevOps Agent</td>
+          <td>Nemotron-3-Super</td>
+          <td>€0.00</td>
+          <td><span class="badge badge-green">✅ DONE</span></td>
+          <td><span class="badge badge-green">✅ DONE</span></td>
+          <td><span class="badge badge-yellow">🟡 ACTIVE</span></td>
+          <td><span class="badge badge-green">ACTIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>QAA-v1</strong></td>
+          <td>QA Agent</td>
+          <td>Nemotron-3-Super</td>
+          <td>€0.00</td>
+          <td><span class="badge badge-green">✅ DONE</span></td>
+          <td><span class="badge badge-green">✅ DONE</span></td>
+          <td><span class="badge badge-yellow">🟡 ACTIVE</span></td>
+          <td><span class="badge badge-green">ACTIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>SEA-v1</strong></td>
+          <td>Security Agent</td>
+          <td>GPT-5</td>
+          <td>€0.03</td>
+          <td><span class="badge badge-green">✅ DONE</span></td>
+          <td><span class="badge badge-yellow">🟡 ACTIVE</span></td>
+          <td><span class="badge badge-yellow">🟡 ACTIVE</span></td>
+          <td><span class="badge badge-green">ACTIVE</span></td>
+        </tr>
+        <tr>
+          <td><strong>FDA-v1</strong></td>
+          <td>Frontend Dev Agent</td>
+          <td>Claude Opus 4</td>
+          <td>€0.02</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge badge-purple">🆕 FIRST SPRINT</span></td>
+          <td><span class="badge badge-purple">NEWLY ACTIVATED</span></td>
+        </tr>
+        <tr>
+          <td><strong>PMA-v1</strong></td>
+          <td>PM Agent</td>
+          <td>Qwen-turbo</td>
+          <td>€0.005</td>
+          <td>—</td>
+          <td>—</td>
+          <td><span class="badge badge-purple">🆕 FIRST SPRINT</span></td>
+          <td><span class="badge badge-purple">NEWLY ACTIVATED</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Sprint Overview -->
+    <h3>Sprint Overview</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Sprint</th>
+          <th>Status</th>
+          <th>Points</th>
+          <th>Focus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sprint 0</td>
+          <td><span class="badge badge-green">✅ COMPLETE</span></td>
+          <td>29 pts</td>
+          <td>Team infrastructure, MDA Sprint Board</td>
+        </tr>
+        <tr>
+          <td>Sprint 1</td>
+          <td><span class="badge badge-green">✅ COMPLETE</span></td>
+          <td>99 pts</td>
+          <td>VentureClaw Core, Tests, Security, CI/CD</td>
+        </tr>
+        <tr>
+          <td>Sprint 2</td>
+          <td><span class="badge badge-green">✅ COMPLETE</span></td>
+          <td>63 pts</td>
+          <td>VMOA Skills, CF Workers, E2E Tests</td>
+        </tr>
+        <tr style="background-color: rgba(210, 153, 34, 0.05)">
+          <td>Sprint 3</td>
+          <td><span class="badge badge-yellow">🟡 ACTIVE</span></td>
+          <td>147 pts</td>
+          <td>Frontend, Stripe, GDPR, NemoClaw prep (+8 pts new)</td>
+        </tr>
+        <tr>
+          <td>Sprint 4</td>
+          <td><span class="badge badge-blue">📋 PLANNED</span></td>
+          <td>~140 pts</td>
+          <td>K8s, NemoClaw adoption, production deploy</td>
+        </tr>
+        <tr>
+          <td>China Cluster</td>
+          <td><span class="badge badge-red">❌ CANCELLED</span></td>
+          <td class="strikethrough">~~81 pts~~</td>
+          <td>Dropped: ICP barrier, PIPL, legal costs</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Sprint 3 Detail -->
+    <div class="sprint-section">
+      <div class="sprint-header">
+        <div class="sprint-title">
+          <span class="badge badge-yellow" style="font-size: 1rem">🟡 SPRINT 3: ACTIVE</span>
+          Frontend, Stripe & GDPR Focus
+        </div>
+        <div class="sprint-meta">Total: 147 pts</div>
+      </div>
+
+      <!-- BDA Tasks -->
+      <div class="agent-group">
+        <div class="agent-header">BDA-v1 Tasks</div>
+        <div class="task-list">
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-BDA-01</span>
+              <span class="task-desc"
+                >Stripe payment integration (SPARK €49, GROWTH €149, SCALE €299, EMPIRE €999)</span
+              >
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-BDA-02</span>
+              <span class="task-desc">GDPR consent flow + data retention policies</span>
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-BDA-03</span>
+              <span class="task-desc">Company onboarding API (POST /api/v1/companies/onboard)</span>
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-BDA-04</span>
+              <span class="task-desc"
+                >Replace PIPLRouter with GDPRRouter (block .cn TLDs with 403, EU data residency only)</span
+              >
+            </div>
+            <span class="task-points">3 pts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOA Tasks -->
+      <div class="agent-group">
+        <div class="agent-header">DOA-v1 Tasks</div>
+        <div class="task-list">
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-DOA-01</span>
+              <span class="task-desc">Kubernetes manifests (Deployment, Service, HPA, PDB) for eu-central-1</span>
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-DOA-02</span>
+              <span class="task-desc">Grafana dashboard JSON (7 VentureClaw metrics + cost tracking)</span>
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-DOA-03</span>
+              <span class="task-desc"
+                >Push-button provision script (provision.sh — auto-registers brick in DynamoDB)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-DOA-04</span>
+              <span class="task-desc"
+                >Full semantic-release config (.releaserc.json, conventional commits enforced)</span
+              >
+            </div>
+            <span class="task-points">3 pts</span>
+          </div>
+          <div class="task-card" style="border-left: 3px solid #8957e5">
+            <div class="task-content">
+              <span class="task-id">S3-DOA-05</span>
+              <span class="badge badge-purple" style="margin-right: 8px">🆕 NEMOCLAW</span>
+              <span class="task-desc"
+                >Star + watch NVIDIA/NemoClaw GitHub, document alpha limitations, add compatibility notes to
+                Dockerfile</span
+              >
+            </div>
+            <span class="task-points">2 pts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- QAA Tasks -->
+      <div class="agent-group">
+        <div class="agent-header">QAA-v1 Tasks</div>
+        <div class="task-list">
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-QAA-01</span>
+              <span class="task-desc"
+                >Chaos engineering tests (kill Redis, kill PostgreSQL, kill BullMQ — verify graceful degradation)</span
+              >
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-QAA-02</span>
+              <span class="task-desc">Cross-border E2E (EU → UK → ANZ routing validation)</span>
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-QAA-03</span>
+              <span class="task-desc"
+                >Stripe payment integration tests (webhook verification, subscription lifecycle)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-QAA-04</span>
+              <span class="task-desc">Grafana performance baselines (P50/P95/P99 established for all 7 metrics)</span>
+            </div>
+            <span class="task-points">3 pts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEA Tasks -->
+      <div class="agent-group">
+        <div class="agent-header">SEA-v1 Tasks</div>
+        <div class="task-list">
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-SEA-01</span>
+              <span class="task-desc"
+                >Slack security-alerts webhook (critical CVE + anomaly detection → #sec-alerts)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-SEA-02</span>
+              <span class="task-desc"
+                >Anomaly detection on /execute endpoint (rate spike, cost spike, geo anomaly)</span
+              >
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-SEA-03</span>
+              <span class="task-desc">Penetration test checklist (OWASP WSTG top 20 test cases documented)</span>
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card" style="border-left: 3px solid #8957e5">
+            <div class="task-content">
+              <span class="task-id">S3-SEA-05</span>
+              <span class="badge badge-purple" style="margin-right: 8px">🆕 NEMOCLAW</span>
+              <span class="task-desc"
+                >Write ADR-007 — NemoClaw adoption decision (plan to adopt OpenShell as security substrate in Sprint
+                4)</span
+              >
+            </div>
+            <span class="task-points">2 pts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FDA Tasks -->
+      <div class="agent-group">
+        <div class="agent-header">
+          FDA-v1 Tasks
+          <span class="badge badge-purple" style="margin-left: 10px">🆕 FIRST SPRINT</span>
+        </div>
+        <div class="task-list">
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-FDA-01</span>
+              <span class="task-desc"
+                >React/Next.js dashboard shell (company settings, brick status, cost tracker UI)</span
+              >
+            </div>
+            <span class="task-points">13 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-FDA-02</span>
+              <span class="task-desc">OpenClaw provisioning UI (push-button provision form + status polling)</span>
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-FDA-03</span>
+              <span class="task-desc"
+                >SPARK landing page (Framer/Webflow export or Next.js, hero + pricing table + CTA)</span
+              >
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-FDA-04</span>
+              <span class="task-desc"
+                >Stripe checkout integration (embedded checkout for SPARK/GROWTH/SCALE/EMPIRE)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card" style="border-left: 3px solid #8957e5">
+            <div class="task-content">
+              <span class="task-id">S3-FDA-05</span>
+              <span class="badge badge-purple" style="margin-right: 8px">🆕 NEMOCLAW</span>
+              <span class="task-desc"
+                >Add "Powered by NVIDIA NemoClaw" badge component to landing page + dashboard header</span
+              >
+            </div>
+            <span class="task-points">2 pts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PMA Tasks -->
+      <div class="agent-group">
+        <div class="agent-header">
+          PMA-v1 Tasks
+          <span class="badge badge-purple" style="margin-left: 10px">🆕 FIRST SPRINT</span>
+        </div>
+        <div class="task-list">
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-PMA-01</span>
+              <span class="task-desc"
+                >Nordic SMB go-to-market plan (Iceland → Norway → Denmark → Sweden → Finland pipeline)</span
+              >
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-PMA-02</span>
+              <span class="task-desc">5 beta user outreach (Icelandic accountants, consultants, SMB owners)</span>
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-PMA-03</span>
+              <span class="task-desc"
+                >Cortex Partner program outreach (2 target partners: IT consultants in IS + NO)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S3-PMA-04</span>
+              <span class="task-desc">Product Hunt launch preparation (assets, description, hunter outreach)</span>
+            </div>
+            <span class="task-points">3 pts</span>
+          </div>
+          <div class="task-card" style="border-left: 3px solid #8957e5">
+            <div class="task-content">
+              <span class="task-id">S3-PMA-05</span>
+              <span class="badge badge-purple" style="margin-right: 8px">🆕 NEMOCLAW</span>
+              <span class="task-desc"
+                >Update Nordic GTM plan messaging — replace "AI tools for SMBs" with "Agents-as-a-Service for SMBs,
+                powered by NVIDIA NemoClaw"</span
+              >
+            </div>
+            <span class="task-points">2 pts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sprint 4 Detail -->
+    <div class="sprint-section">
+      <div class="banner banner-nvidia" style="margin-bottom: 20px; padding: 15px">
+        <strong>🚀 NVIDIA TAILWIND INTEGRATION SPRINT</strong>
+      </div>
+
+      <div class="sprint-header">
+        <div class="sprint-title">
+          <span class="badge badge-blue" style="font-size: 1rem">📋 SPRINT 4: PLANNED</span>
+          Production Deploy & NemoClaw Adoption
+        </div>
+        <div class="sprint-meta">Total: ~140 pts</div>
+      </div>
+
+      <div class="task-list" style="margin-bottom: 30px">
+        <div class="task-card">
+          <div class="task-content">
+            <span class="task-id">S4-GEN-01</span>
+            <span class="task-desc">Full production deployment to eu-central-1 (DOA)</span>
+          </div>
+          <span class="task-points">Planned</span>
+        </div>
+        <div class="task-card">
+          <div class="task-content">
+            <span class="task-id">S4-GEN-02</span>
+            <span class="task-desc">WeChat Pay REMOVED, Stripe only (BDA)</span>
+          </div>
+          <span class="task-points">Planned</span>
+        </div>
+        <div class="task-card">
+          <div class="task-content">
+            <span class="task-id">S4-GEN-03</span>
+            <span class="task-desc">SEO optimization + blog (3 posts targeting "AI tools for SMB") (PMA)</span>
+          </div>
+          <span class="task-points">Planned</span>
+        </div>
+        <div class="task-card">
+          <div class="task-content">
+            <span class="task-id">S4-GEN-04</span>
+            <span class="task-desc">Analytics (PostHog/Mixpanel) + conversion funnel (FDA)</span>
+          </div>
+          <span class="task-points">Planned</span>
+        </div>
+      </div>
+
+      <!-- NemoClaw Milestone -->
+      <div class="highlight-section">
+        <div class="highlight-title">
+          <span class="badge badge-purple" style="font-size: 1em">🚀 MILESTONE</span>
+          NemoClaw Integration (OpenShell Security Substrate)
+        </div>
+
+        <div class="task-list">
+          <!-- BDA -->
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-BDA-NEM-01</span>
+              <span class="task-desc"
+                >Integrate NemoClaw OpenShell as VentureClaw security substrate — replace custom SSRF/Helmet code</span
+              >
+            </div>
+            <span class="task-points">13 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-BDA-NEM-02</span>
+              <span class="task-desc"
+                >Implement NemoClaw inference router (NVIDIA-hosted → local NIM → local vLLM fallback chain)</span
+              >
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+
+          <!-- DOA -->
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-DOA-NEM-01</span>
+              <span class="task-desc"
+                >Add NemoClaw install step to 4-stage Dockerfile (nemoclaw onboard in runtime stage)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-DOA-NEM-02</span>
+              <span class="task-desc"
+                >Configure OpenShell network policy (allowlist: Stripe API, PostgreSQL, DynamoDB, Cloudflare, NVIDIA
+                NIM)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-DOA-NEM-03</span>
+              <span class="task-desc">Deploy NemoClaw-secured VentureClaw to eu-central-1 production</span>
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+
+          <!-- SEA -->
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-SEA-NEM-01</span>
+              <span class="task-desc"
+                >Validate NemoClaw OpenShell sandbox against GDPR requirements (data residency, local inference)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-SEA-NEM-02</span>
+              <span class="task-desc"
+                >Update security posture documentation — retire custom SSRF/Helmet layers replaced by OpenShell</span
+              >
+            </div>
+            <span class="task-points">3 pts</span>
+          </div>
+
+          <!-- QAA -->
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-QAA-NEM-01</span>
+              <span class="task-desc"
+                >Smoke test VentureClaw full stack on NemoClaw runtime — all 103 existing tests must pass</span
+              >
+            </div>
+            <span class="task-points">8 pts</span>
+          </div>
+          <div class="task-card">
+            <div class="task-content">
+              <span class="task-id">S4-QAA-NEM-02</span>
+              <span class="task-desc"
+                >NemoClaw-specific security tests (sandbox escape attempts, network policy violations)</span
+              >
+            </div>
+            <span class="task-points">5 pts</span>
+          </div>
+        </div>
+
+        <div class="alert-box">
+          <strong>⚠️ CONDITION:</strong> NemoClaw must exit alpha OR team validates stability on staging before Sprint 4
+          NemoClaw tasks begin. If still alpha on Sprint 4 start date, these tasks move to Sprint 5.
+        </div>
+      </div>
+    </div>
+
+    <!-- Cancelled Work -->
+    <div class="sprint-section" style="border-color: rgba(218, 54, 51, 0.3)">
+      <div class="sprint-header">
+        <div class="sprint-title" style="color: #f85149">
+          <span class="badge badge-red" style="font-size: 1rem">❌ CANCELLED WORK</span>
+          China Pivot (Dropped)
+        </div>
+        <div class="sprint-meta strikethrough">~~81 pts~~</div>
+      </div>
+      <div class="task-list">
+        <div class="task-card" style="opacity: 0.7">
+          <div class="task-content">
+            <span class="badge badge-red" style="margin-right: 8px">DROPPED</span>
+            <span class="strikethrough">China cluster skills S-54 through S-59 (6 items)</span>
+            <br /><small style="color: #f85149">Reason: ICP wall</small>
+          </div>
+        </div>
+        <div class="task-card" style="opacity: 0.7">
+          <div class="task-content">
+            <span class="badge badge-red" style="margin-right: 8px">DROPPED</span>
+            <span class="strikethrough">WeChat Pay integration</span>
+            <br /><small style="color: #f85149">Reason: requires Chinese entity</small>
+          </div>
+        </div>
+        <div class="task-card" style="opacity: 0.7">
+          <div class="task-content">
+            <span class="badge badge-red" style="margin-right: 8px">DROPPED</span>
+            <span class="strikethrough">ICP registration tasks</span>
+            <br /><small style="color: #f85149">Reason: legally impossible for solo Icelandic founder</small>
+          </div>
+        </div>
+        <div class="task-card" style="opacity: 0.7">
+          <div class="task-content">
+            <span class="badge badge-red" style="margin-right: 8px">DROPPED</span>
+            <span class="strikethrough">PIPL-specific data router</span>
+            <br /><small style="color: #f85149">Reason: replaced with GDPR-only router</small>
+          </div>
+        </div>
+        <div class="task-card" style="opacity: 0.7">
+          <div class="task-content">
+            <span class="badge badge-red" style="margin-right: 8px">DROPPED</span>
+            <span class="strikethrough">Alibaba Cloud China region</span>
+            <br /><small style="color: #f85149">Reason: use Singapore/EU instead</small>
+          </div>
+        </div>
+        <div class="task-card" style="opacity: 0.7">
+          <div class="task-content">
+            <span class="badge badge-red" style="margin-right: 8px">DROPPED</span>
+            <span class="strikethrough">CSL compliance layer</span>
+            <br /><small style="color: #f85149">Reason: not needed, simplifies stack</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Governance -->
+    <div class="governance-section">
+      <div>
+        <h4>Velocity & Costs</h4>
+        <ul>
+          <li><strong>Velocity:</strong> ~65–80 pts per sprint</li>
+          <li><strong>LLM Cost:</strong> ~€25 total estimated</li>
+          <li><strong>Cost per PR:</strong> €0.05</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Definition of Done</h4>
+        <ul>
+          <li>TypeScript strict mode enforced</li>
+          <li>85% test coverage</li>
+          <li>CI green & Contract check pass</li>
+          <li>Trivy 0 critical CVEs</li>
+          <li>ADR if architecture change</li>
+          <li>Slack #dev-events notification</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>Sprint Board v2.1 — Updated: 2026-03-18</div>
+      <div style="margin-top: 10px">
+        <a href="#">Strategy Doc</a> | <a href="#">NemoClaw Official</a> | <a href="#">NemoClaw GitHub</a> |
+        <a href="#">AI Drive /iventure-studio/strategy/</a>
+      </div>
+      <div style="margin-top: 15px; color: #58a6ff">
+        This document supersedes Sprint Board v2.0. Share with all development agents as the authoritative sprint
+        directive.
+      </div>
+    </div>
+  </body>
+</html>

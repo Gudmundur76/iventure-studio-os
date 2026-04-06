@@ -1,0 +1,252 @@
+# VIC Knowledge Graph — Entities v2
+# Session 2, Cycles 11-20 | 2026-03-12
+# Total nodes: 61 (was 34)
+
+entities:
+  # === TIER 3 QUANTITATIVE NODES (added this session) ===
+
+  # FDA Approval Statistics
+  - id: PDUFA_compliance_94pct
+    label: "FDA PDUFA 94% Goal Compliance Rate (2024)"
+    type: quantitative_metric
+    value: 0.94
+    source: FDA PDUFA Performance Report 2024
+    confidence: 0.96
+    zone: regulatory_approvals
+
+  - id: first_cycle_approval_74pct
+    label: "74% First-Cycle FDA Approval Rate (2024)"
+    type: quantitative_metric
+    value: 0.74
+    source: BLA Regulatory / FDA Annual Report
+    confidence: 0.95
+    zone: regulatory_approvals
+
+  - id: novel_drugs_2024
+    label: "50 Novel Drug Approvals 2024"
+    type: statistical_datapoint
+    value: 50
+    source: FDA New Drug Therapy 2025 Annual Report
+    confidence: 0.99
+    zone: regulatory_approvals
+
+  - id: BTD_grant_rate_38pct
+    label: "Breakthrough Therapy Designation 38.7% Grant Rate"
+    type: quantitative_metric
+    value: 0.387
+    source: FDA BTD statistics 2024
+    confidence: 0.95
+    zone: regulatory_approvals
+
+  - id: expedited_pathway_57pct
+    label: "57% of 2024 NDA/BLAs Had Expedited Designation"
+    type: quantitative_metric
+    value: 0.57
+    source: BLA Regulatory Analysis
+    confidence: 0.93
+    zone: regulatory_approvals
+
+  - id: orphan_drug_52pct
+    label: "52% of 2024 Approvals Target Orphan Diseases"
+    type: quantitative_metric
+    value: 0.52
+    source: FDA Annual Report 2024
+    confidence: 0.95
+    zone: regulatory_approvals
+
+  # Paragraph IV / Patent Litigation Statistics
+  - id: PIV_generic_trial_win_48pct
+    label: "Generic Trial Win Rate 48% (Paragraph IV)"
+    type: quantitative_metric
+    value: 0.48
+    source: DrugPatentWatch comprehensive analysis
+    confidence: 0.91
+    zone: litigation_intelligence
+
+  - id: PIV_overall_success_76pct
+    label: "Generic Overall Success Rate 76% (incl. settlements)"
+    type: quantitative_metric
+    value: 0.76
+    source: DrugPatentWatch
+    confidence: 0.93
+    zone: litigation_intelligence
+
+  - id: PIV_settlement_55pct
+    label: "~55% of Paragraph IV Cases Settle Pre-Trial"
+    type: quantitative_metric
+    value: 0.55
+    source: ScienceDirect 2023 analysis
+    confidence: 0.89
+    zone: litigation_intelligence
+
+  - id: patent_exclusivity_remaining_9.83yr
+    label: "Average 9.83 Years Exclusivity Remaining at PIV Challenge"
+    type: quantitative_metric
+    value: 9.83
+    unit: years
+    source: ScienceDirect patent litigation characteristics study
+    confidence: 0.88
+    zone: litigation_intelligence
+
+  # CAFC / Federal Circuit Statistics
+  - id: CAFC_patent_owner_win_19pct
+    label: "Patent Owners Win 19% of CAFC Appeals (2024)"
+    type: quantitative_metric
+    value: 0.19
+    source: Perkins Coie / Law360 Fed Circuit 2024 Empirical Review
+    confidence: 0.97
+    zone: litigation_intelligence
+
+  - id: CAFC_patent_owner_loss_69pct
+    label: "Patent Owners Lose Outright 69% of CAFC Appeals"
+    type: quantitative_metric
+    value: 0.69
+    source: Perkins Coie / Law360
+    confidence: 0.97
+    zone: litigation_intelligence
+
+  - id: CAFC_district_reversal_20pct
+    label: "CAFC Reverses/Vacates 20% of District Court Patent Decisions"
+    type: quantitative_metric
+    value: 0.20
+    source: Perkins Coie / Law360
+    confidence: 0.97
+    zone: litigation_intelligence
+
+  - id: PTAB_patent_owner_win_13pct
+    label: "Patent Owners Win 13% of PTAB Appeals at CAFC"
+    type: quantitative_metric
+    value: 0.13
+    source: Perkins Coie / Law360
+    confidence: 0.97
+    zone: litigation_intelligence
+
+  # Biosimilar Timeline Statistics
+  - id: biosimilar_settlement_2.5yr
+    label: "Biosimilar Launch 2.5yr After Patent Expiry (Settled)"
+    type: quantitative_metric
+    value: 2.5
+    unit: years
+    source: DrugPatentWatch Biosimilar Launch Window
+    confidence: 0.91
+    zone: drug_lifecycle_pipeline
+
+  - id: biosimilar_win_2.3yr
+    label: "Biosimilar Launch 2.3yr After Patent Expiry (Litigation Win)"
+    type: quantitative_metric
+    value: 2.3
+    unit: years
+    source: DrugPatentWatch
+    confidence: 0.91
+    zone: drug_lifecycle_pipeline
+
+  - id: biosimilar_loss_16.5yr
+    label: "Biosimilar Launch 16.5yr After Patent Expiry (Litigation Loss)"
+    type: quantitative_metric
+    value: 16.5
+    unit: years
+    source: DrugPatentWatch
+    confidence: 0.91
+    zone: drug_lifecycle_pipeline
+
+  - id: BPCIA_12yr_exclusivity
+    label: "BPCIA 12-Year Statutory Market Exclusivity"
+    type: legal_constraint
+    value: 12
+    unit: years
+    source: BPCIA statute
+    confidence: 0.99
+    zone: drug_lifecycle_pipeline
+
+  - id: patent_thicket_11_to_65
+    label: "11–65 Patents Asserted Per Biosimilar Product"
+    type: quantitative_metric
+    min: 11
+    max: 65
+    source: DrugPatentWatch
+    confidence: 0.90
+    zone: litigation_intelligence
+
+  - id: biosimilar_litigation_settlement_75pct
+    label: "75% of Biosimilar Litigation Settled (2010-2022)"
+    type: quantitative_metric
+    value: 0.75
+    source: DrugPatentWatch 2010-2022 analysis
+    confidence: 0.91
+    zone: litigation_intelligence
+
+  # Stock Price / Market Impact Statistics
+  - id: phase3_abnormal_return_2.27pct
+    label: "Phase 2/3 Trial Generates +2.27% Abnormal Return vs Phase 1/2"
+    type: quantitative_metric
+    value: 0.0227
+    source: PMC Singh 2022, 13807 trials 2000-2020
+    confidence: 0.89
+    zone: financial_intelligence
+
+  - id: phase3_cumulative_return_3.06pct
+    label: "Phase 2/3 Cumulative 2-Day Abnormal Return +3.06%"
+    type: quantitative_metric
+    value: 0.0306
+    source: PMC Singh 2022
+    confidence: 0.89
+    zone: financial_intelligence
+
+  - id: 8K_4day_filing_deadline
+    label: "Form 8-K Must Be Filed Within 4 Business Days of Material Event"
+    type: legal_constraint
+    value: 4
+    unit: business_days
+    source: SEC Form 8-K Rules
+    confidence: 0.99
+    zone: financial_intelligence
+
+  - id: RegFD_simultaneous_disclosure
+    label: "Regulation FD Requires Simultaneous Public Disclosure"
+    type: legal_constraint
+    source: SEC Regulation Fair Disclosure
+    confidence: 0.99
+    zone: financial_intelligence
+
+  # Orange Book / ANDA Statistics
+  - id: orange_book_machine_readable
+    label: "Orange Book Downloadable as Machine-Readable ZIP"
+    type: data_source_property
+    url: https://www.fda.gov/drugs/drug-approvals-and-databases/orange-book-data-files
+    confidence: 1.0
+    zone: regulatory_approvals
+
+  - id: ANDA_50pct_eligible
+    label: "~50% of ANDA Applications Eligible for Market Entry"
+    type: quantitative_metric
+    value: 0.50
+    source: DrugPatentWatch 2020-2024 analysis
+    confidence: 0.87
+    zone: drug_lifecycle_pipeline
+
+  - id: teva_dominant_PIV_filer
+    label: "Teva is Dominant Paragraph IV Certification Filer"
+    type: market_intelligence
+    source: ResearchGate retrospective 2020-2024
+    confidence: 0.88
+    zone: litigation_intelligence
+
+  # === CROSS-DOMAIN PATTERN NODES ===
+
+  - id: pattern_alpha_prediction_chain
+    label: "PATTERN ALPHA: USPTO→ClinicalTrials→FDA→PACER→SEC Causal Chain"
+    type: emergent_pattern
+    confidence: 0.92
+    zones: [regulatory_approvals, litigation_intelligence, financial_intelligence, drug_lifecycle_pipeline, court_records]
+
+  - id: pattern_beta_valuation_gap
+    label: "PATTERN BETA: CAFC Ruling → 14yr Exclusivity Delta → Stock Event"
+    type: emergent_pattern
+    confidence: 0.93
+    zones: [litigation_intelligence, financial_intelligence]
+
+  - id: pattern_gamma_expedited_signal
+    label: "PATTERN GAMMA: BTD Designation → 6-Month Lead on 8-K Event"
+    type: emergent_pattern
+    confidence: 0.90
+    zones: [regulatory_approvals, financial_intelligence]

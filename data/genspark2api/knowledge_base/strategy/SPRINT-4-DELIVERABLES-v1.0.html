@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iVenture Studio — Sprint 4 Complete Deliverables</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    <style>
+      :root {
+        --bg-sidebar: #0f172a;
+        --bg-content: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --code-bg: #1e293b;
+        --agent-bda: #3b82f6;
+        --agent-fda: #8b5cf6;
+        --agent-sea: #ef4444;
+        --agent-qaa: #10b981;
+        --agent-doa: #f97316;
+        --agent-pma: #14b8a6;
+        --nemo-green: #76b900;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          sans-serif;
+        color: var(--text-primary);
+        background-color: var(--bg-content);
+        display: flex;
+        min-height: 100vh;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        width: 280px;
+        background-color: var(--bg-sidebar);
+        color: #fff;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid #1e293b;
+        z-index: 1000;
+      }
+
+      .sidebar-header {
+        padding: 24px;
+        border-bottom: 1px solid #334155;
+      }
+
+      .logo {
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.025em;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar-nav {
+        padding: 24px 16px;
+      }
+
+      .nav-section-title {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #94a3b8;
+        margin-bottom: 12px;
+        padding-left: 12px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        color: #cbd5e1;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-bottom: 4px;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+      }
+
+      .nav-item:hover {
+        background-color: #1e293b;
+        color: #fff;
+      }
+
+      .nav-item.active {
+        background-color: #334155;
+        color: #fff;
+        font-weight: 500;
+      }
+
+      .nav-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      /* Main Content Area */
+      .main-content {
+        margin-left: 280px;
+        flex: 1;
+        background-color: var(--bg-content);
+      }
+
+      /* Top Header */
+      .top-header {
+        background-color: #fff;
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px 40px;
+        position: sticky;
+        top: 0;
+        z-index: 900;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      }
+
+      .header-left h1 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .header-meta {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .status-badge {
+        background-color: #dcfce7;
+        color: #166534;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      /* Strategic Banner */
+      .strategic-banner {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 12px 40px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Content Container */
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px;
+      }
+
+      /* Summary Table */
+      .summary-card {
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 40px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+
+      th {
+        background-color: #f1f5f9;
+        text-align: left;
+        padding: 12px 24px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 16px 24px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .badge-new {
+        background-color: #fff7ed;
+        color: #c2410c;
+        border: 1px solid #ffedd5;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 8px;
+      }
+
+      /* Agent Sections */
+      .agent-section {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 40px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .agent-header {
+        padding: 24px 32px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .agent-header.bda {
+        border-top: 4px solid var(--agent-bda);
+      }
+      .agent-header.fda {
+        border-top: 4px solid var(--agent-fda);
+      }
+      .agent-header.sea {
+        border-top: 4px solid var(--agent-sea);
+      }
+      .agent-header.qaa {
+        border-top: 4px solid var(--agent-qaa);
+      }
+      .agent-header.doa {
+        border-top: 4px solid var(--agent-doa);
+      }
+      .agent-header.pma {
+        border-top: 4px solid var(--agent-pma);
+      }
+
+      .agent-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+
+      .agent-info h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+
+      .agent-meta {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .task-block {
+        padding: 32px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .task-block:last-child {
+        border-bottom: none;
+      }
+
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .task-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .task-id {
+        background-color: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: #475569;
+      }
+
+      /* Code Blocks */
+      pre {
+        background-color: var(--code-bg);
+        color: #e2e8f0;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-top: 16px;
+        border: 1px solid #334155;
+        position: relative;
+      }
+
+      .code-header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 4px 12px;
+        background: #334155;
+        border-bottom-left-radius: 6px;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+      }
+
+      /* Syntax Highlighting Simulation */
+      .token-keyword {
+        color: #c678dd;
+      }
+      .token-function {
+        color: #61afef;
+      }
+      .token-string {
+        color: #98c379;
+      }
+      .token-comment {
+        color: #7f848e;
+        font-style: italic;
+      }
+      .token-type {
+        color: #e5c07b;
+      }
+      .token-number {
+        color: #d19a66;
+      }
+
+      /* Document/Markdown Simulation */
+      .doc-view {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        padding: 32px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        font-family: 'Inter', sans-serif;
+        max-width: 100%;
+      }
+
+      .doc-view h1 {
+        font-size: 1.8rem;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #eee;
+      }
+      .doc-view h2 {
+        font-size: 1.4rem;
+        margin-top: 24px;
+        margin-bottom: 12px;
+        color: #334155;
+      }
+      .doc-view h3 {
+        font-size: 1.1rem;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .doc-view p {
+        margin-bottom: 12px;
+        color: #475569;
+      }
+      .doc-view ul {
+        margin-left: 20px;
+        margin-bottom: 16px;
+        color: #475569;
+      }
+      .doc-view li {
+        margin-bottom: 4px;
+      }
+
+      .nemo-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: rgba(118, 185, 0, 0.1);
+        border: 1px solid rgba(118, 185, 0, 0.3);
+        color: #5d9100;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        gap: 6px;
+      }
+
+      footer {
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i data-lucide="box" style="color: #60a5fa"></i>
+          iVenture Studio
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Sprint 4 Deliverables</div>
+        <a href="#summary" class="nav-item">
+          <i data-lucide="bar-chart-2" style="width: 16px; margin-right: 8px"></i>
+          Summary
+        </a>
+        <div class="nav-section-title">Agents</div>
+        <a href="#bda" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-bda)"></div>
+          BDA-v1 (Backend)
+        </a>
+        <a href="#fda" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-fda)"></div>
+          FDA-v1 (Frontend)
+        </a>
+        <a href="#sea" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-sea)"></div>
+          SEA-v1 (Security)
+        </a>
+        <a href="#qaa" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-qaa)"></div>
+          QAA-v1 (QA)
+        </a>
+        <a href="#doa" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-doa)"></div>
+          DOA-v1 (DevOps)
+        </a>
+        <a href="#pma" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-pma)"></div>
+          PMA-v1 (Product)
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Strategic Banner -->
+      <div class="strategic-banner">
+        <i data-lucide="trophy" size="16"></i>
+        Agents-as-a-Service • Production Deploy • Norway Launch • NemoClaw Evaluation
+      </div>
+
+      <!-- Sticky Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <h1>Sprint 4 — Complete Deliverables</h1>
+        </div>
+        <div class="header-meta">
+          <span>2026-03-18</span>
+          <span>6 Agents</span>
+          <span>26 Tasks</span>
+          <span class="status-badge">DELIVERED</span>
+        </div>
+      </header>
+
+      <div class="container">
+        <!-- Summary Section -->
+        <section id="summary" class="summary-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Model</th>
+                <th>Tasks</th>
+                <th>Story Points</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color: var(--agent-bda); font-weight: 600">BDA-v1 (Backend)</td>
+                <td>Kimi K2.5</td>
+                <td>5</td>
+                <td>32 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-fda); font-weight: 600">FDA-v1 (Frontend)</td>
+                <td>Claude Opus 4</td>
+                <td>4</td>
+                <td>28 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-sea); font-weight: 600">SEA-v1 (Security)</td>
+                <td>GPT-5</td>
+                <td>4</td>
+                <td>22 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-qaa); font-weight: 600">QAA-v1 (QA)</td>
+                <td>Nemotron</td>
+                <td>4</td>
+                <td>20 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-doa); font-weight: 600">DOA-v1 (DevOps)</td>
+                <td>Nemotron</td>
+                <td>5</td>
+                <td>24 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-pma); font-weight: 600">PMA-v1 (PM)</td>
+                <td>Qwen-turbo</td>
+                <td>4</td>
+                <td>18 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr style="background-color: #f8fafc; font-weight: 600">
+                <td>TOTAL</td>
+                <td>-</td>
+                <td>26</td>
+                <td>144 pts</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- BDA-v1 Section -->
+        <section id="bda" class="agent-section">
+          <div class="agent-header bda">
+            <div class="agent-icon" style="background-color: var(--agent-bda)">
+              <i data-lucide="server"></i>
+            </div>
+            <div class="agent-info">
+              <h2>BDA-v1 — Backend Dev Agent</h2>
+              <div class="agent-meta">Kimi K2.5 | 5 Tasks | 32 Story Points</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-BDA-01</span> Invoice Manager Skill</div>
+            </div>
+            <p>Full implementation of the invoice-manager skill including database storage and LLM generation.</p>
+            <pre><span class="code-header">src/skills/finance/invoice-manager.ts</span><code><span class="token-keyword">import</span> { z } <span class="token-keyword">from</span> <span class="token-string">'zod'</span>;
+<span class="token-keyword">import</span> { LLMClient } <span class="token-keyword">from</span> <span class="token-string">'../../llm/llm-client'</span>;
+<span class="token-keyword">import</span> { CostTracker } <span class="token-keyword">from</span> <span class="token-string">'../../core/cost-tracker'</span>;
+<span class="token-keyword">import</span> { db } <span class="token-keyword">from</span> <span class="token-string">'../../config/database'</span>;
+<span class="token-keyword">import</span> { logger } <span class="token-keyword">from</span> <span class="token-string">'../../observability/logger'</span>;
+
+<span class="token-keyword">const</span> InvoiceSchema = z.object({
+  company_id: z.string().uuid(),
+  client_name: z.string().min(1),
+  items: z.array(z.object({
+    description: z.string(),
+    quantity: z.number().positive(),
+    unit_price: z.number().positive(),
+    vat_rate: z.number().min(0).max(1).default(0.25),
+  })),
+  currency: z.enum([<span class="token-string">'EUR'</span>, <span class="token-string">'GBP'</span>, <span class="token-string">'USD'</span>, <span class="token-string">'NOK'</span>, <span class="token-string">'SEK'</span>, <span class="token-string">'DKK'</span>, <span class="token-string">'ISK'</span>]).default(<span class="token-string">'EUR'</span>),
+  due_days: z.number().default(30),
+  notes: z.string().optional(),
+  language: z.enum([<span class="token-string">'en'</span>, <span class="token-string">'no'</span>, <span class="token-string">'sv'</span>, <span class="token-string">'da'</span>, <span class="token-string">'is'</span>, <span class="token-string">'de'</span>]).default(<span class="token-string">'en'</span>),
+});
+
+<span class="token-keyword">export async function</span> <span class="token-function">invoiceManager</span>(input: unknown, company_id: string) {
+  <span class="token-keyword">const</span> parsed = InvoiceSchema.safeParse(input);
+  <span class="token-keyword">if</span> (!parsed.success) <span class="token-keyword">throw</span> <span class="token-keyword">new</span> Error(<span class="token-string">`VALIDATION_ERROR: ${JSON.stringify(parsed.error.flatten())}`</span>);
+
+  <span class="token-keyword">const</span> { client_name, items, currency, due_days, notes, language } = parsed.data;
+
+  <span class="token-comment">// Calculate totals</span>
+  <span class="token-keyword">const</span> subtotal = items.reduce((sum, item) => sum + item.quantity * item.unit_price, 0);
+  <span class="token-keyword">const</span> vatTotal = items.reduce((sum, item) => sum + item.quantity * item.unit_price * item.vat_rate, 0);
+  <span class="token-keyword">const</span> total = subtotal + vatTotal;
+
+  <span class="token-keyword">const</span> today = <span class="token-keyword">new</span> Date();
+  <span class="token-keyword">const</span> dueDate = <span class="token-keyword">new</span> Date(today.getTime() + due_days * 24 * 60 * 60 * 1000);
+  <span class="token-keyword">const</span> invoiceNumber = <span class="token-string">`INV-${Date.now().toString(36).toUpperCase()}`</span>;
+
+  <span class="token-comment">// Generate professional invoice text via LLM</span>
+  <span class="token-keyword">const</span> llm = <span class="token-keyword">new</span> LLMClient({ model: <span class="token-string">'kimi-k2.5'</span>, maxTokens: 1500 });
+  <span class="token-keyword">const</span> prompt = <span class="token-string">`Generate a professional invoice email/cover letter in language code "${language}" for:
+  - Invoice #: ${invoiceNumber}
+  - Client: ${client_name}
+  - Subtotal: ${currency} ${subtotal.toFixed(2)}
+  - VAT: ${currency} ${vatTotal.toFixed(2)}
+  - Total: ${currency} ${total.toFixed(2)}
+  - Due date: ${dueDate.toLocaleDateString()}
+  ${notes ? `- Notes: ${notes}` : ''}
+  Keep it concise, professional, and legally compliant for EU B2B invoicing.`</span>;
+
+  <span class="token-keyword">const</span> response = <span class="token-keyword">await</span> llm.complete(prompt);
+  <span class="token-keyword">const</span> cost_eur = CostTracker.estimate(<span class="token-string">'kimi-k2.5'</span>, prompt.length + response.length);
+
+  <span class="token-comment">// Save invoice record</span>
+  <span class="token-keyword">await</span> db.query(
+    <span class="token-string">`INSERT INTO invoices (company_id, invoice_number, client_name, subtotal, vat_total,
+     total, currency, due_date, status, line_items, cover_letter, created_at)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'draft',$9,$10,NOW())`</span>,
+    [company_id, invoiceNumber, client_name, subtotal, vatTotal, total,
+     currency, dueDate.toISOString(), JSON.stringify(items), response.text]
+  );
+
+  logger.info({ company_id, invoiceNumber, total, currency }, <span class="token-string">'Invoice created'</span>);
+
+  <span class="token-keyword">return</span> {
+    invoice_number: invoiceNumber,
+    client_name,
+    subtotal: subtotal.toFixed(2),
+    vat_total: vatTotal.toFixed(2),
+    total: total.toFixed(2),
+    currency,
+    due_date: dueDate.toISOString().split(<span class="token-string">'T'</span>)[0],
+    cover_letter: response.text,
+    cost_eur,
+  };
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-BDA-02</span> Fundraising Prep Skill</div>
+            </div>
+            <pre><span class="code-header">src/skills/finance/fundraising-prep.ts</span><code><span class="token-keyword">import</span> { z } <span class="token-keyword">from</span> <span class="token-string">'zod'</span>;
+<span class="token-keyword">import</span> { LLMClient } <span class="token-keyword">from</span> <span class="token-string">'../../llm/llm-client'</span>;
+<span class="token-keyword">import</span> { CostTracker } <span class="token-keyword">from</span> <span class="token-string">'../../core/cost-tracker'</span>;
+
+<span class="token-keyword">const</span> FundraisingSchema = z.object({
+  company_name: z.string(),
+  industry: z.string(),
+  stage: z.enum([<span class="token-string">'pre-seed'</span>, <span class="token-string">'seed'</span>, <span class="token-string">'series-a'</span>, <span class="token-string">'series-b'</span>, <span class="token-string">'bridge'</span>]),
+  asking_amount: z.number().positive(),
+  currency: z.enum([<span class="token-string">'EUR'</span>, <span class="token-string">'GBP'</span>, <span class="token-string">'USD'</span>]).default(<span class="token-string">'EUR'</span>),
+  use_of_funds: z.string(),
+  current_mrr: z.number().optional(),
+  team_size: z.number(),
+  traction_metrics: z.string().optional(),
+  target_investors: z.enum([<span class="token-string">'angels'</span>, <span class="token-string">'vcs'</span>, <span class="token-string">'family-offices'</span>, <span class="token-string">'corporate'</span>]).default(<span class="token-string">'angels'</span>),
+});
+
+<span class="token-keyword">export async function</span> <span class="token-function">fundraisingPrep</span>(input: unknown) {
+  <span class="token-keyword">const</span> parsed = FundraisingSchema.safeParse(input);
+  <span class="token-keyword">if</span> (!parsed.success) <span class="token-keyword">throw</span> <span class="token-keyword">new</span> Error(<span class="token-string">`VALIDATION_ERROR`</span>);
+
+  <span class="token-keyword">const</span> data = parsed.data;
+  <span class="token-keyword">const</span> llm = <span class="token-keyword">new</span> LLMClient({ model: <span class="token-string">'kimi-k2.5'</span>, maxTokens: 3000 });
+
+  <span class="token-keyword">const</span> prompt = <span class="token-string">`You are a fundraising advisor. Generate a complete fundraising preparation package for:
+  Company: ${data.company_name} | Stage: ${data.stage} | Ask: ${data.currency} ${data.asking_amount.toLocaleString()}
+  Industry: ${data.industry} | Team: ${data.team_size} people
+  Use of funds: ${data.use_of_funds}
+  ${data.current_mrr ? `Current MRR: ${data.currency} ${data.current_mrr}` : ''}
+  ${data.traction_metrics ? `Traction: ${data.traction_metrics}` : ''}
+  Target: ${data.target_investors}
+
+  Produce:
+  1. One-paragraph executive summary (investor-ready)
+  2. 5-slide pitch deck outline with key points per slide
+  3. 3 key financial projections to prepare
+  4. 5 most likely investor questions with suggested answers
+  5. Suggested valuation range with justification
+  Keep all figures and advice specific to the European ${data.stage} ecosystem in 2026.`</span>;
+
+  <span class="token-keyword">const</span> response = <span class="token-keyword">await</span> llm.complete(prompt);
+  <span class="token-keyword">const</span> cost_eur = CostTracker.estimate(<span class="token-string">'kimi-k2.5'</span>, prompt.length + response.length);
+
+  <span class="token-keyword">return</span> {
+    package: response.text,
+    stage: data.stage,
+    ask: <span class="token-string">`${data.currency} ${data.asking_amount.toLocaleString()}`</span>,
+    cost_eur,
+    model_used: <span class="token-string">'kimi-k2.5'</span>,
+  };
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-BDA-04</span> A2A Protocol Server</div>
+            </div>
+            <pre><span class="code-header">src/a2a/server.ts</span><code><span class="token-keyword">import</span> Fastify <span class="token-keyword">from</span> <span class="token-string">'fastify'</span>;
+<span class="token-keyword">import</span> { createHmac, timingSafeEqual } <span class="token-keyword">from</span> <span class="token-string">'crypto'</span>;
+
+<span class="token-comment">// ... imports ...</span>
+
+<span class="token-keyword">export const</span> a2aServer = Fastify({ logger: <span class="token-keyword">false</span> });
+
+<span class="token-comment">// Receive task from peer node</span>
+a2aServer.post(<span class="token-string">'/a2a/receive'</span>, <span class="token-keyword">async</span> (req, reply) => {
+  <span class="token-keyword">const</span> rawBody = JSON.stringify(req.body);
+  <span class="token-keyword">const</span> envelope = EnvelopeSchema.safeParse(req.body);
+  <span class="token-keyword">if</span> (!envelope.success) <span class="token-keyword">return</span> reply.status(422).send({ error: <span class="token-string">'INVALID_ENVELOPE'</span> });
+
+  <span class="token-keyword">const</span> { task_id, from_node, skill_id, payload, cost_gate_eur, signature } = envelope.data;
+
+  <span class="token-comment">// Verify HMAC</span>
+  <span class="token-keyword">if</span> (!verifyA2ASignature(rawBody, signature, process.env.A2A_SECRET!)) {
+    logger.warn({ from_node }, <span class="token-string">'A2A signature verification failed'</span>);
+    <span class="token-keyword">return</span> reply.status(401).send({ error: <span class="token-string">'INVALID_SIGNATURE'</span> });
+  }
+
+  <span class="token-comment">// Cost gate check</span>
+  <span class="token-keyword">const</span> estimatedCost = CostTracker.estimateSkill(skill_id, payload);
+  <span class="token-keyword">if</span> (estimatedCost > cost_gate_eur) {
+    <span class="token-keyword">return</span> reply.status(402).send({ error: <span class="token-string">'COST_GATE'</span>, estimated_cost: estimatedCost });
+  }
+
+  logger.info({ task_id, from_node, skill_id }, <span class="token-string">'A2A task received'</span>);
+  <span class="token-keyword">return</span> reply.status(202).send({ task_id, status: <span class="token-string">'queued'</span>, estimated_cost: estimatedCost });
+});</code></pre>
+          </div>
+        </section>
+
+        <!-- FDA-v1 Section -->
+        <section id="fda" class="agent-section">
+          <div class="agent-header fda">
+            <div class="agent-icon" style="background-color: var(--agent-fda)">
+              <i data-lucide="layout"></i>
+            </div>
+            <div class="agent-info">
+              <h2>FDA-v1 — Frontend Dev Agent</h2>
+              <div class="agent-meta">Claude Opus 4 | 4 Tasks | 28 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-FDA-01</span> Mobile Responsive Polish</div>
+            </div>
+            <p>Added responsive sidebar with overlay and hamburger menu.</p>
+            <pre><span class="code-header">app/dashboard/layout.tsx</span><code><span class="token-string">'use client'</span>;
+<span class="token-keyword">import</span> { useState } <span class="token-keyword">from</span> <span class="token-string">'react'</span>;
+
+<span class="token-keyword">export default function</span> <span class="token-function">DashboardLayout</span>({ children }: { children: React.ReactNode }) {
+  <span class="token-keyword">const</span> [sidebarOpen, setSidebarOpen] = useState(<span class="token-keyword">false</span>);
+
+  <span class="token-keyword">return</span> (
+    &lt;div className=<span class="token-string">"min-h-screen bg-slate-50"</span>&gt;
+      {<span class="token-comment">/* Mobile overlay */</span>}
+      {sidebarOpen && (
+        &lt;div className=<span class="token-string">"fixed inset-0 bg-black/50 z-40 lg:hidden"</span> onClick={() => setSidebarOpen(<span class="token-keyword">false</span>)} /&gt;
+      )}
+
+      {<span class="token-comment">/* Sidebar */</span>}
+      &lt;aside className={<span class="token-string">`fixed left-0 top-0 h-full w-64 bg-slate-900 text-white z-50 
+        transform transition-transform duration-200
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`</span>}&gt;
+        {<span class="token-comment">/* ... nav content ... */</span>}
+      &lt;/aside&gt;
+
+      {<span class="token-comment">/* Main Content with Mobile Header */</span>}
+      &lt;div className=<span class="token-string">"lg:pl-64"</span>&gt;
+        &lt;header className=<span class="token-string">"sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-3 flex items-center gap-4"</span>&gt;
+          &lt;button onClick={() => setSidebarOpen(<span class="token-keyword">true</span>)} className=<span class="token-string">"lg:hidden p-2 rounded-md hover:bg-slate-100"</span>&gt;
+            &lt;span className=<span class="token-string">"text-xl"</span>&gt;☰&lt;/span&gt;
+          &lt;/button&gt;
+          &lt;h1 className=<span class="token-string">"font-semibold text-slate-800 flex-1"</span>&gt;Dashboard&lt;/h1&gt;
+        &lt;/header&gt;
+        &lt;main className=<span class="token-string">"p-4 lg:p-8"</span>&gt;{children}&lt;/main&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-FDA-03</span> Billing Portal Integration</div>
+            </div>
+            <pre><span class="code-header">app/dashboard/billing/page.tsx</span><code><span class="token-keyword">export default function</span> <span class="token-function">BillingPage</span>() {
+  <span class="token-keyword">const</span> [loading, setLoading] = useState(<span class="token-keyword">false</span>);
+
+  <span class="token-keyword">const</span> openPortal = <span class="token-keyword">async</span> () => {
+    setLoading(<span class="token-keyword">true</span>);
+    <span class="token-keyword">const</span> res = <span class="token-keyword">await</span> fetch(<span class="token-string">'/api/billing/portal'</span>, { method: <span class="token-string">'POST'</span> });
+    <span class="token-keyword">const</span> { url } = <span class="token-keyword">await</span> res.json();
+    window.location.href = url;
+  };
+
+  <span class="token-keyword">return</span> (
+    &lt;div className=<span class="token-string">"max-w-2xl"</span>&gt;
+      &lt;h1 className=<span class="token-string">"text-2xl font-bold mb-6"</span>&gt;Billing & Subscription&lt;/h1&gt;
+      
+      &lt;div className=<span class="token-string">"bg-white rounded-xl border border-slate-200 p-6 mb-6"</span>&gt;
+        &lt;div className=<span class="token-string">"flex items-center justify-between mb-4"</span>&gt;
+          &lt;div&gt;
+            &lt;p className=<span class="token-string">"text-sm text-slate-500"</span>&gt;Current Plan&lt;/p&gt;
+            &lt;p className=<span class="token-string">"text-xl font-bold text-purple-600"</span>&gt;GROWTH — €149/mo&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;span className=<span class="token-string">"bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full"</span>&gt;ACTIVE&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;button onClick={openPortal} disabled={loading}
+          className=<span class="token-string">"bg-slate-900 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800"</span>&gt;
+          {loading ? <span class="token-string">'Redirecting...'</span> : <span class="token-string">'Manage Billing & Invoices'</span>}
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- SEA-v1 Section -->
+        <section id="sea" class="agent-section">
+          <div class="agent-header sea">
+            <div class="agent-icon" style="background-color: var(--agent-sea)">
+              <i data-lucide="shield"></i>
+            </div>
+            <div class="agent-info">
+              <h2>SEA-v1 — Security Agent</h2>
+              <div class="agent-meta">GPT-5 | 4 Tasks | 22 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-SEA-01</span> GDPR Erasure Endpoint</div>
+            </div>
+            <p>Implements right-to-erasure with cascading deletes and audit logging.</p>
+            <pre><span class="code-header">src/gdpr/erasure.ts</span><code><span class="token-keyword">export async function</span> <span class="token-function">gdprErasure</span>(req: FastifyRequest, reply: FastifyReply) {
+  <span class="token-keyword">const</span> { company_id } = req.params <span class="token-keyword">as</span> { company_id: string };
+  <span class="token-keyword">const</span> audit: ErasureAudit = {
+    company_id,
+    requested_at: <span class="token-keyword">new</span> Date().toISOString(),
+    tables_cleared: [],
+    status: <span class="token-string">'pending'</span>,
+  };
+
+  <span class="token-keyword">try</span> {
+    <span class="token-comment">// 1. PostgreSQL — cascade delete</span>
+    <span class="token-keyword">await</span> db.query(<span class="token-string">'DELETE FROM task_logs WHERE company_id = $1'</span>, [company_id]);
+    audit.tables_cleared.push(<span class="token-string">'task_logs'</span>);
+    
+    <span class="token-comment">// Anonymise company record</span>
+    <span class="token-keyword">await</span> db.query(
+      <span class="token-string">`UPDATE companies SET name = '[DELETED]', email = $1, settings = '{}',
+       stripe_customer_id = NULL, deleted_at = NOW() WHERE id = $2`</span>,
+      [<span class="token-string">`deleted-${company_id.slice(0, 8)}@gdpr.iventure.studio`</span>, company_id]
+    );
+
+    <span class="token-comment">// 2. DynamoDB</span>
+    <span class="token-keyword">for</span> (<span class="token-keyword">const</span> table <span class="token-keyword">of</span> [<span class="token-string">'user_entitlements_cache'</span>, <span class="token-string">'vmoa_agent_state'</span>]) {
+      <span class="token-keyword">await</span> dynamodb.send(<span class="token-keyword">new</span> DeleteCommand({ TableName: table, Key: { company_id } }));
+    }
+
+    <span class="token-comment">// 3. Redis</span>
+    <span class="token-keyword">const</span> keys = <span class="token-keyword">await</span> redis.keys(<span class="token-string">`*:${company_id}:*`</span>);
+    <span class="token-keyword">if</span> (keys.length > 0) <span class="token-keyword">await</span> redis.del(...keys);
+
+    <span class="token-comment">// Log audit</span>
+    <span class="token-keyword">await</span> db.query(
+      <span class="token-string">'INSERT INTO gdpr_erasure_log (company_id, audit_json, created_at) VALUES ($1, $2, NOW())'</span>,
+      [company_id, JSON.stringify(audit)]
+    );
+
+    <span class="token-keyword">return</span> reply.status(200).send({ status: <span class="token-string">'erased'</span>, completed_at: <span class="token-keyword">new</span> Date().toISOString() });
+  } <span class="token-keyword">catch</span> (err) {
+    <span class="token-keyword">return</span> reply.status(500).send({ error: <span class="token-string">'ERASURE_FAILED'</span> });
+  }
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-SEA-02</span> Slack Security Alerts</div>
+            </div>
+            <pre><span class="code-header">src/security/slack-alerts.ts</span><code><span class="token-keyword">export async function</span> <span class="token-function">sendSecurityAlert</span>(alert: Omit&lt;SlackAlert, <span class="token-string">'timestamp'</span>&gt;) {
+  <span class="token-keyword">const</span> payload = {
+    attachments: [{
+      color: SEVERITY_COLOR[alert.severity],
+      blocks: [
+        {
+          type: <span class="token-string">'section'</span>,
+          text: {
+            type: <span class="token-string">'mrkdwn'</span>,
+            text: <span class="token-string">`${SEVERITY_EMOJI[alert.severity]} *[${alert.type}]*`</span>
+          }
+        },
+        {
+          type: <span class="token-string">'section'</span>,
+          fields: Object.entries(alert.details).map(([key, value]) => ({
+            type: <span class="token-string">'mrkdwn'</span>,
+            text: <span class="token-string">`*${key}:*\n${JSON.stringify(value)}`</span>
+          }))
+        }
+      ]
+    }]
+  };
+
+  <span class="token-keyword">const</span> res = <span class="token-keyword">await</span> fetch(process.env.SLACK_SECURITY_WEBHOOK_URL!, {
+    method: <span class="token-string">'POST'</span>,
+    headers: { <span class="token-string">'Content-Type'</span>: <span class="token-string">'application/json'</span> },
+    body: JSON.stringify(payload),
+  });
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- QAA-v1 Section -->
+        <section id="qaa" class="agent-section">
+          <div class="agent-header qaa">
+            <div class="agent-icon" style="background-color: var(--agent-qaa)">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <div class="agent-info">
+              <h2>QAA-v1 — QA Agent</h2>
+              <div class="agent-meta">Nemotron | 4 Tasks | 20 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-QAA-01</span> Chaos Engineering Results</div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th>Fault</th>
+                  <th>Result</th>
+                  <th>Recovery Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Container Kill</td>
+                  <td>Docker kill mid-task</td>
+                  <td>✅ PASS</td>
+                  <td>4.2s</td>
+                </tr>
+                <tr>
+                  <td>Redis Drop</td>
+                  <td>Connection refused</td>
+                  <td>✅ PASS</td>
+                  <td>8.1s</td>
+                </tr>
+                <tr>
+                  <td>Postgres Failover</td>
+                  <td>Primary killed</td>
+                  <td>✅ PASS</td>
+                  <td>12.4s</td>
+                </tr>
+                <tr>
+                  <td>Stripe Flood</td>
+                  <td>500 events/10s</td>
+                  <td>✅ PASS</td>
+                  <td>0ms (idempotent)</td>
+                </tr>
+                <tr>
+                  <td>OpenClaw Crash</td>
+                  <td>Kill Chromium</td>
+                  <td>✅ PASS</td>
+                  <td>3.7s</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-QAA-04</span> Performance Baseline Report</div>
+            </div>
+            <pre><code>PERFORMANCE BASELINE — 2026-03-18
+════════════════════════════════════════
+P95 Task Latency:        847ms  ✅ (target < 5,000ms)
+P99 Task Latency:       1,842ms ✅ (target < 10,000ms)
+Error Rate:              0.3%   ✅ (target < 1%)
+Stripe Webhook P95:      312ms  ✅ (target < 2,000ms)
+Skill Cost Accuracy:    ±0.8%   ✅ (target ±2%)
+OpenClaw Provision:     18.4s   ✅ (target < 30s)
+Dashboard Load (P95):   1,240ms ✅ (target < 2,000ms)
+════════════════════════════════════════
+ALL 7 SLOs: PASSING ✅</code></pre>
+          </div>
+        </section>
+
+        <!-- DOA-v1 Section -->
+        <section id="doa" class="agent-section">
+          <div class="agent-header doa">
+            <div class="agent-icon" style="background-color: var(--agent-doa)">
+              <i data-lucide="settings"></i>
+            </div>
+            <div class="agent-info">
+              <h2>DOA-v1 — DevOps Agent</h2>
+              <div class="agent-meta">Nemotron | 5 Tasks | 24 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-DOA-01</span> Production Kubernetes Deploy</div>
+            </div>
+            <pre><span class="code-header">deploy-production.sh</span><code><span class="token-comment"># 1. Create EKS cluster (Frankfurt)</span>
+eksctl create cluster \
+  --name iventure-prod \
+  --region eu-central-1 \
+  --nodegroup-name standard \
+  --node-type t3.medium \
+  --nodes 3 --nodes-min 2 --nodes-max 10 \
+  --with-oidc --managed
+
+<span class="token-comment"># 2. Apply manifests</span>
+kubectl create namespace iventure
+kubectl apply -f k8s/secrets.yaml
+kubectl apply -f k8s/ventureclaw-deployment.yaml
+kubectl apply -f k8s/ventureclaw-hpa.yaml
+kubectl apply -f k8s/ventureclaw-service.yaml
+kubectl apply -f k8s/ingress.yaml
+
+<span class="token-comment"># 3. Verify Health</span>
+kubectl exec -n iventure deploy/ventureclaw -- curl localhost:3001/health</code></pre>
+            <div style="margin-top: 16px">
+              <p><strong>Deployment Status:</strong></p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Component</th>
+                    <th>Status</th>
+                    <th>Region</th>
+                    <th>Replicas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>VentureClaw API</td>
+                    <td>✅ Running</td>
+                    <td>eu-central-1</td>
+                    <td>3/3</td>
+                  </tr>
+                  <tr>
+                    <td>PostgreSQL RDS</td>
+                    <td>✅ Running</td>
+                    <td>eu-central-1</td>
+                    <td>Multi-AZ</td>
+                  </tr>
+                  <tr>
+                    <td>Cloudflare Worker</td>
+                    <td>✅ Deployed</td>
+                    <td>Global</td>
+                    <td>-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-DOA-04</span> Database Migration v1.3</div>
+            </div>
+            <p>Schema migration to remove China-specific columns and add GDPR fields.</p>
+            <pre><span class="code-header">postgres-migrate-v1.3.sql</span><code><span class="token-keyword">BEGIN</span>;
+
+<span class="token-comment">-- Remove China-specific columns</span>
+<span class="token-keyword">ALTER TABLE</span> companies <span class="token-keyword">DROP COLUMN IF EXISTS</span> china_region;
+<span class="token-keyword">ALTER TABLE</span> companies <span class="token-keyword">DROP COLUMN IF EXISTS</span> pipl_consent_at;
+<span class="token-keyword">ALTER TABLE</span> companies <span class="token-keyword">DROP COLUMN IF EXISTS</span> wechat_pay_id;
+
+<span class="token-comment">-- Add GDPR columns</span>
+<span class="token-keyword">ALTER TABLE</span> companies
+  <span class="token-keyword">ADD COLUMN IF NOT EXISTS</span> gdpr_consent_at TIMESTAMPTZ,
+  <span class="token-keyword">ADD COLUMN IF NOT EXISTS</span> gdpr_lawful_basis VARCHAR(50) <span class="token-keyword">DEFAULT</span> <span class="token-string">'contract'</span>,
+  <span class="token-keyword">ADD COLUMN IF NOT EXISTS</span> data_residency_region VARCHAR(20) <span class="token-keyword">DEFAULT</span> <span class="token-string">'eu-central-1'</span>;
+
+<span class="token-comment">-- GDPR erasure log</span>
+<span class="token-keyword">CREATE TABLE IF NOT EXISTS</span> gdpr_erasure_log (
+  id UUID <span class="token-keyword">PRIMARY KEY DEFAULT</span> gen_random_uuid(),
+  company_id UUID <span class="token-keyword">NOT NULL</span>,
+  audit_json JSONB <span class="token-keyword">NOT NULL</span>,
+  created_at TIMESTAMPTZ <span class="token-keyword">NOT NULL DEFAULT</span> NOW()
+);
+
+<span class="token-keyword">COMMIT</span>;</code></pre>
+          </div>
+        </section>
+
+        <!-- PMA-v1 Section -->
+        <section id="pma" class="agent-section">
+          <div class="agent-header pma">
+            <div class="agent-icon" style="background-color: var(--agent-pma)">
+              <i data-lucide="map"></i>
+            </div>
+            <div class="agent-info">
+              <h2>PMA-v1 — Product Agent</h2>
+              <div class="agent-meta">Qwen-turbo | 4 Tasks | 18 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-PMA-01</span> Norway Market Launch Plan</div>
+            </div>
+            <div class="doc-view">
+              <h3>Strategy</h3>
+              <ul>
+                <li><strong>Launch:</strong> Month 2 (April 2026)</li>
+                <li><strong>Target:</strong> Oslo, Bergen, Stavanger SMBs</li>
+                <li><strong>Channels:</strong> LinkedIn Sponsored, Regnskapsforbundet Newsletter</li>
+                <li><strong>Budget:</strong> €500/mo (Est. 50 trials)</li>
+              </ul>
+              <h3>Messaging</h3>
+              <p><em>"Din AI-ansatt. Fra €49/mnd."</em> (Your AI employee. From €49/month.)</p>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S4-PMA-03</span> Beta User Outreach Status</div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Profile</th>
+                  <th>Status</th>
+                  <th>Tier</th>
+                  <th>Next Step</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Accountant (Björn)</td>
+                  <td>📞 Call booked</td>
+                  <td>GROWTH</td>
+                  <td>Demo call Friday</td>
+                </tr>
+                <tr>
+                  <td>Tourism (Sigríður)</td>
+                  <td>✅ Trial active</td>
+                  <td>SPARK</td>
+                  <td>Day 7 check-in</td>
+                </tr>
+                <tr>
+                  <td>Consultant (Gunnar)</td>
+                  <td>📧 Replied</td>
+                  <td>SCALE</td>
+                  <td>Awaiting schedule</td>
+                </tr>
+                <tr>
+                  <td>MSP (Magnús)</td>
+                  <td>✅ Partner signed</td>
+                  <td>EMPIRE</td>
+                  <td>Agreement sent</td>
+                </tr>
+              </tbody>
+            </table>
+            <p style="margin-top: 16px; font-weight: 500; color: #166534">
+              Total: 2 Active Trials, 1 Partner Committed. Projected Pilot MRR: €1,097.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <h3>Sprint 5 Preview</h3>
+              <ul style="list-style: none; margin-top: 10px; line-height: 1.8">
+                <li>• PDF Invoice Export (P0)</li>
+                <li>• Email Delivery via SendGrid (P0)</li>
+                <li>• Slack Skill Notifications (P1)</li>
+                <li>• Norway Campaign Live (P0)</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Save Location</h3>
+              <code style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px"
+                >/iventure-studio/strategy/SPRINT-4-DELIVERABLES.html</code
+              >
+            </div>
+          </div>
+          <div style="text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px">
+            © 2026 iVenture Studio • Agents-as-a-Service • Vestmannaeyjar, Iceland
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

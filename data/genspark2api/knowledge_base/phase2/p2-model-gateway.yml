@@ -1,0 +1,111 @@
+version: "3.8"
+
+# Phase 2 — Model Gateway
+# LiteLLM proxy + genspark2api + OpenClaw orchestrator
+# Provides unified OpenAI-compatible API for 30+ models
+# docker compose -f p2-model-gateway.yml up -d
+
+networks:
+  iventure-net:
+    external: true
+    name: iventure-net
+
+volumes:
+  litellm-data:
+
+services:
+
+  # ──────────────────────────────────────────────────────────
+  # LiteLLM — Unified model proxy (OpenAI-compatible)
+  # Routes: genspark-pool, openai, anthropic, deepseek, groq
+  # ──────────────────────────────────────────────────────────
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: iventure-litellm
+    restart: unless-stopped
+    command: ["--config", "/app/litellm_config.yaml", "--port", "4000", "--detailed_debug"]
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY}
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-not-set}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-not-set}
+      GOOGLE_AI_API_KEY: ${GOOGLE_AI_API_KEY:-not-set}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-not-set}
+      GROQ_API_KEY: ${GROQ_API_KEY:-not-set}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+    volumes:
+      - ./config/litellm_config.yaml:/app/litellm_config.yaml:ro
+      - litellm-data:/data
+    ports:
+      - "4000:4000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.litellm.rule=Host(`models.localhost`)"
+      - "traefik.http.routers.litellm.entrypoints=web"
+      - "traefik.http.services.litellm.loadbalancer.server.port=4000"
+    depends_on:
+      - openclaw-orchestrator
+    networks:
+      - iventure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # ──────────────────────────────────────────────────────────
+  # OpenClaw Orchestrator — Pool manager for genspark2api
+  # ──────────────────────────────────────────────────────────
+  openclaw-orchestrator:
+    build:
+      context: ./services/openclaw-orchestrator
+      dockerfile: Dockerfile
+    container_name: iventure-openclaw-orchestrator
+    restart: unless-stopped
+    environment:
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      REDIS_URL: ${REDIS_URL}
+      CORTEX_URL: http://iventure-vic-engine:8080/api/cortex/stats
+    ports:
+      - "8090:8090"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openclaw.rule=Host(`pool.localhost`)"
+      - "traefik.http.routers.openclaw.entrypoints=web"
+      - "traefik.http.services.openclaw.loadbalancer.server.port=8090"
+    networks:
+      - iventure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+
+  # ──────────────────────────────────────────────────────────
+  # genspark2api — Genspark session → OpenAI-compatible API
+  # ──────────────────────────────────────────────────────────
+  genspark2api:
+    image: ghcr.io/deanxv/genspark2api:latest
+    container_name: iventure-genspark2api
+    restart: unless-stopped
+    environment:
+      GS_COOKIE: ${GS_COOKIE}
+      API_KEY: ${INTERNAL_API_KEY}
+      PORT: "7055"
+    ports:
+      - "7055:7055"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.genspark2api.rule=Host(`gs.localhost`)"
+      - "traefik.http.routers.genspark2api.entrypoints=web"
+      - "traefik.http.services.genspark2api.loadbalancer.server.port=7055"
+    networks:
+      - iventure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7055/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 15s

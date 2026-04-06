@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iVenture Studio — Sprint 3 Complete Deliverables</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest"></script>
+    <style>
+      :root {
+        --bg-sidebar: #0f172a;
+        --bg-content: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --code-bg: #1e293b;
+        --agent-bda: #3b82f6;
+        --agent-fda: #8b5cf6;
+        --agent-sea: #ef4444;
+        --agent-qaa: #10b981;
+        --agent-doa: #f97316;
+        --agent-pma: #14b8a6;
+        --nemo-green: #76b900;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          system-ui,
+          -apple-system,
+          sans-serif;
+        color: var(--text-primary);
+        background-color: var(--bg-content);
+        display: flex;
+        min-height: 100vh;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      /* Sidebar Navigation */
+      .sidebar {
+        width: 280px;
+        background-color: var(--bg-sidebar);
+        color: #fff;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        border-right: 1px solid #1e293b;
+        z-index: 1000;
+      }
+
+      .sidebar-header {
+        padding: 24px;
+        border-bottom: 1px solid #334155;
+      }
+
+      .logo {
+        font-weight: 700;
+        font-size: 1.25rem;
+        letter-spacing: -0.025em;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar-nav {
+        padding: 24px 16px;
+      }
+
+      .nav-section-title {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #94a3b8;
+        margin-bottom: 12px;
+        padding-left: 12px;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        color: #cbd5e1;
+        text-decoration: none;
+        border-radius: 6px;
+        margin-bottom: 4px;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+      }
+
+      .nav-item:hover {
+        background-color: #1e293b;
+        color: #fff;
+      }
+
+      .nav-item.active {
+        background-color: #334155;
+        color: #fff;
+        font-weight: 500;
+      }
+
+      .nav-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      /* Main Content Area */
+      .main-content {
+        margin-left: 280px;
+        flex: 1;
+        background-color: var(--bg-content);
+      }
+
+      /* Top Header */
+      .top-header {
+        background-color: #fff;
+        border-bottom: 1px solid var(--border-color);
+        padding: 16px 40px;
+        position: sticky;
+        top: 0;
+        z-index: 900;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      }
+
+      .header-left h1 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .header-meta {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .status-badge {
+        background-color: #dcfce7;
+        color: #166534;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      /* Strategic Banner */
+      .strategic-banner {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 12px 40px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Content Container */
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px;
+      }
+
+      /* Summary Table */
+      .summary-card {
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 40px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+
+      th {
+        background-color: #f1f5f9;
+        text-align: left;
+        padding: 12px 24px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        padding: 16px 24px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .badge-new {
+        background-color: #fff7ed;
+        color: #c2410c;
+        border: 1px solid #ffedd5;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        margin-left: 8px;
+      }
+
+      /* Agent Sections */
+      .agent-section {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 40px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .agent-header {
+        padding: 24px 32px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .agent-header.bda {
+        border-top: 4px solid var(--agent-bda);
+      }
+      .agent-header.fda {
+        border-top: 4px solid var(--agent-fda);
+      }
+      .agent-header.sea {
+        border-top: 4px solid var(--agent-sea);
+      }
+      .agent-header.qaa {
+        border-top: 4px solid var(--agent-qaa);
+      }
+      .agent-header.doa {
+        border-top: 4px solid var(--agent-doa);
+      }
+      .agent-header.pma {
+        border-top: 4px solid var(--agent-pma);
+      }
+
+      .agent-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+
+      .agent-info h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+
+      .agent-meta {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .task-block {
+        padding: 32px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .task-block:last-child {
+        border-bottom: none;
+      }
+
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .task-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .task-id {
+        background-color: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: #475569;
+      }
+
+      /* Code Blocks */
+      pre {
+        background-color: var(--code-bg);
+        color: #e2e8f0;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        line-height: 1.5;
+        margin-top: 16px;
+        border: 1px solid #334155;
+        position: relative;
+      }
+
+      .code-header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 4px 12px;
+        background: #334155;
+        border-bottom-left-radius: 6px;
+        font-size: 0.7rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+      }
+
+      /* Syntax Highlighting Simulation */
+      .token-keyword {
+        color: #c678dd;
+      }
+      .token-function {
+        color: #61afef;
+      }
+      .token-string {
+        color: #98c379;
+      }
+      .token-comment {
+        color: #7f848e;
+        font-style: italic;
+      }
+      .token-type {
+        color: #e5c07b;
+      }
+      .token-number {
+        color: #d19a66;
+      }
+
+      /* Document/Markdown Simulation */
+      .doc-view {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        padding: 32px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        font-family: 'Inter', sans-serif;
+        max-width: 100%;
+      }
+
+      .doc-view h1 {
+        font-size: 1.8rem;
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #eee;
+      }
+      .doc-view h2 {
+        font-size: 1.4rem;
+        margin-top: 24px;
+        margin-bottom: 12px;
+        color: #334155;
+      }
+      .doc-view h3 {
+        font-size: 1.1rem;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .doc-view p {
+        margin-bottom: 12px;
+        color: #475569;
+      }
+      .doc-view ul {
+        margin-left: 20px;
+        margin-bottom: 16px;
+        color: #475569;
+      }
+      .doc-view li {
+        margin-bottom: 4px;
+      }
+
+      .nemo-badge {
+        display: inline-flex;
+        align-items: center;
+        background-color: rgba(118, 185, 0, 0.1);
+        border: 1px solid rgba(118, 185, 0, 0.3);
+        color: #5d9100;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        gap: 6px;
+      }
+
+      footer {
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i data-lucide="box" style="color: #60a5fa"></i>
+          iVenture Studio
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-title">Sprint 3 Deliverables</div>
+        <a href="#summary" class="nav-item">
+          <i data-lucide="bar-chart-2" style="width: 16px; margin-right: 8px"></i>
+          Summary
+        </a>
+        <div class="nav-section-title">Agents</div>
+        <a href="#bda" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-bda)"></div>
+          BDA-v1 (Backend)
+        </a>
+        <a href="#fda" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-fda)"></div>
+          FDA-v1 (Frontend)
+        </a>
+        <a href="#sea" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-sea)"></div>
+          SEA-v1 (Security)
+        </a>
+        <a href="#qaa" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-qaa)"></div>
+          QAA-v1 (QA)
+        </a>
+        <a href="#doa" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-doa)"></div>
+          DOA-v1 (DevOps)
+        </a>
+        <a href="#pma" class="nav-item">
+          <div class="nav-dot" style="background: var(--agent-pma)"></div>
+          PMA-v1 (Product)
+        </a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Strategic Banner -->
+      <div class="strategic-banner">
+        <i data-lucide="trophy" size="16"></i>
+        Agents-as-a-Service • Western Markets Only • NVIDIA NemoClaw Integration
+      </div>
+
+      <!-- Sticky Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <h1>Sprint 3 — Complete Deliverables</h1>
+        </div>
+        <div class="header-meta">
+          <span>2026-03-18</span>
+          <span>6 Agents</span>
+          <span>29 Tasks</span>
+          <span class="status-badge">DELIVERED</span>
+        </div>
+      </header>
+
+      <div class="container">
+        <!-- Summary Section -->
+        <section id="summary" class="summary-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Agent</th>
+                <th>Model</th>
+                <th>Tasks</th>
+                <th>Story Points</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color: var(--agent-bda); font-weight: 600">BDA-v1 (Backend)</td>
+                <td>Kimi K2.5</td>
+                <td>4</td>
+                <td>34 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-fda); font-weight: 600">FDA-v1 (Frontend)</td>
+                <td>Claude Opus 4</td>
+                <td>5</td>
+                <td>42 pts</td>
+                <td><span class="status-badge">Done</span> <span class="badge-new">FIRST SPRINT</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-sea); font-weight: 600">SEA-v1 (Security)</td>
+                <td>GPT-5</td>
+                <td>5</td>
+                <td>28 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-qaa); font-weight: 600">QAA-v1 (QA)</td>
+                <td>Nemotron</td>
+                <td>4</td>
+                <td>24 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-doa); font-weight: 600">DOA-v1 (DevOps)</td>
+                <td>Nemotron</td>
+                <td>5</td>
+                <td>22 pts</td>
+                <td><span class="status-badge">Done</span></td>
+              </tr>
+              <tr>
+                <td style="color: var(--agent-pma); font-weight: 600">PMA-v1 (PM)</td>
+                <td>Qwen-turbo</td>
+                <td>4</td>
+                <td>21 pts</td>
+                <td><span class="status-badge">Done</span> <span class="badge-new">FIRST SPRINT</span></td>
+              </tr>
+              <tr style="background-color: #f8fafc; font-weight: 600">
+                <td>TOTAL</td>
+                <td>-</td>
+                <td>27</td>
+                <td>171 pts</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- BDA-v1 Section -->
+        <section id="bda" class="agent-section">
+          <div class="agent-header bda">
+            <div class="agent-icon" style="background-color: var(--agent-bda)">
+              <i data-lucide="server"></i>
+            </div>
+            <div class="agent-info">
+              <h2>BDA-v1 — Backend Dev Agent</h2>
+              <div class="agent-meta">Kimi K2.5 | 4 Tasks | 34 Story Points</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-BDA-01</span> Stripe Checkout Integration</div>
+            </div>
+            <p>Complete TypeScript implementation for subscription checkout sessions.</p>
+            <pre><span class="code-header">src/billing/stripe-checkout.ts</span><code><span class="token-keyword">import</span> Stripe <span class="token-keyword">from</span> <span class="token-string">'stripe'</span>;
+<span class="token-keyword">import</span> { FastifyRequest, FastifyReply } <span class="token-keyword">from</span> <span class="token-string">'fastify'</span>;
+<span class="token-keyword">import</span> { z } <span class="token-keyword">from</span> <span class="token-string">'zod'</span>;
+<span class="token-keyword">import</span> { db } <span class="token-keyword">from</span> <span class="token-string">'../config/database'</span>;
+<span class="token-keyword">import</span> { logger } <span class="token-keyword">from</span> <span class="token-string">'../observability/logger'</span>;
+
+<span class="token-keyword">const</span> stripe = <span class="token-keyword">new</span> Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: <span class="token-string">'2025-10-01'</span> });
+
+<span class="token-keyword">const</span> PRICE_IDS = {
+  spark:  process.env.STRIPE_PRICE_SPARK!,
+  growth: process.env.STRIPE_PRICE_GROWTH!,
+  scale:  process.env.STRIPE_PRICE_SCALE!,
+  empire: process.env.STRIPE_PRICE_EMPIRE!,
+};
+
+<span class="token-keyword">const</span> CheckoutSchema = z.object({
+  company_id: z.string().uuid(),
+  tier: z.enum([<span class="token-string">'spark'</span>, <span class="token-string">'growth'</span>, <span class="token-string">'scale'</span>, <span class="token-string">'empire'</span>]),
+  success_url: z.string().url().optional(),
+  cancel_url: z.string().url().optional(),
+});
+
+<span class="token-keyword">export async function</span> <span class="token-function">createCheckoutSession</span>(req: FastifyRequest, reply: FastifyReply) {
+  <span class="token-keyword">const</span> body = CheckoutSchema.safeParse(req.body);
+  <span class="token-keyword">if</span> (!body.success) <span class="token-keyword">return</span> reply.status(422).send({ error: <span class="token-string">'VALIDATION_ERROR'</span> });
+
+  <span class="token-keyword">const</span> { company_id, tier, success_url, cancel_url } = body.data;
+
+  <span class="token-comment">// Check company exists</span>
+  <span class="token-keyword">const</span> company = <span class="token-keyword">await</span> db.query(
+    <span class="token-string">'SELECT id, name, email, stripe_customer_id FROM companies WHERE id = $1'</span>,
+    [company_id]
+  );
+  <span class="token-keyword">if</span> (!company.rows[0]) <span class="token-keyword">return</span> reply.status(404).send({ error: <span class="token-string">'COMPANY_NOT_FOUND'</span> });
+
+  <span class="token-keyword">const</span> { name, email, stripe_customer_id } = company.rows[0];
+
+  <span class="token-comment">// Create or get Stripe Customer</span>
+  <span class="token-keyword">let</span> customerId = stripe_customer_id;
+  <span class="token-keyword">if</span> (!customerId) {
+    <span class="token-keyword">const</span> customer = <span class="token-keyword">await</span> stripe.customers.create({ email, name, metadata: { company_id } });
+    customerId = customer.id;
+    <span class="token-keyword">await</span> db.query(<span class="token-string">'UPDATE companies SET stripe_customer_id = $1 WHERE id = $2'</span>, [customerId, company_id]);
+  }
+
+  <span class="token-comment">// Create Session</span>
+  <span class="token-keyword">const</span> session = <span class="token-keyword">await</span> stripe.checkout.sessions.create({
+    customer: customerId,
+    payment_method_types: [<span class="token-string">'card'</span>],
+    line_items: [{ price: PRICE_IDS[tier], quantity: 1 }],
+    mode: <span class="token-string">'subscription'</span>,
+    success_url: success_url ?? `${process.env.APP_URL}/dashboard?checkout=success&tier=${tier}`,
+    cancel_url: cancel_url ?? `${process.env.APP_URL}/pricing?checkout=cancelled`,
+    metadata: { company_id, tier },
+    subscription_data: {
+      metadata: { company_id, tier },
+      trial_settings: { end_behavior: { missing_payment_method: <span class="token-string">'cancel'</span> } },
+    },
+    allow_promotion_codes: <span class="token-keyword">true</span>,
+  });
+
+  logger.info({ company_id, tier }, <span class="token-string">'Stripe checkout session created'</span>);
+  <span class="token-keyword">return</span> reply.status(200).send({ checkout_url: session.url, session_id: session.id });
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-BDA-02</span> Stripe Webhook Handler</div>
+            </div>
+            <p>Handles subscription lifecycle events and entitlement sync.</p>
+            <pre><span class="code-header">src/billing/stripe-webhook.ts</span><code><span class="token-keyword">export async function</span> <span class="token-function">stripeWebhookHandler</span>(req: FastifyRequest, reply: FastifyReply) {
+  <span class="token-keyword">const</span> sig = req.headers[<span class="token-string">'stripe-signature'</span>] <span class="token-keyword">as</span> string;
+  <span class="token-keyword">let</span> event: Stripe.Event;
+
+  <span class="token-keyword">try</span> {
+    event = stripe.webhooks.constructEvent(req.rawBody <span class="token-keyword">as</span> Buffer, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+  } <span class="token-keyword">catch</span> (err) {
+    <span class="token-keyword">return</span> reply.status(400).send({ error: <span class="token-string">'INVALID_SIGNATURE'</span> });
+  }
+
+  <span class="token-keyword">switch</span> (event.type) {
+    <span class="token-keyword">case</span> <span class="token-string">'customer.subscription.created'</span>:
+    <span class="token-keyword">case</span> <span class="token-string">'customer.subscription.updated'</span>:
+      <span class="token-keyword">await</span> <span class="token-function">handleSubscriptionUpdate</span>(event.data.object <span class="token-keyword">as</span> Stripe.Subscription);
+      <span class="token-keyword">break</span>;
+    <span class="token-keyword">case</span> <span class="token-string">'customer.subscription.deleted'</span>:
+      <span class="token-keyword">await</span> <span class="token-function">handleSubscriptionDeleted</span>(event.data.object <span class="token-keyword">as</span> Stripe.Subscription);
+      <span class="token-keyword">break</span>;
+    <span class="token-keyword">case</span> <span class="token-string">'invoice.payment_failed'</span>:
+      <span class="token-keyword">await</span> <span class="token-function">handlePaymentFailed</span>(event.data.object <span class="token-keyword">as</span> Stripe.Invoice);
+      <span class="token-keyword">break</span>;
+  }
+  <span class="token-keyword">return</span> reply.status(200).send({ received: <span class="token-keyword">true</span> });
+}
+
+<span class="token-keyword">async function</span> <span class="token-function">handleSubscriptionUpdate</span>(sub: Stripe.Subscription) {
+  <span class="token-keyword">const</span> company_id = sub.metadata.company_id;
+  <span class="token-keyword">const</span> tier = TIER_MAP[sub.items.data[0].price.id] ?? <span class="token-string">'unknown'</span>;
+  <span class="token-keyword">const</span> status = sub.status;
+
+  <span class="token-keyword">await</span> db.query(
+    <span class="token-string">`UPDATE companies SET subscription_tier = $1, subscription_status = $2,
+     stripe_subscription_id = $3, updated_at = NOW() WHERE id = $4`</span>,
+    [tier, status, sub.id, company_id]
+  );
+
+  <span class="token-comment">// Sync to DynamoDB for low-latency checks</span>
+  <span class="token-keyword">await</span> dynamodb.send(<span class="token-keyword">new</span> UpdateCommand({
+    TableName: <span class="token-string">'user_entitlements_cache'</span>,
+    Key: { company_id },
+    UpdateExpression: <span class="token-string">'SET subscription_tier = :t, subscription_status = :s'</span>,
+    ExpressionAttributeValues: { <span class="token-string">':t'</span>: tier, <span class="token-string">':s'</span>: status },
+  }));
+}</code></pre>
+          </div>
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-BDA-03</span> Entitlement Middleware</div>
+            </div>
+            <p>Enforces subscription limits on every API call.</p>
+            <pre><span class="code-header">src/api/middleware/entitlements.ts</span><code><span class="token-keyword">export async function</span> <span class="token-function">entitlementMiddleware</span>(req: FastifyRequest, reply: FastifyReply) {
+  <span class="token-keyword">const</span> company_id = req.user?.company_id;
+  
+  <span class="token-comment">// Check DynamoDB Cache</span>
+  <span class="token-keyword">const</span> result = <span class="token-keyword">await</span> dynamodb.send(<span class="token-keyword">new</span> GetCommand({
+    TableName: <span class="token-string">'user_entitlements_cache'</span>,
+    Key: { company_id },
+  }));
+  <span class="token-keyword">const</span> entitlement = result.Item;
+
+  <span class="token-keyword">if</span> (!entitlement) <span class="token-keyword">return</span> reply.status(402).send({ error: <span class="token-string">'NO_SUBSCRIPTION'</span> });
+
+  <span class="token-keyword">if</span> (entitlement.subscription_tier === <span class="token-string">'trial'</span>) {
+    <span class="token-keyword">if</span> (<span class="token-keyword">new</span> Date(entitlement.trial_ends_at) < <span class="token-keyword">new</span> Date()) {
+       <span class="token-keyword">return</span> reply.status(402).send({ error: <span class="token-string">'TRIAL_EXPIRED'</span> });
+    }
+    <span class="token-keyword">const</span> requestedSkill = (req.body <span class="token-keyword">as</span> any)?.skill_id;
+    <span class="token-keyword">if</span> (requestedSkill && !FREE_TRIAL_SKILLS.includes(requestedSkill)) {
+       <span class="token-keyword">return</span> reply.status(402).send({ error: <span class="token-string">'SKILL_NOT_IN_TRIAL'</span> });
+    }
+  }
+  req.entitlement = entitlement;
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- FDA-v1 Section -->
+        <section id="fda" class="agent-section">
+          <div class="agent-header fda">
+            <div class="agent-icon" style="background-color: var(--agent-fda)">
+              <i data-lucide="layout"></i>
+            </div>
+            <div class="agent-info">
+              <h2>FDA-v1 — Frontend Dev Agent</h2>
+              <div class="agent-meta">
+                Claude Opus 4 | 5 Tasks | 42 Pts | <span class="badge-new">FIRST SPRINT</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-FDA-03</span> NemoClaw Trust Badge</div>
+            </div>
+            <p>Key UI component for landing page and dashboard trust signaling.</p>
+            <pre><span class="code-header">components/NemoClawBadge.tsx</span><code><span class="token-string">'use client'</span>;
+<span class="token-keyword">import</span> { ShieldCheckIcon } <span class="token-keyword">from</span> <span class="token-string">'@heroicons/react/24/solid'</span>;
+
+<span class="token-keyword">interface</span> NemoClawBadgeProps {
+  size?: <span class="token-string">'sm'</span> | <span class="token-string">'md'</span> | <span class="token-string">'lg'</span>;
+  className?: string;
+}
+
+<span class="token-keyword">export function</span> <span class="token-function">NemoClawBadge</span>({ size = <span class="token-string">'md'</span>, className = <span class="token-string">''</span> }: NemoClawBadgeProps) {
+  <span class="token-keyword">return</span> (
+    &lt;div className={<span class="token-string">`group relative inline-flex items-center gap-2 bg-[#76b900]/10 border border-[#76b900]/30 rounded-full cursor-help`</span>}&gt;
+      &lt;ShieldCheckIcon className=<span class="token-string">"text-[#76b900] w-4 h-4"</span> /&gt;
+      &lt;span className=<span class="token-string">"text-[#76b900] font-medium text-sm"</span>&gt;Secured by NVIDIA NemoClaw&lt;/span&gt;
+      
+      {<span class="token-comment">/* Tooltip */</span>}
+      &lt;div className=<span class="token-string">"absolute bottom-full mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100"</span>&gt;
+        &lt;p className=<span class="token-string">"font-semibold text-[#76b900]"</span>&gt;NVIDIA NemoClaw&lt;/p&gt;
+        &lt;p&gt;Enterprise-grade security. Data stays in EU. Policy guardrails active.&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-FDA-01</span> Project Structure</div>
+            </div>
+            <p>Next.js 14 App Router structure.</p>
+            <pre><code>ventrueclaw-dashboard/
+├── app/
+│   ├── page.tsx                    <span class="token-comment"># Landing page (Marketing)</span>
+│   ├── layout.tsx                  <span class="token-comment"># Root layout</span>
+│   ├── onboard/                    <span class="token-comment"># Multi-step onboarding flow</span>
+│   └── dashboard/
+│       ├── layout.tsx              <span class="token-comment"># Authenticated Shell (Sidebar + Header)</span>
+│       ├── page.tsx                <span class="token-comment"># Overview (Stats, Usage)</span>
+│       ├── settings/page.tsx       <span class="token-comment"># Company Profile</span>
+│       ├── bricks/page.tsx         <span class="token-comment"># Brick Catalogue</span>
+│       ├── skills/page.tsx         <span class="token-comment"># Skill Runner (AI Task Interface)</span>
+│       └── openclaw/page.tsx       <span class="token-comment"># Node Provisioner</span>
+├── components/
+│   ├── NemoClawBadge.tsx           <span class="token-comment"># Trust Badge</span>
+│   ├── BrickCard.tsx               <span class="token-comment"># Catalogue Item</span>
+│   └── SkillRunner.tsx             <span class="token-comment"># Interactive Runner</span></code></pre>
+          </div>
+        </section>
+
+        <!-- SEA-v1 Section -->
+        <section id="sea" class="agent-section">
+          <div class="agent-header sea">
+            <div class="agent-icon" style="background-color: var(--agent-sea)">
+              <i data-lucide="shield"></i>
+            </div>
+            <div class="agent-info">
+              <h2>SEA-v1 — Security Agent</h2>
+              <div class="agent-meta">GPT-5 | 5 Tasks | 28 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-SEA-01</span> ADR-006: GDPR Architecture</div>
+            </div>
+            <div class="doc-view">
+              <h1>ADR-006: GDPR Data Architecture</h1>
+              <p><strong>Date:</strong> 2026-03-18 | <strong>Status:</strong> ACCEPTED</p>
+
+              <h3>Context</h3>
+              <p>iVenture Studio processes EU SMB data. Western-market-only focus makes GDPR the primary framework.</p>
+
+              <h3>Decision</h3>
+              <ol>
+                <li>
+                  <strong>EU Data Residency:</strong> All data in AWS eu-central-1 (Frankfurt). No cross-border
+                  transfers.
+                </li>
+                <li>
+                  <strong>Right to Erasure:</strong> Cascading delete across Postgres, DynamoDB, Redis, S3 via
+                  <code>DELETE /api/v1/companies/{id}/gdpr/erasure</code>.
+                </li>
+                <li>
+                  <strong>Minimisation:</strong> Skills log only metadata (cost, duration). Input content not stored
+                  unless opted-in.
+                </li>
+                <li>
+                  <strong>Lawful Basis:</strong> Contract (Service), Legitimate Interest (Security), Consent
+                  (Marketing).
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-SEA-02</span> Anomaly Detector</div>
+            </div>
+            <p>Detects cost spikes and attacks using Redis sliding windows.</p>
+            <pre><span class="code-header">src/security/anomaly-detector.ts</span><code><span class="token-keyword">const</span> CONFIG = {
+  costSpike:   { windowMs: 60_000, multiplier: 3 },
+  rateLimit:   { windowMs: 60_000, maxRequests: 50 },
+};
+
+<span class="token-keyword">export async function</span> <span class="token-function">checkCostAnomaly</span>(company_id: string, cost_eur: number): Promise&lt;boolean&gt; {
+  <span class="token-keyword">const</span> key = <span class="token-string">`anomaly:cost:${company_id}:window`</span>;
+  
+  <span class="token-keyword">const</span> pipeline = redis.pipeline();
+  pipeline.lpush(key, cost_eur.toString());
+  pipeline.ltrim(key, 0, 99); <span class="token-comment">// Keep last 100 txns</span>
+  pipeline.lrange(key, 0, -1);
+  <span class="token-keyword">const</span> results = <span class="token-keyword">await</span> pipeline.exec();
+  
+  <span class="token-keyword">const</span> costs = (results![2][1] <span class="token-keyword">as</span> string[]).map(Number);
+  <span class="token-keyword">if</span> (costs.length < 5) <span class="token-keyword">return</span> <span class="token-keyword">false</span>;
+  
+  <span class="token-keyword">const</span> avg = costs.slice(1).reduce((a, b) => a + b, 0) / (costs.length - 1);
+  <span class="token-keyword">const</span> isAnomaly = cost_eur > avg * CONFIG.costSpike.multiplier;
+  
+  <span class="token-keyword">if</span> (isAnomaly) {
+    <span class="token-keyword">await</span> <span class="token-function">sendSecurityAlert</span>({ 
+        type: <span class="token-string">'COST_ANOMALY'</span>, 
+        details: { cost_eur, avg_cost: avg } 
+    });
+  }
+  
+  <span class="token-keyword">return</span> isAnomaly;
+}</code></pre>
+          </div>
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-SEA-05</span> ADR-007: NemoClaw Adoption</div>
+            </div>
+            <div class="doc-view">
+              <h1>ADR-007: NVIDIA NemoClaw Security Layer</h1>
+              <p><strong>Status:</strong> PROPOSED (Sprint 4) | <strong>Author:</strong> SEA-v1</p>
+              <h3>Context</h3>
+              <p>NVIDIA announced NemoClaw at GTC 2026. It offers an OpenShell sandbox for agents.</p>
+              <h3>Decision</h3>
+              <p>
+                <strong>PROPOSED:</strong> Evaluate in Sprint 4. Keep custom Sprint 1 security as production layer for
+                now.
+              </p>
+              <p>
+                <strong>Logic:</strong> NemoClaw is Alpha (March 2026). Linux-only. We will badge it for marketing
+                ("Powered by") but integrate code only when RC is available (Q3 2026).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- QAA-v1 Section -->
+        <section id="qaa" class="agent-section">
+          <div class="agent-header qaa">
+            <div class="agent-icon" style="background-color: var(--agent-qaa)">
+              <i data-lucide="check-circle"></i>
+            </div>
+            <div class="agent-info">
+              <h2>QAA-v1 — QA Agent</h2>
+              <div class="agent-meta">Nemotron | 4 Tasks | 24 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-QAA-01</span> Chaos Engineering</div>
+            </div>
+            <p>Scenario 1: Container Kill Mid-Task</p>
+            <pre><span class="code-header">tests/chaos/container-kill.test.ts</span><code>describe(<span class="token-string">'Chaos: Container kill mid-task'</span>, () => {
+  it(<span class="token-string">'should recover gracefully and mark task as failed'</span>, <span class="token-keyword">async</span> () => {
+    <span class="token-comment">// 1. Start long-running browser task</span>
+    <span class="token-keyword">const</span> taskId = <span class="token-keyword">await</span> startTask({ skill: <span class="token-string">'competitive-intel'</span> });
+    
+    <span class="token-comment">// 2. Inject fault: kill container after 2s</span>
+    <span class="token-keyword">await</span> sleep(2000);
+    <span class="token-keyword">await</span> exec(<span class="token-string">'docker kill ventureclaw-test'</span>);
+    
+    <span class="token-comment">// 3. Wait for auto-restart</span>
+    <span class="token-keyword">await</span> waitFor(() => containerIsHealthy());
+    
+    <span class="token-comment">// 4. Assert task failed, no billing</span>
+    <span class="token-keyword">const</span> task = <span class="token-keyword">await</span> getTask(taskId);
+    expect(task.status).toBe(<span class="token-string">'failed'</span>);
+    expect(task.error_code).toBe(<span class="token-string">'CONTAINER_RESTART'</span>);
+    
+    <span class="token-keyword">const</span> billingEntries = <span class="token-keyword">await</span> getBillingForTask(taskId);
+    expect(billingEntries).toHaveLength(0);
+  });
+});</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-QAA-04</span> Grafana SLO Baselines</div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>SLO Metric</th>
+                  <th>Target</th>
+                  <th>Critical Alert</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>P95 Task Latency</td>
+                  <td>&lt; 5,000 ms</td>
+                  <td>&gt; 5,000 ms</td>
+                </tr>
+                <tr>
+                  <td>P99 Task Latency</td>
+                  <td>&lt; 10,000 ms</td>
+                  <td>&gt; 10,000 ms</td>
+                </tr>
+                <tr>
+                  <td>Error Rate</td>
+                  <td>&lt; 1%</td>
+                  <td>&gt; 1%</td>
+                </tr>
+                <tr>
+                  <td>Stripe Processing</td>
+                  <td>&lt; 2,000 ms</td>
+                  <td>&gt; 2,000 ms</td>
+                </tr>
+                <tr>
+                  <td>Skill Cost Accuracy</td>
+                  <td>&plusmn; 2%</td>
+                  <td>&plusmn; 2%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- DOA-v1 Section -->
+        <section id="doa" class="agent-section">
+          <div class="agent-header doa">
+            <div class="agent-icon" style="background-color: var(--agent-doa)">
+              <i data-lucide="settings"></i>
+            </div>
+            <div class="agent-info">
+              <h2>DOA-v1 — DevOps Agent</h2>
+              <div class="agent-meta">Nemotron | 5 Tasks | 22 Pts</div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-DOA-01</span> Kubernetes Manifests</div>
+            </div>
+            <pre><span class="code-header">k8s/ventureclaw-deployment.yaml</span><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ventureclaw
+  namespace: iventure
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ventureclaw
+  template:
+    metadata:
+      labels:
+        app: ventureclaw
+    spec:
+      securityContext:
+        runAsNonRoot: <span class="token-keyword">true</span>
+        runAsUser: 1001
+      containers:
+      - name: ventureclaw
+        image: ghcr.io/iventure-studio/ventureclaw:1.0.0
+        ports:
+        - containerPort: 3001
+        resources:
+          requests:
+            cpu: <span class="token-string">"500m"</span>
+            memory: <span class="token-string">"512Mi"</span>
+          limits:
+            cpu: <span class="token-string">"2000m"</span>
+            memory: <span class="token-string">"2Gi"</span>
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ventureclaw-hpa
+spec:
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70</code></pre>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-DOA-05</span> NemoClaw Compatibility</div>
+            </div>
+            <div class="doc-view">
+              <h1>NemoClaw Compatibility & Integration Plan</h1>
+              <p><strong>Owner:</strong> DOA-v1 | <strong>Date:</strong> 2026-03-18</p>
+
+              <h3>System Requirements</h3>
+              <ul>
+                <li><strong>Ubuntu 22.04+:</strong> Supported (Dockerfile base)</li>
+                <li><strong>Docker:</strong> Required (In use)</li>
+                <li><strong>K8s-native:</strong> ETA Q3 2026</li>
+              </ul>
+
+              <h3>Sprint 4 Integration Plan</h3>
+              <p>Steps: 1) Watch GitHub for RC. 2) Add onboarding step to Dockerfile.</p>
+              <pre><code># NemoClaw Integration (Sprint 4)
+# RUN curl -fsSL https://nvidia.com/nemoclaw.sh | bash
+# RUN nemoclaw onboard
+# COPY policy.yaml /etc/nemoclaw/policy.yaml</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- PMA-v1 Section -->
+        <section id="pma" class="agent-section">
+          <div class="agent-header pma">
+            <div class="agent-icon" style="background-color: var(--agent-pma)">
+              <i data-lucide="map"></i>
+            </div>
+            <div class="agent-info">
+              <h2>PMA-v1 — Product Agent</h2>
+              <div class="agent-meta">Qwen-turbo | 4 Tasks | 21 Pts | <span class="badge-new">FIRST SPRINT</span></div>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-PMA-01</span> Nordic GTM Plan</div>
+            </div>
+            <div class="doc-view">
+              <h1>Nordic GTM — iVenture Studio</h1>
+              <h3>Market Sizing (Target: 30% AI-Ready SMBs)</h3>
+              <ul>
+                <li><strong>🇮🇸 Iceland (Pilot):</strong> 9,300 SMBs (TAM €457K/mo)</li>
+                <li><strong>🇳🇴 Norway:</strong> 119,400 SMBs (TAM €5.9M/mo)</li>
+                <li><strong>🇸🇪 Sweden:</strong> 342,000 SMBs (TAM €16.8M/mo)</li>
+              </ul>
+
+              <h3>Messaging Framework</h3>
+              <ul>
+                <li><strong>Primary:</strong> "Your AI Team. From €49/month."</li>
+                <li><strong>Nordic:</strong> "Smarter than hiring. Simpler than software."</li>
+                <li>
+                  <strong>NemoClaw Angle:</strong>
+                  <span class="nemo-badge"><i data-lucide="shield" size="12"></i> Enterprise Security</span> without
+                  enterprise prices.
+                </li>
+              </ul>
+
+              <h3>Pricing Localisation</h3>
+              <ul>
+                <li><strong>SPARK:</strong> €49 / 599 kr</li>
+                <li><strong>GROWTH:</strong> €149 / 1,799 kr</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="task-block">
+            <div class="task-header">
+              <div class="task-title"><span class="task-id">S3-PMA-03</span> Partner Email Sequence</div>
+            </div>
+            <div class="doc-view" style="background-color: #f8fafc; border: 1px dashed #cbd5e1">
+              <p><strong>Subject:</strong> AI team for your clients — built for Nordic consultants</p>
+              <p>Hi [Name],</p>
+              <p>
+                I'm building iVenture Studio from Iceland — an AI platform giving SMBs access to a full AI operations
+                team at €49/month.
+              </p>
+              <p>
+                I'm inviting 5 Icelandic partners to join the Cortex Partner program. You provide iVenture to your
+                clients under your brand, earn 20% MRR, and use all 72 AI skills free.
+              </p>
+              <p>Would a 15-minute call make sense this week?</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <h3>Sprint 4 Preview</h3>
+              <ul style="list-style: none; margin-top: 10px; line-height: 1.8">
+                <li>• NemoClaw OpenShell Integration</li>
+                <li>• Invoice Manager & Proposal Generator Skills</li>
+                <li>• Full Production Kubernetes Deploy</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Save Location</h3>
+              <code style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px"
+                >/iventure-studio/strategy/SPRINT-3-DELIVERABLES.html</code
+              >
+            </div>
+          </div>
+          <div style="text-align: center; border-top: 1px solid #e2e8f0; padding-top: 20px">
+            © 2026 iVenture Studio • Agents-as-a-Service • Vestmannaeyjar, Iceland
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

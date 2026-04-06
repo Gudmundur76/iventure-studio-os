@@ -1,0 +1,90 @@
+version: "3.8"
+
+# Phase 2.5 — OpenClaw Pool + MiroFish + VMOA Skill #19
+# Run AFTER P1 core services are healthy
+# docker compose -f p25-docker-compose-mirofish.yml up -d
+
+networks:
+  iventure-net:
+    external: true
+    name: iventure-net
+
+volumes:
+  mirofish-neo4j-data:
+
+services:
+
+  # ──────────────────────────────────────────────────────────
+  # MiroFish-Offline — OASIS simulation UI
+  # Repo: https://github.com/nikmcfly/MiroFish-Offline
+  # ──────────────────────────────────────────────────────────
+  mirofish:
+    build:
+      context: ./services/mirofish
+      dockerfile: Dockerfile
+    container_name: iventure-mirofish
+    restart: unless-stopped
+    environment:
+      # LLM — OpenClaw Pool (NOT Ollama)
+      LLM_API_KEY: ${INTERNAL_API_KEY}
+      LLM_BASE_URL: http://iventure-openclaw-orchestrator:8090/v1
+      LLM_MODEL_NAME: ${MIROFISH_MODEL:-deepseek-r1}
+      # Neo4j — shared instance, mirofish_db
+      NEO4J_URI: bolt://iventure-neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+      # Embeddings
+      EMBEDDING_MODEL: nomic-embed-text
+      EMBEDDING_BASE_URL: http://iventure-openclaw-orchestrator:8090
+      # iVenture hooks
+      CORTEX_INGEST_URL: http://iventure-vic-engine:8080/api/cortex/ingest
+      OASIS_MAX_AGENTS: ${OASIS_MAX_AGENTS:-500}
+    ports:
+      - "3000:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mirofish.rule=Host(`simulate.localhost`)"
+      - "traefik.http.routers.mirofish.entrypoints=web"
+      - "traefik.http.services.mirofish.loadbalancer.server.port=3000"
+    depends_on:
+      - skill-market-sim
+    networks:
+      - iventure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # ──────────────────────────────────────────────────────────
+  # VMOA Skill #19 — market-simulation microservice
+  # FastAPI wrapper around MiroFish/OASIS
+  # ──────────────────────────────────────────────────────────
+  skill-market-sim:
+    build:
+      context: ./services/skill-market-sim
+      dockerfile: Dockerfile
+    container_name: iventure-skill-market-sim
+    restart: unless-stopped
+    environment:
+      OPENCLAW_BASE_URL: http://iventure-openclaw-orchestrator:8090/v1
+      INTERNAL_API_KEY: ${INTERNAL_API_KEY}
+      SIMULATION_MODEL: ${SIMULATION_MODEL:-deepseek-r1}
+      MIROFISH_URL: http://iventure-mirofish:3000
+      CORTEX_INGEST_URL: http://iventure-vic-engine:8080/api/cortex/ingest
+    ports:
+      - "8085:8085"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.skill-sim.rule=Host(`skill-sim.localhost`)"
+      - "traefik.http.routers.skill-sim.entrypoints=web"
+      - "traefik.http.services.skill-sim.loadbalancer.server.port=8085"
+    networks:
+      - iventure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

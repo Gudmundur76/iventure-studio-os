@@ -1,0 +1,77 @@
+# ============================================================
+# iVenture Studio – OpenClaw Orchestrator Docker Service
+# Add this block to docker-compose.yml (Phase 2 extension)
+# ============================================================
+
+# ── ADD TO networks section (already exists) ──
+# iventure-net: (existing)
+
+# ── ADD TO volumes section ──
+  openclaw_state:
+    driver: local
+
+# ── ADD THESE SERVICES ──────────────────────────────────────
+
+  # ── OpenClaw Master Orchestrator ────────────────────────
+  openclaw-orchestrator:
+    build:
+      context: ./services/openclaw-orchestrator
+      dockerfile: Dockerfile
+    container_name: iventure-openclaw-orchestrator
+    restart: unless-stopped
+    environment:
+      REDIS_URL: "redis://:${REDIS_PASSWORD}@redis:6379/1"   # DB 1 for openclaw
+      CORTEX_INGEST_URL: "${CORTEX_INGEST_URL:-https://cortex.iventure.studio/ingest}"
+      CORTEX_API_KEY: "${CORTEX_API_KEY}"
+      INTERNAL_API_KEY: "${INTERNAL_API_KEY}"
+      POOL_HEALTH_TTL: "30"
+      RATE_LIMIT_BACKOFF: "60"
+      MAX_RETRIES: "3"
+      REQUEST_TIMEOUT: "120"
+      # Cookies injected at runtime via /pool/register-secure endpoint
+      # Or via env: CLAW_COOKIE_<INSTANCE_ID>=<raw_cookie>
+    volumes:
+      - openclaw_state:/app/state
+    ports:
+      - "8090:8090"
+    networks:
+      - iventure-net
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openclaw.rule=Host(`claw.localhost`)"
+      - "traefik.http.routers.openclaw.service=openclaw"
+      - "traefik.http.services.openclaw.loadbalancer.server.port=8090"
+
+  # ── Single genspark2api instance (starter – P2 block A) ──
+  genspark2api:
+    image: ghcr.io/deanxv/genspark2api:latest
+    container_name: iventure-genspark2api
+    restart: unless-stopped
+    environment:
+      GS_COOKIE: "${GS_COOKIE}"
+      PORT: "7055"
+      API_SECRET: "${INTERNAL_API_KEY}"
+    ports:
+      - "7055:7055"
+    networks:
+      - iventure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7055/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.genspark2api.rule=Host(`models.localhost`)"
+      - "traefik.http.routers.genspark2api.service=genspark2api"
+      - "traefik.http.services.genspark2api.loadbalancer.server.port=7055"

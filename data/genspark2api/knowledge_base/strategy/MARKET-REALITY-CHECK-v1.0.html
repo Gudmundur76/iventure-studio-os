@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Market Reality Check & Strategic Pivot — China DROPPED, Western Markets FULL FOCUS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #1a237e;
+        --danger-color: #d32f2f;
+        --success-color: #2e7d32;
+        --text-color: #333;
+        --bg-color: #fff;
+        --card-bg: #f8f9fa;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        color: var(--text-color);
+        background-color: var(--bg-color);
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px;
+        line-height: 1.6;
+      }
+
+      /* Header Styling */
+      header.doc-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      header.doc-header h1 {
+        color: white;
+        margin: 0;
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+
+      header.doc-header p {
+        color: rgba(255, 255, 255, 0.9);
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        margin-bottom: 0;
+      }
+
+      /* Typography */
+      h2 {
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.5rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        color: #444;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      /* Section Specifics */
+      .executive-decision {
+        background-color: #e8eaf6;
+        border-left: 5px solid var(--primary-color);
+        padding: 1.5rem;
+        border-radius: 4px;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      /* Badges */
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: white;
+      }
+      .badge-red {
+        background-color: var(--danger-color);
+      }
+      .badge-green {
+        background-color: var(--success-color);
+      }
+
+      /* Directives Lists */
+      .directive-box {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .directive-drop {
+        border-top: 4px solid var(--danger-color);
+        background-color: #fff5f5;
+      }
+      .directive-accelerate {
+        border-top: 4px solid var(--success-color);
+        background-color: #f0fdf4;
+      }
+      .directive-title {
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        display: block;
+      }
+      .text-red {
+        color: var(--danger-color);
+      }
+      .text-green {
+        color: var(--success-color);
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+        font-size: 0.95rem;
+      }
+      th {
+        background-color: #f1f3f5;
+        color: var(--primary-color);
+        font-weight: 600;
+        text-align: left;
+        padding: 12px;
+        border-bottom: 2px solid #ddd;
+      }
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Verdict Cards */
+      .verdict-card {
+        background: var(--card-bg);
+        padding: 1.5rem;
+        border-radius: 6px;
+        border: 1px solid #eee;
+        margin-top: 1rem;
+      }
+      .verdict-label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        color: #666;
+      }
+      .verdict-result {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+
+      /* Code Blocks */
+      pre {
+        background-color: #2d2d2d;
+        color: #f8f8f2;
+        padding: 1.5rem;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.9rem;
+        margin: 1.5rem 0;
+      }
+      code {
+        font-family: 'Roboto Mono', monospace;
+      }
+
+      /* List Styling */
+      ul {
+        padding-left: 1.2rem;
+      }
+      li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Footer */
+      .doc-footer {
+        margin-top: 4rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+        font-size: 0.85rem;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      /* Grid for Profile */
+      .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      @media (min-width: 768px) {
+        .profile-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .profile-item strong {
+        color: var(--primary-color);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="doc-header">
+      <h1>Market Reality Check & Strategic Pivot</h1>
+      <p>China DROPPED, Western Markets FULL FOCUS</p>
+    </header>
+
+    <main>
+      <!-- Section 1 -->
+      <section id="executive-decision">
+        <h2>Section 1 — Executive Decision</h2>
+        <div class="executive-decision">
+          <p style="margin-bottom: 0">
+            <strong>China market:</strong> <span class="badge badge-red">DROPPED permanently</span><br />
+            <strong>Western markets (EU/US/UK/ANZ):</strong> <span class="badge badge-green">FULL FOCUS</span
+            ><br /><br />
+            Effective immediately. All developers redirect now.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 2 -->
+      <section id="founder-profile">
+        <h2>Section 2 — Founder Profile</h2>
+        <div class="profile-grid">
+          <div class="profile-item">• <strong>Age:</strong> 49, non-technical vision & product owner</div>
+          <div class="profile-item">
+            • <strong>Location:</strong> Vestmannaeyjar (Westman Islands), Iceland — remote island, pop. ~4,200, fishing
+            economy
+          </div>
+          <div class="profile-item">
+            • <strong>Working style:</strong> Remote-first by necessity, no local tech ecosystem
+          </div>
+          <div class="profile-item">• <strong>Strength:</strong> AI-agent-driven product development</div>
+          <div class="profile-item">
+            • <strong>Natural market advantage:</strong> Iceland = EU-adjacent, GDPR-native, NATO-member, neutral
+            country — trusted by Western buyers
+          </div>
+          <div class="profile-item">
+            • <strong>Key constraint:</strong> Cannot manage foreign legal entities, non-English compliance operations
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section id="china-stop">
+        <h2>Section 3 — China Market Hard Stop (7 legal barriers)</h2>
+        <ol>
+          <li>
+            <strong>Commercial ICP License</strong> — only available to Chinese companies or JV ≤50% foreign ownership.
+            A solo Icelandic founder CANNOT hold this.
+          </li>
+          <li>
+            <strong>PIPL Compliance 2025</strong> — mandatory audits from May 2025, data must be stored inside China,
+            requires local DPO.
+          </li>
+          <li>
+            <strong>WFOE requirement</strong> — 3–6 months, $5,000–$15,000 upfront, but WFOE still cannot hold
+            commercial ICP.
+          </li>
+          <li><strong>Fapiao system</strong> — no fapiao = no enterprise sales in China.</li>
+          <li><strong>Triple compliance stack (PIPL + CSL + DSL)</strong> — $20,000–$50,000/yr ongoing legal cost.</li>
+          <li><strong>Chinese partner dilution</strong> — 85% probability founder loses majority equity.</li>
+          <li>
+            <strong>Geopolitical risk</strong> — Iceland is NATO member, Western AI tools increasingly restricted in
+            China.
+          </li>
+        </ol>
+
+        <div class="verdict-card" style="border-left: 4px solid var(--danger-color)">
+          <span class="verdict-label">MiroFish Scenario B Result</span>
+          <p style="margin-bottom: 0.5rem">
+            Setup cost $80K+, Ongoing $35K+/yr, ICP probability 12%, NPV NEGATIVE over 5 years.
+          </p>
+          <div class="verdict-result text-red">VERDICT: DROP</div>
+        </div>
+      </section>
+
+      <!-- Section 4 -->
+      <section id="western-focus">
+        <h2>Section 4 — Western Market Full Focus</h2>
+        <div class="grid">
+          <div>
+            <h3>Market Data</h3>
+            <ul>
+              <li><strong>European AIaaS:</strong> $6.59B (2025) → $8.90B (2026), 35% CAGR</li>
+              <li><strong>Global AI SaaS:</strong> $22.21B (2025) → $30.33B (2026) → $367.6B (2034)</li>
+              <li><strong>SMB Software:</strong> $73B (2025) → $124B by 2033</li>
+              <li>91% of SMBs adopting AI report revenue increases (Salesforce 2025)</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>Product-Market Fit Table</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Bundle</th>
+              <th>Price</th>
+              <th>Western SMB Pain Point</th>
+              <th>Fit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>SPARK</strong></td>
+              <td>€49/mo</td>
+              <td>"I need AI but can't afford an agency"</td>
+              <td>✅ Perfect entry</td>
+            </tr>
+            <tr>
+              <td><strong>GROWTH</strong></td>
+              <td>€149/mo</td>
+              <td>"I need to automate sales + ops"</td>
+              <td>✅ Core market</td>
+            </tr>
+            <tr>
+              <td><strong>SCALE</strong></td>
+              <td>€299/mo</td>
+              <td>"I need competitive intel + forecasting"</td>
+              <td>✅ High LTV</td>
+            </tr>
+            <tr>
+              <td><strong>EMPIRE</strong></td>
+              <td>€999/mo</td>
+              <td>"I need a full AI operations team"</td>
+              <td>✅ Enterprise upsell</td>
+            </tr>
+            <tr>
+              <td><strong>Cortex Partner</strong></td>
+              <td>FREE</td>
+              <td>"I want to resell AI to my clients"</td>
+              <td>✅ Channel growth</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="verdict-card" style="border-left: 4px solid var(--success-color)">
+          <span class="verdict-label">MiroFish Scenario A Result</span>
+          <p style="margin-bottom: 0.5rem">
+            Time to first sale 4–8 weeks, €10K MRR in 6–12 months, GDPR compliance €2–5K one-time, Stripe 2 hours to
+            configure, NPV €1.2M–€4.8M (5yr).
+          </p>
+          <div class="verdict-result text-green">VERDICT: FULL FOCUS</div>
+        </div>
+      </section>
+
+      <!-- Section 5 -->
+      <section id="developer-directives">
+        <h2>Section 5 — Developer Directives</h2>
+
+        <div class="directive-box directive-drop">
+          <span class="directive-title text-red">DROP IMMEDIATELY</span>
+          <ul style="margin-bottom: 0">
+            <li>China cluster skills S-54 to S-59</li>
+            <li>WeChat Pay integration</li>
+            <li>ICP registration tasks</li>
+            <li>PIPLRouter in VentureClaw (replace with GDPRRouter)</li>
+            <li>Alibaba Cloud China region</li>
+            <li>CSL compliance layer</li>
+            <li>Mandarin-priority routing in VMOA translator</li>
+            <li>China-specific DynamoDB bricks</li>
+          </ul>
+        </div>
+
+        <div class="directive-box directive-accelerate">
+          <span class="directive-title text-green">ACCELERATE IMMEDIATELY</span>
+          <ul style="margin-bottom: 0">
+            <li>FDA-v1 Sprint 1 — Frontend dashboard UI (FIRST TIME, top priority)</li>
+            <li>Stripe payment integration (2 hours to live revenue)</li>
+            <li>GDPRRouter replacing PIPLRouter</li>
+            <li>Nordic SMB pilot (5 free accounts)</li>
+            <li>SEO landing page (Webflow/Framer)</li>
+            <li>Cortex Partner onboarding for first Icelandic reseller</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Section 6 -->
+      <section id="sprint-plan">
+        <h2>Section 6 — Revised Sprint 3 Plan</h2>
+        <table>
+          <thead>
+            <tr>
+              <th width="20%">Agent</th>
+              <th>Sprint 3 Assignment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>BDA-v1</strong></td>
+              <td>Stripe integration + freemium tier</td>
+            </tr>
+            <tr>
+              <td><strong>FDA-v1</strong></td>
+              <td>Company dashboard MVP + landing page (FIRST SPRINT)</td>
+            </tr>
+            <tr>
+              <td><strong>SEA-v1</strong></td>
+              <td>GDPR ADR-006, anomaly detection on /execute, pen test checklist</td>
+            </tr>
+            <tr>
+              <td><strong>QAA-v1</strong></td>
+              <td>Chaos engineering, Stripe webhook tests, cross-border E2E</td>
+            </tr>
+            <tr>
+              <td><strong>DOA-v1</strong></td>
+              <td>K8s manifests (eu-central-1), Grafana dashboard JSON, provision script</td>
+            </tr>
+            <tr>
+              <td><strong>PMA-v1</strong></td>
+              <td>Nordic GTM plan, 5 beta users identified, Cortex Partner outreach</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section 7 -->
+      <section id="code-snippet">
+        <h2>Section 7 — GDPRRouter Code Snippet (TypeScript)</h2>
+        <pre><code>// src/routing/gdpr-router.ts
+// REPLACES: src/routing/pipl-router.ts (DELETED)
+
+const EU_COUNTRIES = new Set([
+  'IS','IE','GB','DE','FR','NL','BE','DK','SE','NO','FI',
+  'AT','CH','PL','ES','IT','PT','CZ','HU','RO','GR','HR',
+  'BG','SK','SI','EE','LV','LT','LU','MT','CY'
+]);
+
+export function routeRequest(countryCode: string, tld: string): string {
+  // Hard block: China TLDs
+  if (tld === '.cn') {
+    throw new Error('403: China routing disabled per strategy directive 2026-03-18');
+  }
+  if (EU_COUNTRIES.has(countryCode)) return 'eu-central-1';
+  if (['US','CA'].includes(countryCode)) return 'us-east-1';
+  if (['AU','NZ'].includes(countryCode)) return 'ap-southeast-2';
+  return 'eu-central-1'; // default: EU
+}</code></pre>
+      </section>
+
+      <!-- Section 8 -->
+      <section id="sql-migration">
+        <h2>Section 8 — Schema Migration SQL</h2>
+        <pre><code>-- Migration: Remove China-specific columns, add GDPR columns
+-- File: postgres-migrate-v1.3.sql
+-- Date: 2026-03-18
+-- Author: BDA-v1 (redirected by strategy directive)
+
+ALTER TABLE companies
+  DROP COLUMN IF EXISTS icp_license_number,
+  DROP COLUMN IF EXISTS pipl_consent_date,
+  DROP COLUMN IF EXISTS csl_data_category,
+  ADD COLUMN IF NOT EXISTS gdpr_consent_date TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS data_residency_region VARCHAR(20)
+    CHECK (data_residency_region IN ('eu-central-1','us-east-1','ap-southeast-2'))
+    DEFAULT 'eu-central-1';
+
+-- Index for region-based queries
+CREATE INDEX IF NOT EXISTS idx_companies_region 
+  ON companies(data_residency_region);
+
+COMMENT ON COLUMN companies.data_residency_region 
+  IS 'GDPR data residency: eu-central-1 (default), us-east-1, ap-southeast-2. CN routing disabled.';</code></pre>
+      </section>
+
+      <!-- Section 9 -->
+      <section id="target-markets">
+        <h2>Section 9 — Target Markets</h2>
+        <div class="grid">
+          <div>
+            <h3>Primary (build now)</h3>
+            <ul>
+              <li>🇮🇸 Iceland (pilot — natural home base)</li>
+              <li>🇬🇧 UK (English-speaking, post-Brexit GDPR-equivalent)</li>
+              <li>🇩🇪 Germany/DACH (largest EU SMB market)</li>
+              <li>🇳🇱 Netherlands (high AI adoption, English proficiency)</li>
+              <li>🇸🇪🇳🇴🇩🇰🇫🇮 Nordics (high trust, high ARPU, innovation-friendly)</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Secondary (6–12 months)</h3>
+            <ul>
+              <li>🇺🇸 US (Stripe-native, massive TAM)</li>
+              <li>🇦🇺🇳🇿 Australia/NZ (English-speaking, GDPR-adjacent)</li>
+              <li>🇨🇦 Canada (PIPEDA, English-speaking)</li>
+            </ul>
+            <h3>NOT in scope</h3>
+            <ul>
+              <li>🇨🇳 China — until €50K MRR AND all 4 re-entry conditions met</li>
+              <li>🇷🇺 Russia — geopolitical risk</li>
+              <li>🇮🇷 Iran — sanctions</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 10 -->
+      <section id="china-reentry">
+        <h2>Section 10 — China Re-entry Conditions</h2>
+        <p><strong>ALL 4 must be met simultaneously:</strong></p>
+        <ol>
+          <li>✅ €50K MRR in Western markets achieved and sustained 3 months</li>
+          <li>✅ Chinese partner with >50% stake identified, vetted, and legally contracted</li>
+          <li>✅ $100K+ legal budget ring-fenced (not operational funds)</li>
+          <li>✅ Dedicated China operations manager (fluent Mandarin, physically based in China) hired</li>
+        </ol>
+        <p style="background: #f8f9fa; padding: 10px; border-left: 3px solid #666; font-style: italic">
+          Until all 4 are met, no developer time is allocated to China features.
+        </p>
+      </section>
+
+      <!-- Section 11 -->
+      <section id="impact-summary">
+        <h2>Section 11 — Impact Summary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Before (China included)</th>
+              <th>After (Western only)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Time to first revenue</strong></td>
+              <td class="text-red">18–24 months</td>
+              <td class="text-green"><strong>4–8 weeks</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Compliance setup cost</strong></td>
+              <td class="text-red">$80,000–$100,000</td>
+              <td class="text-green"><strong>€2,000–€5,000</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Ongoing legal cost/yr</strong></td>
+              <td class="text-red">$35,000+</td>
+              <td class="text-green"><strong>~€3,000 (GDPR)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Story points freed</strong></td>
+              <td>—</td>
+              <td class="text-green"><strong>~120 pts (3–4 sprints)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Time saved</strong></td>
+              <td>—</td>
+              <td class="text-green"><strong>6–12 months</strong></td>
+            </tr>
+            <tr>
+              <td><strong>5-year NPV</strong></td>
+              <td class="text-red">NEGATIVE</td>
+              <td class="text-green"><strong>€1.2M–€4.8M</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Founder control</strong></td>
+              <td class="text-red">15–50% (Chinese JV)</td>
+              <td class="text-green"><strong>100%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <footer class="doc-footer">
+      <div>File reference: /iventure-studio/strategy/MARKET-REALITY-CHECK-v1.0.md</div>
+      <div>Date: 2026-03-18 | Status: LIVE | Version: 1.0</div>
+    </footer>
+  </body>
+</html>
