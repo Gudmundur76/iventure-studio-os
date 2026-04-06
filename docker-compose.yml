@@ -48,7 +48,7 @@ services:
       - iventure-net
 
   postgres:
-    image: postgres:16-alpine
+    image: timescale/timescaledb-ha:pg16
     container_name: iventure-postgres
     restart: unless-stopped
     environment:
@@ -60,7 +60,7 @@ services:
     networks:
       - iventure-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U iventure"]
+      test: ["CMD-SHELL", "pg_isready -U iventure -d iventure_studio"]
       interval: 10s
       timeout: 5s
       retries: 5

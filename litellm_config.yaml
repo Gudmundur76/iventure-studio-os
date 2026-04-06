@@ -15,7 +15,7 @@ model_list:
   - model_name: gpt-5
     litellm_params:
       model: openai/gpt-5
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
       metadata:
         region: us-east-1
@@ -26,7 +26,7 @@ model_list:
   - model_name: gpt-5-pro
     litellm_params:
       model: openai/gpt-5-pro
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -35,7 +35,7 @@ model_list:
   - model_name: gpt-5-minimal
     litellm_params:
       model: openai/gpt-5-minimal
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -44,7 +44,7 @@ model_list:
   - model_name: o3-pro
     litellm_params:
       model: openai/o3-pro
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -53,7 +53,7 @@ model_list:
   - model_name: o3
     litellm_params:
       model: openai/o3
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -62,7 +62,7 @@ model_list:
   - model_name: claude-opus-4
     litellm_params:
       model: openai/claude-opus-4
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
       metadata:
         region: us-east-1
@@ -73,7 +73,7 @@ model_list:
   - model_name: claude-opus-4-1
     litellm_params:
       model: openai/claude-opus-4-1
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -82,7 +82,7 @@ model_list:
   - model_name: claude-sonnet-4
     litellm_params:
       model: openai/claude-sonnet-4
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -91,7 +91,7 @@ model_list:
   - model_name: gemini-2.5-pro
     litellm_params:
       model: openai/gemini-2.5-pro
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -100,7 +100,7 @@ model_list:
   - model_name: gemini-2.5-flash
     litellm_params:
       model: openai/gemini-2.5-flash
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -109,7 +109,7 @@ model_list:
   - model_name: nemotron
     litellm_params:
       model: openai/nemotron-4-340b-instruct
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -118,7 +118,7 @@ model_list:
   - model_name: gemma-2-27b
     litellm_params:
       model: openai/google/gemma-2-27b-it
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -132,7 +132,7 @@ model_list:
   - model_name: deepseek-v3
     litellm_params:
       model: openai/deep-seek-v3
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -141,7 +141,7 @@ model_list:
   - model_name: deepseek-r1
     litellm_params:
       model: openai/deep-seek-r1
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -150,7 +150,7 @@ model_list:
   - model_name: grok-4
     litellm_params:
       model: openai/grok-4-0709
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -163,23 +163,21 @@ model_list:
 
   - model_name: skywork-r1v4-lite
     litellm_params:
-      model: openai/skywork/r1v4-lite
-      api_base: https://api.skyworkmodel.ai/v1
-      api_key: os.environ/SKYWORK_API_KEY
+      model: skywork-r1v4-lite
+      api_base: http://localhost:7055/v1
+      api_key: os.environ/GENSPARK2API_SECRET
     model_info:
-      provider: skywork-platform
-      use_case: vision + search + code execution, multimodal OPC tasks
-      special_params:
-        enable_search: true  # Toggle for deep research mode
+      provider: genspark2api
+      use_case: vision + search (Bridge Mode)
 
   - model_name: skywork-deepresearch-v2
     litellm_params:
-      model: openai/skywork-deepresearch-v2
-      api_base: https://api.skyworkmodel.ai/v1
-      api_key: os.environ/SKYWORK_API_KEY
+      model: skywork-deepresearch-v2
+      api_base: http://localhost:7055/v1
+      api_key: os.environ/GENSPARK2API_SECRET
     model_info:
-      provider: skywork-platform
-      use_case: "VMOA Agent 9 — deep research (38.7% BrowseComp, #1 globally)"
+      provider: genspark2api
+      use_case: "Deep Research (Bridge Mode)"
 
   # ──────────────────────────────────────────────
   # TIER 4: OPEN-WEIGHT MODELS (self-hosted via vLLM)
@@ -239,7 +237,7 @@ model_list:
   - model_name: gpt-image-1
     litellm_params:
       model: openai/gpt-image-1
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -248,7 +246,7 @@ model_list:
   - model_name: flux-pro-ultra
     litellm_params:
       model: openai/flux-pro/ultra
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -257,7 +255,7 @@ model_list:
   - model_name: imagen4
     litellm_params:
       model: openai/imagen4
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -270,7 +268,7 @@ model_list:
   - model_name: sora-2
     litellm_params:
       model: openai/sora-2
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -279,7 +277,7 @@ model_list:
   - model_name: sora-2-pro
     litellm_params:
       model: openai/sora-2-pro
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -288,7 +286,7 @@ model_list:
   - model_name: gemini-veo3
     litellm_params:
       model: openai/gemini/veo3
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api
@@ -297,7 +295,7 @@ model_list:
   - model_name: kling-v2-5
     litellm_params:
       model: openai/kling/v2.5-turbo/pro
-      api_base: http://genspark2api:7055/v1
+      api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
       provider: genspark2api

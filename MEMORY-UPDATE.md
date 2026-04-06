@@ -145,3 +145,41 @@ None of it costs extra. All of it compounds forever."
 ---
 *Memory entry: 2026-03-17 | iVenture Studio ehf. | Phase 27*
 *Next memory update due: After P3 completion*
+
+## SPRINT MEMORY ENTRY — 2026-04-06 — GENSPARK MIGRATION & FACTORY ORG
+
+### Session Type: Technical Migration & Standardization
+### Outcome: BRIDGE ARCHITECTURE v2.0 LIVE
+
+---
+
+### DECISION LOG
+
+**DECISION 6: Genspark Bridge for Intelligence Layer**
+- Rationale: Missing direct Skywork API keys/HF tokens.
+- Action: Redirected all `skywork-*` models to the Genspark Gateway.
+- Implementation: LiteLLM re-mapped to `localhost:7055`.
+- Benefit: Keeps Phase 4 (Intelligence) moving without external blockers.
+
+**DECISION 7: Industrial Factory Standard (VMOA v2.0)**
+- Action: Moved agent roster to `AGENTS.yaml` (Manifest).
+- Action: Created `SKILL-STANDARD.md` for tool consistency.
+- Impact: VMOA Core is now model-agnostic and manifest-driven.
+
+**DECISION 8: Cortex-Native Storage (Timescale Upgrade)**
+- Action: Swapped Postgres image for `timescale/timescaledb-ha:pg16`.
+- Impact: Unlocks `pgai` and `pgvectorscale` directly in the primary DB.
+- Decision: Cancelled standalone Qdrant/Neo4j deployment; use Postgres-native AI.
+
+---
+
+### FACTORY STATUS (Verified)
+
+- **Engine:** `vmoa_lite.py` (Manifest-driven)
+- **Primary Router:** LiteLLM (Port 4000)
+- **Active Gateway:** Genspark (Port 7055)
+- **Reward Critic:** GPT-5 (Bridge Mode)
+- **Team Size:** 11 agents ready.
+
+---
+*Memory entry: 2026-04-06 | iVenture Studio ehf.*

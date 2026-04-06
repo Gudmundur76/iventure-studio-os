@@ -24,6 +24,16 @@ async def list_models():
 async def chat_completions(request: Request):
     payload = await request.json()
     model = payload.get("model", "unknown")
+    messages = payload.get("messages", [])
+    last_message = messages[-1]["content"] if messages else ""
+    
+    content = f"[MOCK PHASE 4 RESPONSE] iVenture Studio node ivs_49960de5880e responding via {model}. Task executed with GRPO 0.991337."
+    
+    if "JSON object" in last_message and "score" in last_message:
+        content = '{"score": 0.991337, "reasoning": "Mock bridge critic response"}'
+    elif "JSON list" in last_message and "floats" in last_message:
+        content = '[0.9, 0.95, 0.98]'
+
     return {
         "id": "mock-completion-123",
         "object": "chat.completion",
