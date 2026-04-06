@@ -4,10 +4,11 @@ import httpx
 import json
 from typing import Dict, Any, List, Optional
 from reward_client import GRPORewardComposer
+from resource_connector import connector
 
 class iVentureHarness:
     """
-    Harness Core v1.0 — US/EU Edition
+    Harness Core v1.1 — Resource Aware
     The Industrial Wrapper for AI Agents.
     """
     def __init__(self, agent_id: str, model: str):
@@ -18,18 +19,17 @@ class iVentureHarness:
         self.composer = GRPORewardComposer()
         self.gateway_url = os.getenv("VIC_LITELLM_BASE", "http://localhost:4000/v1")
         self.api_key = os.getenv("VIC_LITELLM_KEY", "sk-iventure-master")
+        self.connector = connector
 
     def validate_causal_chain(self, task: str) -> bool:
         """Pillar I: Deterministic Causal Chains (Placeholder for expansion)"""
         # Logic: Ensure task doesn't violate US/EU regulatory constraints
-        # For now, simple presence of forbidden keywords or check against local knowledge base
         return True
 
     def get_minimized_context(self, task: str) -> str:
-        """Pillar IV: Progressive Disclosure"""
-        # Logic: Fetch ONLY the relevant documents from Postgres/Timescale
-        # For now, returns a stub.
-        return "Minimized US/EU context for task."
+        """Pillar IV: Progressive Disclosure via Resource Connector"""
+        # Search the Genspark AI Drive for relevant snippets
+        return self.connector.search(task)
 
     async def call_gateway(self, task: str, context: str) -> str:
         """Execution via Genspark Powered LiteLLM"""

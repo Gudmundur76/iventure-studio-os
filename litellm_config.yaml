@@ -167,7 +167,7 @@ model_list:
 
   - model_name: genspark-research-v1
     litellm_params:
-      model: skywork-deepresearch-v2
+      model: openai/skywork-deepresearch-v2
       api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
@@ -176,7 +176,7 @@ model_list:
 
   - model_name: genspark-vision-v1
     litellm_params:
-      model: gpt-5
+      model: openai/gpt-5
       api_base: http://localhost:7055/v1
       api_key: os.environ/GENSPARK2API_SECRET
     model_info:
@@ -333,9 +333,9 @@ router_settings:
     "vmoa-synthesizer": "claude-opus-4"
     "vmoa-validator": "skywork-reward-v2-8b"
     "vmoa-narrator": "gemini-2.5-flash"
-    "vmoa-researcher": "skywork-deepresearch-v2"
+    "vmoa-researcher": "genspark-research-v1"
     "vmoa-mathematician": "skywork-or1-32b"
-    "vmoa-vision": "skywork-r1v4-lite"
+    "vmoa-vision": "genspark-vision-v1"
     "vmoa-china-ops": "deepseek-v3"
     "vic-reasoner": "o3-pro"
     "vic-coder": "gpt-5"
