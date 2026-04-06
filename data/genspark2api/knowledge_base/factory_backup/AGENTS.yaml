@@ -1,0 +1,83 @@
+# ============================================================
+# iVenture Studio — VMOA Manifest
+# "The Living Roster of the AI Executive Team"
+# ============================================================
+
+agents:
+  - id: "mda-v1"
+    name: "Master Architect"
+    role: "Master Dev / PM"
+    model: "gpt-5"
+    description: "System architecture, core logic, and project management."
+
+  - id: "bda-v1"
+    name: "Backend Specialist"
+    role: "Backend Dev"
+    model: "gpt-5"
+    description: "API design, database optimization, and server-side logic."
+
+  - id: "doa-v1"
+    name: "DevOps Engineer"
+    role: "Infrastructure / CI-CD"
+    model: "gemini-2.5-flash"
+    description: "Docker, Traefik, atNorth node provisioning, and deployments."
+
+  - id: "qaa-v1"
+    name: "Quality Assurance"
+    role: "QA / Testing"
+    model: "gemini-2.5-flash"
+    description: "Unit testing, integration testing, and bug detection."
+
+  - id: "sea-v1"
+    name: "Security Guard"
+    role: "Security Analyst"
+    model: "gpt-5"
+    description: "Token safety, encryption, and vulnerability audits."
+
+  - id: "fda-v1"
+    name: "Frontend Architect"
+    role: "Frontend Dev"
+    model: "claude-opus-4"
+    description: "Next.js dashboard, React components, and UX/UI flow."
+
+  - id: "pma-v1"
+    name: "Project Manager"
+    role: "PM Agent"
+    model: "gpt-5-minimal"
+    description: "Sprint planning, backlog management, and deadline tracking."
+
+  - id: "financial-v1"
+    name: "Financial Analyst"
+    role: "OPC Financials / Tax"
+    model: "deepseek-r1"
+    description: "US/EU tax compliance, cashflow modeling, and revenue optimization."
+
+  - id: "subsidy-advisor"
+    name: "GTM Consultant"
+    role: "US/EU GTM / NIST Compliance"
+    model: "gpt-5"
+    description: "Iceland-US bridge, EU market entry, US federal/state subsidies, and NIST AI compliance."
+
+  - id: "researcher"
+    name: "Deep Research Lead"
+    role: "Market Intelligence (Genspark Deep Research)"
+    model: "genspark-research-v1"
+    description: "High-performance market research using Genspark's deep-research engine."
+
+  - id: "kady-researcher"
+    name: "Scientific Expert"
+    role: "Complex Data / Sci Research"
+    model: "gemini-3.1-pro-preview"
+    description: "Analysis of scientific papers, patents, and complex datasets."
+
+  - id: "vision-researcher"
+    name: "Multimodal Analyst"
+    role: "Vision & OCR"
+    model: "genspark-vision-v1"
+    description: "Image analysis, UI/UX audits via screenshots, and OCR."
+
+# ── Metadata ────────────────────────────────────────────────
+meta:
+  gateway: "Genspark (via genspark2api)"
+  node_id: "ivs_default_node"
+  last_organized: "2026-04-06"

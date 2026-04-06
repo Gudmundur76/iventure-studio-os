@@ -1,0 +1,24 @@
+{
+  "ui_locale": "en-US",
+  "currency": "USD",
+  "currency_symbol": "$",
+  "labels": {
+    "dashboard_title": "iVenture Studio — US Genesis Node",
+    "revenue_metric": "Recurring Revenue (MRR)",
+    "cost_metric": "Operational Expenditure",
+    "agent_status": "Agent Readiness",
+    "grpo_score": "Resilience Score (GRPO)",
+    "market_focus": "US Digital Frontier",
+    "subsidy_tracker": "NIST Compliance Status"
+  },
+  "regional_settings": {
+    "default_inference_region": "us-east-1",
+    "timezone": "America/New_York",
+    "date_format": "MM/DD/YYYY"
+  },
+  "theme": {
+    "primary_color": "#0A2342",
+    "accent_color": "#00B4D8",
+    "font_family": "Inter, system-ui, sans-serif"
+  }
+}
