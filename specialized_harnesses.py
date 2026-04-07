@@ -48,3 +48,15 @@ class MultimodalHarness(iVentureHarness):
     def get_minimized_context(self, task: str) -> str:
         drive_context = self.connector.search(f"vision UI OCR {task}")
         return f"Standard: Visual precision. {drive_context}"
+
+# ── BROWSER & AGENCY HARNESS ────────────────────────────────
+class BrowserHarness(iVentureHarness):
+    """Handles precise browser-based actions and authenticated sessions."""
+    def get_minimized_context(self, task: str) -> str:
+        drive_context = self.connector.search(f"browser credentials login URL {task}")
+        return f"Standard: Agent-First Compact Browsing. {drive_context}"
+    
+    async def execute(self, task: str):
+        # Implementation logic for spawning agent-browser.dev scripts
+        # For now, it inherits the base execution with Bridge support
+        return await super().execute(task)

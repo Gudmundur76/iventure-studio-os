@@ -38,6 +38,8 @@ def get_harness(agent_id: str) -> iVentureHarness:
         return ExpertHarness(agent_id, model)
     elif agent_id == "vision-researcher":
         return MultimodalHarness(agent_id, model)
+    elif agent_id == "web-agent-v1":
+        return BrowserHarness(agent_id, model)
     else:
         # Fallback to base harness
         return iVentureHarness(agent_id, model)

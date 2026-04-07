@@ -76,8 +76,19 @@ agents:
     model: "genspark-vision-v1"
     description: "Image analysis, UI/UX audits via screenshots, and OCR."
 
+  - id: "web-agent-v1"
+    name: "Browser Agent"
+    role: "Precision Web Agency"
+    model: "gemini-2.5-flash"
+    description: "Executes direct browser-based tasks, logins, and authenticated data retrieval via agent-browser.dev."
+
 # ── Metadata ────────────────────────────────────────────────
 meta:
   gateway: "Genspark (via genspark2api)"
   node_id: "ivs_default_node"
   last_organized: "2026-04-06"
+  capabilities:
+    - "Resource-Aware RAG (Genspark Drive)"
+    - "Deterministic Causal Chains"
+    - "Recursive RAAL Loops"
+    - "Browser Agency (via agent-browser.dev)"
