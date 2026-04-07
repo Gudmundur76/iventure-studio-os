@@ -11,7 +11,7 @@ class TechnicalHarness(iVentureHarness):
             return False
         return True
 
-    def get_minimized_context(self, task: str) -> str:
+    async def get_minimized_context(self, task: str) -> str:
         # Search the Drive for technical docs
         drive_context = self.connector.search(f"technical architecture code {task}")
         return f"Standard: Clean Code, SOLID. {drive_context}"
@@ -19,7 +19,7 @@ class TechnicalHarness(iVentureHarness):
 # ── OPERATIONS & PM HARNESS ─────────────────────────────────
 class OperationsHarness(iVentureHarness):
     """Handles Project Management and Sprint Planning."""
-    def get_minimized_context(self, task: str) -> str:
+    async def get_minimized_context(self, task: str) -> str:
         drive_context = self.connector.search(f"sprint timeline mission {task}")
         return f"Standard: Agile. Focus: US/EU coordination. {drive_context}"
 
@@ -31,28 +31,28 @@ class ComplianceHarness(iVentureHarness):
             return False
         return True
 
-    def get_minimized_context(self, task: str) -> str:
+    async def get_minimized_context(self, task: str) -> str:
         drive_context = self.connector.search(f"compliance NIST regulation subsidy {task}")
         return f"Standard: NIST AI RMF, GDPR. {drive_context}"
 
 # ── EXPERT & SCIENTIFIC HARNESS ─────────────────────────────
 class ExpertHarness(iVentureHarness):
     """Handles Kady-Researcher (Scientific/Complex Data)."""
-    def get_minimized_context(self, task: str) -> str:
+    async def get_minimized_context(self, task: str) -> str:
         drive_context = self.connector.search(f"scientific patent biotech {task}")
         return f"Standard: Peer-reviewed precision. {drive_context}"
 
 # ── MULTIMODAL & VISION HARNESS ─────────────────────────────
 class MultimodalHarness(iVentureHarness):
     """Handles Vision and Image Analysis."""
-    def get_minimized_context(self, task: str) -> str:
+    async def get_minimized_context(self, task: str) -> str:
         drive_context = self.connector.search(f"vision UI OCR {task}")
         return f"Standard: Visual precision. {drive_context}"
 
 # ── BROWSER & AGENCY HARNESS ────────────────────────────────
 class BrowserHarness(iVentureHarness):
     """Handles precise browser-based actions and authenticated sessions."""
-    def get_minimized_context(self, task: str) -> str:
+    async def get_minimized_context(self, task: str) -> str:
         drive_context = self.connector.search(f"browser credentials login URL {task}")
         return f"Standard: Agent-First Compact Browsing. {drive_context}"
     

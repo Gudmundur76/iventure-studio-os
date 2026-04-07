@@ -7,7 +7,8 @@ from specialized_harnesses import (
     OperationsHarness, 
     ComplianceHarness, 
     ExpertHarness, 
-    MultimodalHarness
+    MultimodalHarness,
+    BrowserHarness
 )
 
 def get_harness(agent_id: str) -> iVentureHarness:
