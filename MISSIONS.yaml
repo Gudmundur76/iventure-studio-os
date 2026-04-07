@@ -25,6 +25,11 @@ missions:
     goal: "Audit the dashboard UI/UX and prepare for Next.js deployment."
     sequence: ["vision-researcher", "fda-v1", "qaa-v1"]
 
+  - id: "ubc-biotech-regulatory-strat"
+    name: "UBC Biotech-Tech Synthesis"
+    goal: "Synthesize a Biotech Regulatory strategy for Alvotech biosimilars that adheres to iVenture NIST and RAAL technical standards."
+    sequence: ["researcher", "kady-researcher", "subsidy-advisor", "mda-v1"]
+
 # ── Mission Logic ──────────────────────────────────────────
 # Each mission triggers the sequential passage of Artifacts.
 # Results are automatically committed to the Genspark AI Drive.

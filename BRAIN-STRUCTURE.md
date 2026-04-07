@@ -32,6 +32,12 @@ The realization of the iVenture Brain is that it can run **systematically foreve
 - **Logic:** Identifies "Hidden Synapses" between projects. 
 - **Function:** It maps shared entities (e.g., "FDA" or "Harness Standards") across disparate directories. When an agent works on a Biotech task, the Structural Cortex automatically identifies related Architecture or Regulatory artifacts from other projects, creating a **Unified Intelligence Context**.
 
+### Layer E: The "Autonomous Pulse" (The Loop)
+- **Component:** `PulseHandler`
+- **Logic:** Real-time file system monitoring.
+- **Function:** Automatically detects new documents in the AI Drive. It triggers the Structural Cortex to identify impacts and launches a **Harness Swarm** without human input.
+- **The Compounding Loop:** Every swarm mission output is written back to the AI Drive as a "Compounded Intelligence Artifact." This new artifact triggers the Pulse again, creating a recursive, self-improving memory cycle that runs systematically forever.
+
 ## 🛠️ 3. Systematic Development Protocol
 To expand the brain, we follow the "Compound Order":
 - **Step 1: Ingest Context** (Upload MD/PDF to AI Drive).

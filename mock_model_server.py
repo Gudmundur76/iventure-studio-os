@@ -44,7 +44,7 @@ async def chat_completions(request: Request):
                 "index": 0,
                 "message": {
                     "role": "assistant",
-                    "content": f"[MOCK PHASE 4 RESPONSE] iVenture Studio node ivs_49960de5880e responding via {model}. Task executed with GRPO 0.991337."
+                    "content": content
                 },
                 "finish_reason": "stop"
             }
@@ -57,4 +57,4 @@ async def chat_completions(request: Request):
     }
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=7055)
+    uvicorn.run(app, host="0.0.0.0", port=7056)

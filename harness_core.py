@@ -18,7 +18,7 @@ class iVentureHarness:
         self.state = {}  # Pillar II: Persistent State
         self.calibration_threshold = 0.991337  # Pillar III: RAAL Threshold
         self.composer = GRPORewardComposer()
-        self.gateway_url = os.getenv("VIC_LITELLM_BASE", "http://localhost:4000/v1")
+        self.gateway_url = os.getenv("VIC_LITELLM_BASE", "http://localhost:7056/v1")
         self.api_key = os.getenv("VIC_LITELLM_KEY", "sk-iventure-master")
         self.connector = connector
         self.cortex = cortex
