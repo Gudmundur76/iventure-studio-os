@@ -1,5 +1,5 @@
 # iVenture Studio — DEVELOPMENT BRAIN ARCHITECTURE
-Version: 2.0 | Date: 2026-04-06 | Phase: 27.7 [COMPOUND ERA]
+Version: 2.2 | Date: 2026-04-06 | Phase: 27.8 [HYBRID MEMORY ERA]
 
 ## 🏗️ THE PHILOSOPHY: COMPOUND ENGINEERING
 iVenture Studio operates under the **Compound Engineering** principle. We do not build monolithic models; we build **Compound AI Systems** where intelligence emerges from the systematic interaction of multiple specialized components (Harnesses, Drive, and Orchestrators).
@@ -21,22 +21,27 @@ The realization of the iVenture Brain is that it can run **systematically foreve
 
 ### Layer B: The "Harness Tier" (Compound Components)
 - **Logic:** The "Active Brain." Specialized build systems (`Technical`, `Financial`, `Legal`) that wrap models in deterministic guardrails.
-- **Independence:** Each harness can be upgraded or swapped (e.g., swapping a GPT model for a Strawberry SLM) without destabilizing the whole system.
+- **Independence:** Each harness can be upgraded or swapped without destabilizing the whole system.
 
 ### Layer C: The "Inter-Harness Synapse" (Collaboration)
 - **Logic:** How components communicate. Harnesses never "talk"—they **exchange state**. 
-- **Rule:** One harness produces an Artifact; another harness consumes it. This "Artifact-Driven" communication prevents context-drowning and ensures systematic reliability.
+- **Rule:** One harness produces an Artifact; another harness consumes it.
 
 ### Layer D: The "Structural Cortex" (Unified Component)
 - **Component:** `StructuralCortex`
 - **Logic:** Identifies "Hidden Synapses" between projects. 
-- **Function:** It maps shared entities (e.g., "FDA" or "Harness Standards") across disparate directories. When an agent works on a Biotech task, the Structural Cortex automatically identifies related Architecture or Regulatory artifacts from other projects, creating a **Unified Intelligence Context**.
+- **Function:** Maps shared entities (e.g., "FDA" or "Harness Standards") across directories to create a **Unified Intelligence Context**.
 
 ### Layer E: The "Autonomous Pulse" (The Loop)
 - **Component:** `PulseHandler`
 - **Logic:** Real-time file system monitoring.
-- **Function:** Automatically detects new documents in the AI Drive. It triggers the Structural Cortex to identify impacts and launches a **Harness Swarm** without human input.
-- **The Compounding Loop:** Every swarm mission output is written back to the AI Drive as a "Compounded Intelligence Artifact." This new artifact triggers the Pulse again, creating a recursive, self-improving memory cycle that runs systematically forever.
+- **Function:** Automatically detects new documents in the AI Drive. It triggers the Structural Cortex and launches a **Harness Swarm** without human input.
+- **The Compounding Loop:** Mission outputs are written back to the AI Drive, triggering the Pulse again for a recursive self-improving cycle.
+
+### Layer F: The "Distributed Synapse" (mem9)
+- **Component:** `Mem9Connector`
+- **Logic:** Cloud-Persistent Hybrid Memory.
+- **Function:** Synchronizes session-level memories across multiple nodes. Provides high-speed vector recall for recent interactions, ensuring the "Active Logic" survives node migration.
 
 ## 🛠️ 3. Systematic Development Protocol
 To expand the brain, we follow the "Compound Order":

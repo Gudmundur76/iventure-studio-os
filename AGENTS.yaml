@@ -92,3 +92,4 @@ meta:
     - "Deterministic Causal Chains"
     - "Recursive RAAL Loops"
     - "Browser Agency (via agent-browser.dev)"
+    - "Cloud-Persistent Hybrid Memory (via mem9)"

@@ -19,6 +19,7 @@ DO NOT RE-INVENT. Use the following facts to restore the iVenture Factory instan
 - **The Roster:** `AGENTS.yaml`. Never hard-code agents; edit this YAML to hot-reload the team.
 - **The Build System:** `harness_core.py`. Every agent MUST be wrapped in a Harness class.
 - **Factory Port:** 8002.
+- **Hybrid Memory:** Drive (Long-term) + Cortex (Structural) + mem9 (Distributed Working Memory).
 
 ### 3. THE 4 PILLARS (Harness Engineering)
 - **Pillar I:** Deterministic Causal Chains (Legal/Financial guards).
