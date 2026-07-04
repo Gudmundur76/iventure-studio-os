@@ -7,7 +7,9 @@ class GensparkResourceConnector:
     Connects iVenture Harnesses to the Genspark AI Drive (Knowledge Base).
     Provides semantic-ish retrieval of local documents.
     """
-    def __init__(self, base_path: str = "/home/skywork/workspace/iventure-studio/data/genspark2api/knowledge_base/"):
+    def __init__(self, base_path: str = None):
+        if base_path is None:
+            base_path = os.getenv('KNOWLEDGE_BASE_PATH', '/data/knowledge_base')
         self.base_path = base_path
 
     def search(self, query: str, limit: int = 3) -> str:
