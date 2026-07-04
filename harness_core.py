@@ -96,18 +96,4 @@ class iVentureHarness:
             "pillars": "verified"
         }
 
-    async def loop_back_reasoning(self, task: str, response: str, score: float) -> Dict[str, Any]:
-        """Pillar III: Recursive Reasoning Loop"""
-        correction_task = f"Original task: {task}\nPrior response failed calibration (score: {score}). Improve precision and format."
-        orig_model = self.model
-        self.model = "gpt-5"
-        final_result = await self.call_gateway(correction_task, "High-fidelity reasoning override.")
-        self.model = orig_model 
-        final_reward = await self.composer.score(task, final_result)
-        return {
-            "status": "success_after_loop",
-            "agent_id": self.agent_id,
-            "response": final_result,
-            "grpo": final_reward.composite,
-            "pillars": "hardened"
-        }
+    async def 
