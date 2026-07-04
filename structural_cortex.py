@@ -10,7 +10,7 @@ class StructuralCortex:
     Identifies structural connections between disparate projects in the AI Drive
     and synthesizes them into a single cognitive map.
     """
-    def __init__(self, drive_path: str = "/home/skywork/workspace/iventure-studio/data/genspark2api/knowledge_base/"):
+    def __init__(self, drive_path: str = os.getenv('KNOWLEDGE_BASE_PATH', '/data/knowledge_base')):
         self.drive_path = drive_path
         self.knowledge_map = {} # {entity: [file_list]}
         self.cross_project_links = [] # [(file_a, file_b, reason)]
