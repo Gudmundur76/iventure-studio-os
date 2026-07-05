@@ -8,8 +8,8 @@ from structural_cortex import cortex
 from swarm_orchestrator import swarm_engine
 
 # ── CONFIG ──────────────────────────────────────────────────
-WATCH_PATH = "/home/skywork/workspace/iventure-studio/data/genspark2api/knowledge_base/"
-COMPOUND_PATH = os.path.join(WATCH_PATH, "compounded_intelligence/")
+WATCH_PATH = os.getenv("KNOWLEDGE_BASE_PATH", "/data/knowledge_base") + "/"
+COMPOUND_PATH = os.path.join(WATCH_PATH, "compounded_intelligence")
 os.makedirs(COMPOUND_PATH, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO, format='[PULSE] %(asctime)s - %(message)s')
