@@ -89,7 +89,7 @@ function HeroSection() {
     <section className="relative min-h-[100svh] flex flex-col" style={{ background: "#0C0C0C", overflowX: "clip" }}>
       {/* Top nav */}
       <FadeIn delay={0} y={-20}>
-        <nav className="flex justify-between items-center px-4 sm:px-6 md:px-10 pt-5 md:pt-8 gap-1 sm:gap-2">
+        <nav className="hidden">
           {[
             { label: "Þjónusta", href: "#services" },
             { label: "Verk", href: "#work" },
@@ -534,7 +534,7 @@ function Footer() {
     <footer className="px-4 sm:px-6 md:px-10 py-8 sm:py-10 flex flex-col sm:flex-row justify-between items-center gap-3 text-center sm:text-left"
       style={{ background: "#0C0C0C", borderTop: "1px solid rgba(215,226,234,0.1)" }}>
       <span className="font-black uppercase tracking-wider" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif", fontSize: "1rem sm:1.1rem" }}>Gummi G&#250;r&#250;</span>
-      <span className="font-light text-xs sm:text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>© 2025 Gummi G&#250;r&#250;. Íslenskt gervigreindarstofa.</span>
+      <span className="font-light text-xs sm:text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>© 2026 Gummi G&#250;r&#250;. Íslenskt gervigreindarstofa.</span>
       <a href="/chat" className="font-medium uppercase tracking-widest text-xs sm:text-sm transition-opacity duration-200 hover:opacity-70"
         style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>Talaðu við okkur →</a>
     </footer>

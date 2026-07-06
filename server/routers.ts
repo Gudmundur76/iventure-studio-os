@@ -13,6 +13,7 @@ import {
 import { seedDatabase } from "./seed";
 import { createEnquiry, listEnquiries } from "./db";
 import { invokeLLM, listLLMModels } from "./_core/llm";
+import { notifyOwner } from "./_core/notification";
 
 export const appRouter = router({
   system: systemRouter,
@@ -122,7 +123,7 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         await saveChatMessage({ sessionId: input.sessionId, role: "user", content: input.message, model: input.model });
         const messages = [
-          { role: "system" as const, content: "You are iVenture Studio OS — an intelligent AI agent operating system assistant. You help manage multi-agent workflows, analyze business intelligence, and coordinate the VMOA agent team. Be concise, precise, and professional. Use markdown formatting." },
+          { role: "system" as const, content: "Þú ert Gummi Gúrú — íslenskt gervigreindarstofa. Þú hjálpar viðskiptavinum að lýsa verkefnum sínum og útskýrir hvernig við getum afhent fullklárað verk. Þú ert vingjarnlegur, faglegur og hnitmiðaður. Svaraðu alltaf á íslensku nema viðskiptavinurinn skrifi á ensku. Notaðu markdown snið þar sem við á." },
           ...(input.history ?? []).map(h => ({ role: h.role as "user" | "assistant" | "system", content: h.content })),
           { role: "user" as const, content: input.message },
         ];
@@ -156,6 +157,11 @@ export const appRouter = router({
           email: input.email,
           service: input.service ?? null,
           message: input.message,
+        });
+        // Notify owner of new enquiry
+        await notifyOwner({
+          title: `Ný fyrirspurn frá ${input.name}`,
+          content: `**Nafn:** ${input.name}\n**Netfang:** ${input.email}\n**Þjónusta:** ${input.service ?? "Ekki tilgreint"}\n\n**Skilaboð:**\n${input.message}`,
         });
         return { success: true };
       }),

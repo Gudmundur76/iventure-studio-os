@@ -6,39 +6,13 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import AmplifyHome from "./pages/AmplifyHome";
 import AmplifyChat from "./pages/AmplifyChat";
-import AmplifyNav from "./components/AmplifyNav";
-import AmplifyFooter from "./components/AmplifyFooter";
-import GummiPage from "./pages/GummiPage";
-
-function PublicLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <AmplifyNav />
-      {children}
-      <AmplifyFooter />
-    </>
-  );
-}
 
 function Router() {
   return (
     <Switch>
       <Route path="/chat" component={AmplifyChat} />
-      <Route path="/gummi" component={GummiPage} />
-      <Route path="/">
-        {() => (
-          <PublicLayout>
-            <AmplifyHome />
-          </PublicLayout>
-        )}
-      </Route>
-      <Route>
-        {() => (
-          <PublicLayout>
-            <NotFound />
-          </PublicLayout>
-        )}
-      </Route>
+      <Route path="/" component={AmplifyHome} />
+      <Route component={NotFound} />
     </Switch>
   );
 }
