@@ -9,6 +9,7 @@ import {
   projects, InsertProject,
   chatMessages, InsertChatMessage,
 } from "../drizzle/schema";
+import { enquiries, InsertEnquiry } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -128,4 +129,16 @@ export async function saveChatMessage(msg: InsertChatMessage) {
   const db = await getDb();
   if (!db) return;
   await db.insert(chatMessages).values(msg);
+}
+
+export async function createEnquiry(data: InsertEnquiry) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(enquiries).values(data);
+}
+
+export async function listEnquiries() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(enquiries).orderBy(enquiries.createdAt);
 }

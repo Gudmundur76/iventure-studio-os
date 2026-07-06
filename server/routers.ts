@@ -11,6 +11,7 @@ import {
   saveChatMessage,
 } from "./db";
 import { seedDatabase } from "./seed";
+import { createEnquiry, listEnquiries } from "./db";
 import { invokeLLM, listLLMModels } from "./_core/llm";
 
 export const appRouter = router({
@@ -137,6 +138,29 @@ export const appRouter = router({
   seed: router({
     run: publicProcedure.mutation(async () => {
       return seedDatabase();
+    }),
+  }),
+
+  // Enquiries
+  enquiries: router({
+    submit: publicProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        email: z.string().email(),
+        service: z.string().optional(),
+        message: z.string().min(1),
+      }))
+      .mutation(async ({ input }) => {
+        await createEnquiry({
+          name: input.name,
+          email: input.email,
+          service: input.service ?? null,
+          message: input.message,
+        });
+        return { success: true };
+      }),
+    list: protectedProcedure.query(async () => {
+      return listEnquiries();
     }),
   }),
 });

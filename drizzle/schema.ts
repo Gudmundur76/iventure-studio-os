@@ -119,3 +119,16 @@ export const chatMessages = mysqlTable("chat_messages", {
 
 export type ChatMessage = typeof chatMessages.$inferSelect;
 export type InsertChatMessage = typeof chatMessages.$inferInsert;
+
+export const enquiries = mysqlTable("enquiries", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  service: varchar("service", { length: 255 }),
+  message: text("message").notNull(),
+  status: mysqlEnum("status", ["new", "in_progress", "done"]).default("new").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Enquiry = typeof enquiries.$inferSelect;
+export type InsertEnquiry = typeof enquiries.$inferInsert;

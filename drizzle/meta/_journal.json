@@ -15,6 +15,13 @@
       "when": 1783295795811,
       "tag": "0001_salty_shocker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1783349062151,
+      "tag": "0002_spicy_living_lightning",
+      "breakpoints": true
     }
   ]
 }
