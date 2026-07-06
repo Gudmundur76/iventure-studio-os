@@ -4,37 +4,38 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
-const SYSTEM_PROMPT = `You are the Amplify AI assistant — the client-facing chat interface for Amplify, Iceland's AI-powered agency.
+const SYSTEM_PROMPT = `Þú ert Gummi Gúrú gervigreindarstuðningurinn — viðmót Gummi Gúrú við viðskiptavini á Íslandi.
 
-Your role is to:
-1. Help potential clients understand what Amplify can deliver for them
-2. Ask clarifying questions to understand their needs
-3. Suggest the right service(s) for their situation
-4. Collect enough information to create a proper brief
-5. Be warm, professional, and direct — like a sharp agency account manager
+Hlutverk þitt er að:
+1. Hjálpa mögulegum viðskiptavinum að skilja hvað Gummi Gúrú getur afhent þeim
+2. Spyrja skýringarspurninga til að skilja þarfir þeirra
+3. Leggja til réttu þjónustuna fyrir þeirra aðstæður
+4. Safna nægar upplýsingar til að búa til eiginlega lýsingu
+5. Vera hlýr, faglegur og beinlínis — eins og skarpir reikningsstjóri hjá stofunni
 
-Amplify's 8 services:
-- Website & App Development (landing pages, SaaS apps, e-commerce, client portals) — 2-5 days
-- Research Reports & Market Intelligence (competitor analysis, market research, due diligence) — 1-2 days
-- Marketing Content & Campaigns (blog posts, email sequences, ad copy, social media) — 1-3 days
-- Business Proposals & Documents (proposals, business plans, SOPs, grant applications) — same day to 2 days
-- Presentation Decks (investor pitches, sales decks, board updates) — 1-2 days
-- Data Analysis & Spreadsheets (Excel reports, dashboards, financial models) — same day to 2 days
-- Social Media & Content Batches (LinkedIn, Twitter, newsletters, Instagram) — 1-2 days
-- Lead Research & Prospect Lists (B2B lists, competitor customers, investor targets) — same day to 1 day
+8 þjónustur Gummi Gúrú:
+- Vefsíður og forritaþróun (lendingarsíður, SaaS forrit, netverslun, viðskiptavinahlið) — 2-5 dagar
+- Rannsóknir og markaðsgreining (samkeppnisgreining, markaðsrannsóknir, áreiðanleikakönnun) — 1-2 dagar
+- Markaðsefni og herferðir (blogggreinar, tölvupóstkeðjur, auglýsingatextar, samfélagsmiðlar) — 1-3 dagar
+- Viðskiptatillögur og skjöl (tillögur, viðskiptaáætlanir, ferlar, styrktarbeiðnir) — sama dag til 2 daga
+- Kynningarglærur (fjárfestingafundir, sölukynningu, stjórnarfundir) — 1-2 dagar
+- Gagnagreining og töflureiknar (Excel skýrslur, mælaborð, fjármálalíkön) — sama dag til 2 daga
+- Samfélagsmiðlar og efnispakkar (LinkedIn, Twitter, fréttabréf, Instagram) — 1-2 dagar
+- Viðfangsrannsóknir og listi yfir horfur (B2B listar, samkeppnisviðskiptavinir, fjárfestingamarkmið) — sama dag til 1 dag
 
-Pricing: Starter from ISK 49,900/project. Growth plan ISK 149,900/month. Agency = custom.
+Verðlag: Byrjandi frá ISK 49.900/verkefni. Vöxtur ISK 149.900/mánuð. Stofuáætlun = sérsniðið.
 
-Always end your first response by asking: "What are you working on?" or a relevant follow-up question.
-Keep responses concise and conversational. Use markdown sparingly.`;
+Svaraðu alltaf á íslensku nema viðskiptavinurinn tali við þig á öðru tungumáli.
+Ljúktu alltaf fyrstu svari þínu með því að spyrja: "Hvað ertu að vinna í?" eða viðeigandi eftirfylgnispurningu.
+Haltu svörum stuttum og samræðulegum. Notaðu markdown sparsamlega.`;
 
-const WELCOME_MESSAGE = `Hi! I'm the Amplify assistant.
+const WELCOME_MESSAGE = `Hæ! Ég er Gummi Gúrú aðstoðarmaðurinn.
 
-We're Iceland's AI-powered agency — we take your brief and deliver finished work. Not drafts. Not suggestions. The actual thing.
+Við erum íslenska gervigreindarstofa — við tökum lýsingu þína og afhendum fullklárað verk. Ekki drög. Ekki hugmyndir. Hið eiginlega verk.
 
-Whether you need a website built, a research report written, a marketing campaign drafted, or a proposal put together — we handle it end to end.
+Hvort sem þú þarft vefsíðu smíðaða, rannsóknarskýrslu skrifaða, markaðsherferð dregna upp eða tillögu sett saman — við sjáum um það frá upphafi til enda.
 
-**What are you working on?**`;
+**Hvað ertu að vinna í?**`;
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -109,7 +110,7 @@ export default function AmplifyChat() {
             onMouseLeave={(e) => (e.currentTarget.style.color = "var(--amp-muted)")}
           >
             <ArrowLeft size={16} />
-            Back to Amplify
+            Til baka
           </button>
         </Link>
 
@@ -121,7 +122,7 @@ export default function AmplifyChat() {
             <Zap size={14} style={{ color: "var(--amp-black)" }} strokeWidth={2.5} />
           </div>
           <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "var(--amp-white)" }}>
-            Amplify Chat
+            Gummi Gúrú Spjall
           </span>
         </div>
 
@@ -199,8 +200,8 @@ export default function AmplifyChat() {
                 className="px-4 py-3 rounded-2xl flex items-center gap-2"
                 style={{ background: "var(--amp-surface)", border: "1px solid var(--amp-border)", borderRadius: "4px 18px 18px 18px" }}
               >
-                <Loader2 size={14} className="animate-spin" style={{ color: "var(--amp-green)" }} />
-                <span className="text-sm" style={{ color: "var(--amp-muted)" }}>Thinking...</span>
+              <Loader2 size={14} className="animate-spin" style={{ color: "var(--amp-green)" }} />
+                <span className="text-sm" style={{ color: "var(--amp-muted)" }}>Hugsa...</span>
               </div>
             </div>
           )}
@@ -222,8 +223,8 @@ export default function AmplifyChat() {
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Describe what you need..."
+            onKeyDown={handleKeyDown}
+            placeholder="Lýstu því sem þú þarft..."
               rows={1}
               className="flex-1 resize-none outline-none text-sm bg-transparent"
               style={{
@@ -251,11 +252,10 @@ export default function AmplifyChat() {
             </button>
           </div>
           <p className="text-xs text-center mt-2" style={{ color: "var(--amp-muted-2)" }}>
-            Press Enter to send · Shift+Enter for new line
+            Ýttu á Enter til að senda · Shift+Enter fyrir nýja línu
           </p>
         </div>
       </div>
     </div>
   );
 }
-

@@ -345,6 +345,121 @@ function WorkSection() {
 
 // ─── CONTACT ─────────────────────────────────────────────────────────────────
 
+// ─── PRICING ─────────────────────────────────────────────────────────────────
+
+const PLANS = [
+  {
+    name: "Byrjandi",
+    price: "49.900",
+    unit: "kr / verkefni",
+    desc: "Fullklárað eitt verkefni afhent. Fullkomið fyrir fyrstu verkefnin.",
+    features: [
+      "1 verkefni í einu",
+      "Afhending innan 2-5 daga",
+      "Ótak endurskoðana",
+      "Fullklárað verk afhent",
+      "Tölvupóstsþjónusta",
+    ],
+    cta: "Hefjast handa",
+    highlight: false,
+  },
+  {
+    name: "Vöxtur",
+    price: "149.900",
+    unit: "kr / mánuð",
+    desc: "Ótakmarkaðar beiðnir. Fullkomið fyrir fyrirtæki sem þurfa stöðugar afurðir.",
+    features: [
+      "Ótakmarkaðar verkefnisbeiðnir",
+      "Forgangur í biðröð",
+      "Afhending innan 24-48 klukkustunda",
+      "Hollur reikningsstjóri",
+      "Mánaðarlegar skýrslur",
+      "Slack/tölvupóstur samskipti",
+    ],
+    cta: "Byrja mánaðaráskrift",
+    highlight: true,
+  },
+  {
+    name: "Stofuáætlun",
+    price: "Sérsniðið",
+    unit: "",
+    desc: "Fyrir stór fyrirtæki og sérstaka þarfir. Við setjum saman pakka sem hentar þér.",
+    features: [
+      "Allt í Vöxtur",
+      "Sérsniðnar samþættingar",
+      "API aðgangur",
+      "SLA trygging",
+      "Hollur þróunarteymi",
+      "Ráðgjöf og stefnumótun",
+    ],
+    cta: "Hafa samband",
+    highlight: false,
+  },
+];
+
+function PricingSection() {
+  return (
+    <section id="pricing" className="rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 z-20 relative px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32" style={{ background: "#0C0C0C" }}>
+      <FadeIn y={40}>
+        <h2 className="hero-heading font-black uppercase text-center mb-4 leading-none tracking-tight"
+          style={{ fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>Verðlag</h2>
+        <p className="text-center font-light mb-16 sm:mb-20" style={{ color: "rgba(215,226,234,0.5)", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(1rem,1.8vw,1.3rem)" }}>
+          Eitt verkefni eða ótakmarkaðar afurðir. Þú velur.
+        </p>
+      </FadeIn>
+      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+        {PLANS.map((plan, i) => (
+          <FadeIn key={plan.name} delay={i * 0.1} y={30}>
+            <div
+              className="flex flex-col rounded-[32px] p-8 h-full transition-transform duration-300 hover:-translate-y-1"
+              style={{
+                background: plan.highlight ? "linear-gradient(135deg,#18011F 0%,#7621B0 60%,#B600A8 100%)" : "rgba(215,226,234,0.05)",
+                border: plan.highlight ? "2px solid #B600A8" : "2px solid rgba(215,226,234,0.12)",
+                boxShadow: plan.highlight ? "0 0 40px rgba(182,0,168,0.25)" : "none",
+              }}
+            >
+              {plan.highlight && (
+                <span className="self-start mb-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest"
+                  style={{ background: "rgba(255,255,255,0.15)", color: "#fff", fontFamily: "'Kanit',sans-serif" }}>
+                  Vinsælast
+                </span>
+              )}
+              <p className="font-black uppercase mb-1" style={{ color: "#D7E2EA", fontSize: "clamp(1.4rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>{plan.name}</p>
+              <div className="flex items-baseline gap-1 mb-3">
+                <span className="font-black" style={{ color: "#fff", fontSize: "clamp(1.8rem,4vw,2.8rem)", fontFamily: "'Kanit',sans-serif" }}>{plan.price}</span>
+                {plan.unit && <span className="font-light text-sm" style={{ color: "rgba(215,226,234,0.5)", fontFamily: "'Kanit',sans-serif" }}>{plan.unit}</span>}
+              </div>
+              <p className="font-light mb-6 leading-relaxed" style={{ color: "rgba(215,226,234,0.6)", fontFamily: "'Kanit',sans-serif", fontSize: "0.95rem" }}>{plan.desc}</p>
+              <ul className="flex flex-col gap-3 mb-8 flex-1">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-sm font-light" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>
+                    <span className="mt-0.5 flex-shrink-0 text-base" style={{ color: plan.highlight ? "#fff" : "rgba(182,0,168,0.9)" }}>✓</span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => window.location.href = plan.name === "Stofuáætlun" ? "#contact" : "/chat"}
+                className="w-full rounded-full font-medium uppercase tracking-widest py-3.5 text-sm transition-all duration-200 cursor-pointer"
+                style={{
+                  background: plan.highlight ? "#fff" : "transparent",
+                  color: plan.highlight ? "#0C0C0C" : "#D7E2EA",
+                  border: plan.highlight ? "none" : "2px solid rgba(215,226,234,0.3)",
+                  fontFamily: "'Kanit',sans-serif",
+                }}
+                onMouseEnter={(e) => { if (!plan.highlight) { e.currentTarget.style.borderColor = "rgba(215,226,234,0.7)"; } }}
+                onMouseLeave={(e) => { if (!plan.highlight) { e.currentTarget.style.borderColor = "rgba(215,226,234,0.3)"; } }}
+              >
+                {plan.cta}
+              </button>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", service: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
@@ -431,6 +546,7 @@ export default function AmplifyHome() {
       <AboutSection />
       <ServicesSection />
       <WorkSection />
+      <PricingSection />
       <ContactSection />
       <Footer />
     </div>

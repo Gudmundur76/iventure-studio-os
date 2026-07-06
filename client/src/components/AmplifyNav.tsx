@@ -3,11 +3,10 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, Zap } from "lucide-react";
 
 const navLinks = [
-  { label: "Services", href: "/#services" },
-  { label: "How It Works", href: "/#how-it-works" },
-  { label: "Capabilities", href: "/#capabilities" },
-  { label: "Pricing", href: "/#pricing" },
-  { label: "About", href: "/#about" },
+  { label: "Þjónusta", href: "/#services" },
+  { label: "Verk", href: "/#work" },
+  { label: "Verðlag", href: "/#pricing" },
+  { label: "Um okkur", href: "/#about" },
 ];
 
 export default function AmplifyNav() {
@@ -54,7 +53,7 @@ export default function AmplifyNav() {
                 className="text-xl font-display font-800"
                 style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "var(--amp-white)" }}
               >
-                Amplify
+                Gummi Gúrú
               </span>
             </div>
           </Link>
@@ -83,15 +82,15 @@ export default function AmplifyNav() {
 
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/chat">
-              <button className="btn-outline text-sm px-4 py-2">Talk to us</button>
-            </Link>
-            <button
-              className="btn-primary text-sm px-4 py-2"
-              onClick={() => handleNavClick("/#contact")}
-            >
-              Get Started
-            </button>
+          <Link href="/chat">
+              <button className="btn-outline text-sm px-4 py-2">Talaðu við okkur</button>
+          </Link>
+          <button
+            className="btn-primary text-sm px-4 py-2"
+            onClick={() => handleNavClick("/#contact")}
+          >
+            Hefjast handa
+          </button>
           </div>
 
           {/* Mobile menu toggle */}
@@ -124,10 +123,10 @@ export default function AmplifyNav() {
             ))}
             <div className="flex flex-col gap-3 pt-2 border-t" style={{ borderColor: "var(--amp-border)" }}>
               <Link href="/chat" onClick={() => setMobileOpen(false)}>
-                <button className="btn-outline w-full text-sm">Talk to us</button>
+                <button className="btn-outline w-full text-sm">Talaðu við okkur</button>
               </Link>
               <button className="btn-primary w-full text-sm" onClick={() => { handleNavClick("/#contact"); }}>
-                Get Started
+                Hefjast handa
               </button>
             </div>
           </div>
@@ -136,4 +135,3 @@ export default function AmplifyNav() {
     </header>
   );
 }
-
