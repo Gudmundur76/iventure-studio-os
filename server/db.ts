@@ -9,7 +9,7 @@ import {
   projects, InsertProject,
   chatMessages, InsertChatMessage,
 } from "../drizzle/schema";
-import { enquiries, InsertEnquiry } from "../drizzle/schema";
+import { enquiries, InsertEnquiry, updates, InsertUpdate, Update } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -141,4 +141,37 @@ export async function listEnquiries() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(enquiries).orderBy(enquiries.createdAt);
+}
+
+// ── Updates ──────────────────────────────────────────────────────────────────
+export async function listUpdates(publishedOnly = true): Promise<Update[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db.select().from(updates).orderBy(updates.publishedAt);
+  return publishedOnly ? rows.filter(r => r.published) : rows;
+}
+
+export async function getUpdateBySlug(slug: string): Promise<Update | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(updates).where(eq(updates.slug, slug)).limit(1);
+  return rows[0];
+}
+
+export async function createUpdate(data: InsertUpdate): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(updates).values(data);
+}
+
+export async function updatePost(id: number, data: Partial<InsertUpdate>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(updates).set(data).where(eq(updates.id, id));
+}
+
+export async function deleteUpdate(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(updates).where(eq(updates.id, id));
 }

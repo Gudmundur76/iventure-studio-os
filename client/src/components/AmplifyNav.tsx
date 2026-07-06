@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { label: "Verðlag", href: "#pricing" },
   { label: "Um okkur", href: "#about" },
   { label: "Samband", href: "#contact" },
+  { label: "Fréttir", href: "/updates" },
 ];
 
 export default function AmplifyNav() {

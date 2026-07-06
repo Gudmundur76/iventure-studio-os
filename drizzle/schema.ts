@@ -132,3 +132,19 @@ export const enquiries = mysqlTable("enquiries", {
 
 export type Enquiry = typeof enquiries.$inferSelect;
 export type InsertEnquiry = typeof enquiries.$inferInsert;
+
+export const updates = mysqlTable("updates", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 256 }).notNull().unique(),
+  title: varchar("title", { length: 256 }).notNull(),
+  excerpt: text("excerpt"),
+  content: text("content").notNull(),
+  category: varchar("category", { length: 64 }).notNull().default("fréttir"),
+  published: boolean("published").default(false).notNull(),
+  publishedAt: timestamp("publishedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Update = typeof updates.$inferSelect;
+export type InsertUpdate = typeof updates.$inferInsert;

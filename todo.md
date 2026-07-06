@@ -35,3 +35,13 @@
 - [x] Run tests and verify pass (16/16 passing)
 - [x] Final screenshot verification (homepage + chat confirmed)
 - [x] Checkpoint and delivery (v1.0 — version 973ba2dd)
+
+## Phase 7: Nýjustu fréttir — Latest Updates Publishing
+- [x] Add updates/posts DB table (title, slug, excerpt, content, category, published, publishedAt)
+- [x] Add tRPC router: updates.list, updates.getBySlug, updates.create, updates.update, updates.delete
+- [x] Build /updates standalone page (full feed with category filter)
+- [x] Build /updates/:slug individual post page
+- [x] Build /admin/updates admin page (create/edit/delete posts, owner-only protected route)
+- [x] Add "Fréttir" nav link to AmplifyNav
+- [x] Wire all routes in App.tsx
+- [x] Checkpoint and deliver updates feature

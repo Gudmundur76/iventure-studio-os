@@ -3,6 +3,14 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+
+// Owner/admin guard — only the site owner (admin role) can manage updates
+const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (ctx.user?.role !== "admin") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Aðeins stjórnendur hafa aðgang" });
+  }
+  return next({ ctx });
+});
 import { TRPCError } from "@trpc/server";
 import {
   getAllAgents, getAllSkills, getMemoryEntries,
@@ -12,6 +20,7 @@ import {
 } from "./db";
 import { seedDatabase } from "./seed";
 import { createEnquiry, listEnquiries } from "./db";
+import { listUpdates, getUpdateBySlug, createUpdate, updatePost, deleteUpdate } from "./db";
 import { invokeLLM, listLLMModels } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
 
@@ -140,6 +149,61 @@ export const appRouter = router({
     run: publicProcedure.mutation(async () => {
       return seedDatabase();
     }),
+  }),
+
+  // Updates (Nýjustu fréttir)
+  updates: router({
+    list: publicProcedure
+      .input(z.object({ all: z.boolean().optional() }).optional())
+      .query(async ({ input }) => {
+        return listUpdates(!(input?.all));
+      }),
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        const post = await getUpdateBySlug(input.slug);
+        if (!post) throw new TRPCError({ code: "NOT_FOUND", message: "Grein fannst ekki" });
+        return post;
+      }),
+    create: adminProcedure
+      .input(z.object({
+        title: z.string().min(1),
+        slug: z.string().min(1).regex(/^[a-z0-9-]+$/, "Slug must be lowercase letters, numbers and hyphens only"),
+        excerpt: z.string().optional(),
+        content: z.string().min(1),
+        category: z.string().default("fréttir"),
+        published: z.boolean().default(false),
+      }))
+      .mutation(async ({ input }) => {
+        await createUpdate({
+          ...input,
+          excerpt: input.excerpt ?? null,
+          publishedAt: input.published ? new Date() : null,
+        });
+        return { success: true };
+      }),
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().min(1).optional(),
+        excerpt: z.string().optional(),
+        content: z.string().min(1).optional(),
+        category: z.string().optional(),
+        published: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        const patch: Record<string, unknown> = { ...data };
+        if (data.published) patch.publishedAt = new Date();
+        await updatePost(id, patch as Parameters<typeof updatePost>[1]);
+        return { success: true };
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteUpdate(input.id);
+        return { success: true };
+      }),
   }),
 
   // Enquiries
