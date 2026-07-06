@@ -42,20 +42,20 @@ export default function AmplifyNav() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-            <div className="flex items-center gap-2 cursor-pointer group">
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center"
-                style={{ background: "var(--amp-green)", boxShadow: "0 0 16px var(--amp-green-glow)" }}
-              >
-                <Zap size={16} style={{ color: "var(--amp-black)" }} strokeWidth={2.5} />
-              </div>
-              <span
-                className="text-xl font-display font-800"
-                style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "var(--amp-white)" }}
-              >
-                Gummi Gúrú
-              </span>
+          <div className="flex items-center gap-2 cursor-pointer group">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ background: "var(--amp-green)", boxShadow: "0 0 16px var(--amp-green-glow)" }}
+            >
+              <Zap size={16} style={{ color: "var(--amp-black)" }} strokeWidth={2.5} />
             </div>
+            <span
+              className="hidden sm:block text-xl font-display font-800"
+              style={{ fontFamily: "var(--font-display)", fontWeight: 800, color: "var(--amp-white)" }}
+            >
+              Gummi Gúrú
+            </span>
+          </div>
           </Link>
 
           {/* Desktop nav */}

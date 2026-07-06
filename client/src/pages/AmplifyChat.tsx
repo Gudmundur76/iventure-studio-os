@@ -99,12 +99,12 @@ export default function AmplifyChat() {
     >
       {/* Header */}
       <div
-        className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 h-16 border-b"
+        className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-3 sm:px-6 h-14 sm:h-16 border-b gap-2"
         style={{ background: "rgba(13,13,13,0.95)", backdropFilter: "blur(12px)", borderColor: "var(--amp-border)" }}
       >
         <Link href="/">
           <button
-            className="flex items-center gap-2 text-sm transition-colors"
+            className="flex items-center gap-1.5 text-xs sm:text-sm transition-colors flex-shrink-0"
             style={{ color: "var(--amp-muted)", background: "none", border: "none", cursor: "pointer" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "var(--amp-white)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "var(--amp-muted)")}
@@ -116,12 +116,12 @@ export default function AmplifyChat() {
 
         <div className="flex items-center gap-2">
           <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center"
+            className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center flex-shrink-0"
             style={{ background: "var(--amp-green)" }}
           >
             <Zap size={14} style={{ color: "var(--amp-black)" }} strokeWidth={2.5} />
           </div>
-          <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "var(--amp-white)" }}>
+          <span className="hidden sm:block" style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "var(--amp-white)" }}>
             Gummi Gúrú Spjall
           </span>
         </div>
@@ -130,7 +130,7 @@ export default function AmplifyChat() {
         <select
           value={selectedModel}
           onChange={(e) => setSelectedModel(e.target.value)}
-          className="text-xs px-3 py-1.5 rounded-lg outline-none"
+          className="text-xs px-2 py-1.5 rounded-lg outline-none max-w-[120px] sm:max-w-none"
           style={{
             background: "var(--amp-surface-2)",
             border: "1px solid var(--amp-border)",
@@ -138,11 +138,11 @@ export default function AmplifyChat() {
             fontFamily: "var(--font-mono)",
           }}
         >
-          <option value="claude-sonnet-4-5">claude-sonnet-4-5</option>
-          <option value="claude-opus-4-5">claude-opus-4-5</option>
-          <option value="gpt-4o">gpt-4o</option>
-          <option value="gpt-4o-mini">gpt-4o-mini</option>
-          <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+          <option value="claude-sonnet-4-5">Sonnet 4.5</option>
+          <option value="claude-opus-4-5">Opus 4.5</option>
+          <option value="gpt-4o">GPT-4o</option>
+          <option value="gpt-4o-mini">GPT-4o mini</option>
+          <option value="gemini-2.0-flash">Gemini Flash</option>
           {models?.map((m: { id: string }) => (
             !["claude-sonnet-4-5","claude-opus-4-5","gpt-4o","gpt-4o-mini","gemini-2.0-flash"].includes(m.id) && (
               <option key={m.id} value={m.id}>{m.id}</option>
