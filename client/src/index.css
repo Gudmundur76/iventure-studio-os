@@ -185,3 +185,12 @@ html { color-scheme: dark; }
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in-up { animation: none; }
 }
+/* Gummi portfolio — hero heading gradient */
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.aurora-gradient {

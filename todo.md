@@ -32,6 +32,6 @@
 ## Phase 6: Polish, Tests & Delivery
 - [x] Vitest tests for enquiries router (submit valid, reject invalid email, reject empty message, list protected)
 - [x] TypeScript: 0 errors
-- [ ] Run tests and verify pass
-- [ ] Final screenshot verification
-- [ ] Checkpoint and delivery
+- [x] Run tests and verify pass (16/16 passing)
+- [x] Final screenshot verification (homepage + chat confirmed)
+- [x] Checkpoint and delivery (v1.0 — version 973ba2dd)

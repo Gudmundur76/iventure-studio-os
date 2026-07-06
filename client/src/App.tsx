@@ -8,6 +8,7 @@ import AmplifyHome from "./pages/AmplifyHome";
 import AmplifyChat from "./pages/AmplifyChat";
 import AmplifyNav from "./components/AmplifyNav";
 import AmplifyFooter from "./components/AmplifyFooter";
+import GummiPage from "./pages/GummiPage";
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,6 +24,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/chat" component={AmplifyChat} />
+      <Route path="/gummi" component={GummiPage} />
       <Route path="/">
         {() => (
           <PublicLayout>
