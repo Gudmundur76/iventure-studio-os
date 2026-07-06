@@ -72,7 +72,7 @@ function AnimatedText({ text, className, style }: { text: string; className?: st
   );
 }
 
-function CTA({ label = "Get Started", onClick }: { label?: string; onClick?: () => void }) {
+function CTA({ label = "Hefjast handa", onClick }: { label?: string; onClick?: () => void }) {
   return (
     <button onClick={onClick}
       className="rounded-full font-medium uppercase tracking-widest text-white cursor-pointer px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base transition-opacity duration-200 hover:opacity-90"
@@ -89,10 +89,15 @@ function HeroSection() {
     <section className="relative h-screen flex flex-col" style={{ background: "#0C0C0C", overflowX: "clip" }}>
       <FadeIn delay={0} y={-20}>
         <nav className="flex justify-between items-center px-6 md:px-10 pt-6 md:pt-8">
-          {["Services", "Work", "About", "Contact"].map((link) => (
-            <a key={link} href={`#${link.toLowerCase()}`}
+          {[
+            { label: "Þjónusta", href: "#services" },
+            { label: "Verk", href: "#work" },
+            { label: "Um okkur", href: "#about" },
+            { label: "Hafa samband", href: "#contact" },
+          ].map(({ label, href }) => (
+            <a key={label} href={href}
               className="font-medium uppercase tracking-wider transition-opacity duration-200 hover:opacity-70 text-sm md:text-lg lg:text-[1.4rem]"
-              style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{link}</a>
+              style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{label}</a>
           ))}
         </nav>
       </FadeIn>
@@ -107,14 +112,12 @@ function HeroSection() {
       <FadeIn delay={0.6} y={30}
         className="absolute left-1/2 -translate-x-1/2 z-10 top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0 w-[240px] sm:w-[320px] md:w-[400px] lg:w-[480px]">
         <Magnet padding={150} strength={3}>
-          <p
-            className="text-center font-medium uppercase tracking-widest mb-4"
-            style={{ color: "#D7E2EA", fontSize: "clamp(0.85rem,1.6vw,1.4rem)", fontFamily: "'Kanit',sans-serif", opacity: 0.85 }}
-          >
+          <p className="text-center font-medium uppercase tracking-widest mb-4"
+            style={{ color: "#D7E2EA", fontSize: "clamp(0.85rem,1.6vw,1.4rem)", fontFamily: "'Kanit',sans-serif", opacity: 0.85 }}>
             hæ þetta er Gummi
           </p>
           <img src="https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png"
-            alt="Amplify" className="w-full h-auto object-contain" loading="eager" />
+            alt="Gummi Guru" className="w-full h-auto object-contain" loading="eager" />
         </Magnet>
       </FadeIn>
 
@@ -122,11 +125,11 @@ function HeroSection() {
         <FadeIn delay={0.35} y={20}>
           <p className="font-light uppercase tracking-wide leading-snug max-w-[160px] sm:max-w-[220px] md:max-w-[260px]"
             style={{ color: "#D7E2EA", fontSize: "clamp(0.75rem,1.4vw,1.5rem)", fontFamily: "'Kanit',sans-serif" }}>
-            Gummi Guru — Iceland&apos;s AI-powered agency. One brief. Finished work delivered.
+            Íslenskt gervigreindarstofa. Eitt verkefni. Fullklárað verk afhent.
           </p>
         </FadeIn>
         <FadeIn delay={0.5} y={20}>
-          <CTA label="Get Started" onClick={() => window.location.href = "/chat"} />
+          <CTA label="Hefjast handa" onClick={() => window.location.href = "/chat"} />
         </FadeIn>
       </div>
     </section>
@@ -190,7 +193,7 @@ function MarqueeSection() {
 
 // ─── ABOUT ───────────────────────────────────────────────────────────────────
 
-const ABOUT_TEXT = "Amplify is a one-person agency powered by Manus AI. You describe what you need — a website, a research report, a marketing campaign, a proposal — and we deliver the finished asset. Not a draft. Not a prompt. The actual thing. Unlimited capacity. Icelandic roots. Global reach.";
+const ABOUT_TEXT = "Gummi Guru er eins manns stofa knúin áfram af Manus gervigreind. Þú lýsir því sem þú þarft — vefsíðu, rannsóknarskýrslu, markaðsherferð, tillögu — og við afhendum fullklárað verkefni. Ekki drög. Ekki hugmynd. Hið eiginlega verk. Ótakmarkaður geta. Íslenskar rætur. Alþjóðleg sókn.";
 
 function AboutSection() {
   return (
@@ -210,13 +213,13 @@ function AboutSection() {
       <div className="flex flex-col items-center gap-10 sm:gap-14 md:gap-16 z-10">
         <FadeIn delay={0} y={40}>
           <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center"
-            style={{ fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>About us</h2>
+            style={{ fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>Um okkur</h2>
         </FadeIn>
         <AnimatedText text={ABOUT_TEXT} className="font-medium text-center leading-relaxed max-w-[560px]"
           style={{ color: "#D7E2EA", fontSize: "clamp(1rem,2vw,1.35rem)", fontFamily: "'Kanit',sans-serif" }} />
       </div>
       <div className="mt-16 sm:mt-20 md:mt-24 z-10">
-        <CTA label="Talk to us" onClick={() => window.location.href = "/chat"} />
+        <CTA label="Talaðu við okkur" onClick={() => window.location.href = "/chat"} />
       </div>
     </section>
   );
@@ -225,14 +228,14 @@ function AboutSection() {
 // ─── SERVICES ────────────────────────────────────────────────────────────────
 
 const SERVICES = [
-  { num: "01", name: "Website & App Development", desc: "Fully built, deployed websites and web applications. You brief us, we ship the live product. No code required on your end." },
-  { num: "02", name: "Research & Market Intelligence", desc: "Deep-dive research reports, competitor analysis, and market intelligence — structured, cited, and ready to act on." },
-  { num: "03", name: "Marketing Content & Campaigns", desc: "Blog posts, SEO copy, social media batches, email sequences, and ad copy — written, formatted, and ready to publish." },
-  { num: "04", name: "Business Proposals & Documents", desc: "Professional proposals, reports, and business documents — polished and client-ready, generated to your brief." },
-  { num: "05", name: "Presentation Decks", desc: "Compelling slide decks for pitches, board meetings, and client presentations — structured, designed, and delivered." },
-  { num: "06", name: "Data Analysis & Spreadsheets", desc: "Raw data in, clean analysis out. Charts, summaries, and structured spreadsheets built from your data sources." },
-  { num: "07", name: "Social Media & Content Batches", desc: "Weeks of content planned and written in one session. Posts, captions, threads, and hooks across all platforms." },
-  { num: "08", name: "Lead Research & Prospect Lists", desc: "Targeted prospect lists with contact details, company context, and personalised outreach angles — ready to send." },
+  { num: "01", name: "Vefsíður og forritaþróun", desc: "Fullbúnar, uppsettar vefsíður og vefforrit. Þú sendir okkur lýsingu, við skiluðum lifandi vöru. Engin kóðun þarf af þinni hálfu." },
+  { num: "02", name: "Rannsóknir og markaðsgreining", desc: "Ítarlegar rannsóknarskýrslur, samkeppnisgreining og markaðsupplýsingar — skipulegar, tilvísaðar og tilbúnar til notkunar." },
+  { num: "03", name: "Markaðsefni og herferðir", desc: "Blogggreinar, tölvupóstkeðjur, auglýsingatextar, efni í samfélagsmiðla og SEO-efni — skrifað, sniðið og tilbúið til birtingar." },
+  { num: "04", name: "Viðskiptatillögur og skjöl", desc: "Faglegar tillögur, viðskiptaáætlanir, kynningarsett, samningar og skýrslur — skrifaðar eftir þínum leiðbeiningum og tilbúnar til notkunar." },
+  { num: "05", name: "Kynningarglærur", desc: "Sannfærandi glærusett fyrir fjárfestingafundi, sölukynningu og stjórnarfundi — skipulegar, vel útlitslegar og tilbúnar til kynningar." },
+  { num: "06", name: "Gagnagreining og töflureiknar", desc: "Hráð gögn inn, skýr greining út. Gröf, samantektir og skipulagðar Excel-skýrslur byggðar á gagnasöfnum þínum." },
+  { num: "07", name: "Samfélagsmiðlar og efnispakkar", desc: "Vikna efni skipulagt og skrifað í einni lotu. Færslur, myndatextar, þræðir og hakar yfir allar vettvangana." },
+  { num: "08", name: "Viðfangsrannsóknir og listi yfir horfur", desc: "Markvissir listi yfir horfur með tengiliðaupplýsingum, samhengi fyrirtækis og persónulegum nálgunarhornum — tilbúinn til sendingar." },
 ];
 
 function ServicesSection() {
@@ -240,7 +243,7 @@ function ServicesSection() {
     <section id="services" className="rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32" style={{ background: "#FFFFFF" }}>
       <FadeIn y={40}>
         <h2 className="font-black uppercase text-center mb-16 sm:mb-20 md:mb-28"
-          style={{ color: "#0C0C0C", fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>Services</h2>
+          style={{ color: "#0C0C0C", fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>Þjónusta</h2>
       </FadeIn>
       <div className="max-w-5xl mx-auto">
         {SERVICES.map((s, i) => (
@@ -265,7 +268,7 @@ function ServicesSection() {
 
 const PROJECTS = [
   {
-    num: "01", category: "Web Development", name: "Amplify Agency Site",
+    num: "01", category: "Vefsíðugerð", name: "Gummi Guru stofusíða",
     col1: [
       "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png&w=1280&q=85",
       "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png&w=1280&q=85",
@@ -273,7 +276,7 @@ const PROJECTS = [
     col2: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png&w=1280&q=85",
   },
   {
-    num: "02", category: "Research", name: "Icelandic Market Report",
+    num: "02", category: "Rannsóknir", name: "Íslensk markaðsgreining",
     col1: [
       "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f.png&w=1280&q=85",
       "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055723_5ceda0b8-d9c2-4665-b2e3-83ba19ba76d1.png&w=1280&q=85",
@@ -281,7 +284,7 @@ const PROJECTS = [
     col2: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055753_adc5dcbd-a8e6-49c0-b43a-9b030d835cea.png&w=1280&q=85",
   },
   {
-    num: "03", category: "Marketing", name: "Campaign & Content Suite",
+    num: "03", category: "Markaðssetning", name: "Herferð og efnispakki",
     col1: [
       "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f.png&w=1280&q=85",
       "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_060108_438f781a-9846-4dcc-89ab-c4e6cb830f5b.png&w=1280&q=85",
@@ -306,7 +309,7 @@ function ProjectCard({ project, index, progress }: {
           <span className="font-black leading-none" style={{ color: "#D7E2EA", fontSize: "clamp(2rem,6vw,80px)", fontFamily: "'Kanit',sans-serif" }}>{project.num}</span>
           <span className="uppercase tracking-widest text-sm font-medium opacity-50" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{project.category}</span>
           <span className="font-medium uppercase flex-1" style={{ color: "#D7E2EA", fontSize: "clamp(1rem,2.5vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>{project.name}</span>
-          <button className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base transition-colors duration-200 hover:bg-[#D7E2EA]/10 cursor-pointer" style={{ fontFamily: "'Kanit',sans-serif" }}>View Work</button>
+          <button className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest px-8 py-3 sm:px-10 sm:py-3.5 text-sm sm:text-base transition-colors duration-200 hover:bg-[#D7E2EA]/10 cursor-pointer" style={{ fontFamily: "'Kanit',sans-serif" }}>Skoða verk</button>
         </div>
         <div className="flex gap-3 sm:gap-4">
           <div className="flex flex-col gap-3 sm:gap-4" style={{ width: "40%" }}>
@@ -331,7 +334,7 @@ function WorkSection() {
       style={{ background: "#0C0C0C" }}>
       <FadeIn y={40} className="mb-16 sm:mb-20 md:mb-28">
         <h2 className="hero-heading font-black uppercase text-center leading-none tracking-tight"
-          style={{ fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>Our Work</h2>
+          style={{ fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>Verk okkar</h2>
       </FadeIn>
       {PROJECTS.map((project, i) => (
         <ProjectCard key={project.num} project={project} index={i} progress={scrollYProgress} />
@@ -346,34 +349,34 @@ function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", service: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const submitEnquiry = trpc.enquiries.submit.useMutation({
-    onSuccess: () => { setSubmitted(true); toast.success("Message sent! We'll be in touch within 24 hours."); },
-    onError: () => toast.error("Something went wrong. Please try again."),
+    onSuccess: () => { setSubmitted(true); toast.success("Skilaboð móttekin! Við höfum samband innan 24 klukkustunda."); },
+    onError: () => toast.error("Eitthvað fór úrskeiðis. Vinsamlegast reyndu aftur."),
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) { toast.error("Please fill in all required fields."); return; }
+    if (!form.name || !form.email || !form.message) { toast.error("Vinsamlegast fylltu út öll nauðsynleg svæði."); return; }
     submitEnquiry.mutate(form);
   };
   return (
     <section id="contact" className="rounded-t-[40px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-10 z-20 relative px-5 sm:px-8 md:px-10 py-20 sm:py-24 md:py-32" style={{ background: "#FFFFFF" }}>
       <FadeIn y={40}>
         <h2 className="font-black uppercase text-center mb-16 sm:mb-20"
-          style={{ color: "#0C0C0C", fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>Contact</h2>
+          style={{ color: "#0C0C0C", fontSize: "clamp(3rem,12vw,160px)", fontFamily: "'Kanit',sans-serif" }}>Samband</h2>
       </FadeIn>
       <div className="max-w-2xl mx-auto">
         {submitted ? (
           <FadeIn y={20}>
             <div className="text-center py-20">
-              <p className="font-black uppercase text-[#0C0C0C]" style={{ fontSize: "clamp(1.5rem,4vw,3rem)", fontFamily: "'Kanit',sans-serif" }}>Message received.</p>
-              <p className="mt-4 font-light" style={{ color: "rgba(12,12,12,0.6)", fontFamily: "'Kanit',sans-serif" }}>We&apos;ll be in touch within 24 hours.</p>
+              <p className="font-black uppercase text-[#0C0C0C]" style={{ fontSize: "clamp(1.5rem,4vw,3rem)", fontFamily: "'Kanit',sans-serif" }}>Skilaboð móttekin.</p>
+              <p className="mt-4 font-light" style={{ color: "rgba(12,12,12,0.6)", fontFamily: "'Kanit',sans-serif" }}>Við höfum samband innan 24 klukkustunda.</p>
             </div>
           </FadeIn>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             {[
-              { key: "name", label: "Your Name", type: "text", placeholder: "Jón Sigurðsson" },
-              { key: "email", label: "Email Address", type: "email", placeholder: "jon@company.is" },
-              { key: "service", label: "Service (optional)", type: "text", placeholder: "e.g. Website Development" },
+              { key: "name", label: "Nafn þitt", type: "text", placeholder: "Jón Sigurðsson" },
+              { key: "email", label: "Netfang", type: "email", placeholder: "jon@fyrirtaeki.is" },
+              { key: "service", label: "Þjónusta (valkvætt)", type: "text", placeholder: "t.d. Vefsíðugerð" },
             ].map(({ key, label, type, placeholder }) => (
               <FadeIn key={key} y={15} delay={0.1}>
                 <div className="flex flex-col gap-2">
@@ -387,15 +390,15 @@ function ContactSection() {
             ))}
             <FadeIn y={15} delay={0.25}>
               <div className="flex flex-col gap-2">
-                <label className="font-medium uppercase tracking-wider text-sm" style={{ color: "#0C0C0C", fontFamily: "'Kanit',sans-serif" }}>Your Brief</label>
-                <textarea rows={5} placeholder="Describe what you need in plain language. We'll handle the rest."
+                <label className="font-medium uppercase tracking-wider text-sm" style={{ color: "#0C0C0C", fontFamily: "'Kanit',sans-serif" }}>Lýsing á verkefni</label>
+                <textarea rows={5} placeholder="Lýstu því sem þú þarft á einföldu máli. Við sjáum um restina."
                   value={form.message} onChange={(e) => setForm(f => ({ ...f, message: e.target.value }))}
                   className="w-full px-5 py-4 rounded-2xl border-2 outline-none transition-colors duration-200 focus:border-[#B600A8] resize-none"
                   style={{ borderColor: "rgba(12,12,12,0.15)", background: "#F8F8F8", color: "#0C0C0C", fontFamily: "'Kanit',sans-serif" }} />
               </div>
             </FadeIn>
             <FadeIn y={15} delay={0.35} className="flex justify-center mt-4">
-              <CTA label={submitEnquiry.isPending ? "Sending..." : "Send Brief"} />
+              <CTA label={submitEnquiry.isPending ? "Sendi..." : "Senda lýsingu"} />
             </FadeIn>
           </form>
         )}
@@ -410,10 +413,10 @@ function Footer() {
   return (
     <footer className="px-6 md:px-10 py-10 flex flex-col sm:flex-row justify-between items-center gap-4"
       style={{ background: "#0C0C0C", borderTop: "1px solid rgba(215,226,234,0.1)" }}>
-      <span className="font-black uppercase tracking-wider" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif", fontSize: "1.2rem" }}>Amplify</span>
-      <span className="font-light text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>© 2025 Amplify. Iceland&apos;s AI-powered agency.</span>
+      <span className="font-black uppercase tracking-wider" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif", fontSize: "1.2rem" }}>Gummi Guru</span>
+      <span className="font-light text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>© 2025 Gummi Guru. Íslenskt gervigreindarstofa.</span>
       <a href="/chat" className="font-medium uppercase tracking-widest text-sm transition-opacity duration-200 hover:opacity-70"
-        style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>Talk to us →</a>
+        style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>Talaðu við okkur →</a>
     </footer>
   );
 }
