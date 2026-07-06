@@ -100,13 +100,19 @@ function HeroSection() {
       <FadeIn delay={0.15} y={40} className="overflow-hidden">
         <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[11vw] sm:text-[12vw] md:text-[13vw] lg:text-[14.5vw] mt-6 sm:mt-4 md:-mt-5"
           style={{ fontFamily: "'Kanit',sans-serif" }}>
-          amplify agency
+          gummi guru
         </h1>
       </FadeIn>
 
       <FadeIn delay={0.6} y={30}
         className="absolute left-1/2 -translate-x-1/2 z-10 top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0 w-[240px] sm:w-[320px] md:w-[400px] lg:w-[480px]">
         <Magnet padding={150} strength={3}>
+          <p
+            className="text-center font-medium uppercase tracking-widest mb-4"
+            style={{ color: "#D7E2EA", fontSize: "clamp(0.85rem,1.6vw,1.4rem)", fontFamily: "'Kanit',sans-serif", opacity: 0.85 }}
+          >
+            hæ þetta er Gummi
+          </p>
           <img src="https://shrug-person-78902957.figma.site/_components/v2/d24c01ad3a56fc65e942a1f501eb73db42d7cf9a/Rectangle_40443.81459862.png"
             alt="Amplify" className="w-full h-auto object-contain" loading="eager" />
         </Magnet>
@@ -116,7 +122,7 @@ function HeroSection() {
         <FadeIn delay={0.35} y={20}>
           <p className="font-light uppercase tracking-wide leading-snug max-w-[160px] sm:max-w-[220px] md:max-w-[260px]"
             style={{ color: "#D7E2EA", fontSize: "clamp(0.75rem,1.4vw,1.5rem)", fontFamily: "'Kanit',sans-serif" }}>
-            Iceland&apos;s AI-powered agency. One brief. Finished work delivered.
+            Gummi Guru — Iceland&apos;s AI-powered agency. One brief. Finished work delivered.
           </p>
         </FadeIn>
         <FadeIn delay={0.5} y={20}>
