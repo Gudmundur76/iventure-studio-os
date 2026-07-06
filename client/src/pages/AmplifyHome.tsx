@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
+import AmplifyNav from "@/components/AmplifyNav";
 
 // ─── REUSABLE COMPONENTS ─────────────────────────────────────────────────────
 
@@ -87,22 +88,6 @@ function CTA({ label = "Hefjast handa", onClick }: { label?: string; onClick?: (
 function HeroSection() {
   return (
     <section className="relative min-h-[100svh] flex flex-col" style={{ background: "#0C0C0C", overflowX: "clip" }}>
-      {/* Top nav */}
-      <FadeIn delay={0} y={-20}>
-        <nav className="hidden">
-          {[
-            { label: "Þjónusta", href: "#services" },
-            { label: "Verk", href: "#work" },
-            { label: "Um okkur", href: "#about" },
-            { label: "Samband", href: "#contact" },
-          ].map(({ label, href }) => (
-            <a key={label} href={href}
-              className="font-medium uppercase tracking-wider transition-opacity duration-200 hover:opacity-70 text-[0.65rem] xs:text-xs sm:text-sm md:text-lg lg:text-[1.4rem]"
-              style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{label}</a>
-          ))}
-        </nav>
-      </FadeIn>
-
       {/* Heading — HTML entities ensure ú renders on all platforms */}
       <FadeIn delay={0.15} y={40} className="overflow-hidden">
         <h1 lang="is" className="hero-heading font-black uppercase tracking-tight leading-none w-full mt-4 sm:mt-3 md:-mt-2 px-1"
@@ -546,6 +531,7 @@ function Footer() {
 export default function AmplifyHome() {
   return (
     <div style={{ background: "#0C0C0C", fontFamily: "'Kanit',sans-serif", overflowX: "clip" }}>
+      <AmplifyNav />
       <HeroSection />
       <MarqueeSection />
       <AboutSection />
