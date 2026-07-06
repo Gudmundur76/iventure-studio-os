@@ -4,32 +4,38 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import IVLayout from "./components/IVLayout";
+import CommandCentre from "./pages/CommandCentre";
+import AgentBoard from "./pages/AgentBoard";
+import SkillsLibrary from "./pages/SkillsLibrary";
+import MemoryViewer from "./pages/MemoryViewer";
+import NetworkPanel from "./pages/NetworkPanel";
+import CortexPanel from "./pages/CortexPanel";
+import Analytics from "./pages/Analytics";
+import ClientPortal from "./pages/ClientPortal";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <IVLayout>
+      <Switch>
+        <Route path="/" component={CommandCentre} />
+        <Route path="/agents" component={AgentBoard} />
+        <Route path="/skills" component={SkillsLibrary} />
+        <Route path="/memory" component={MemoryViewer} />
+        <Route path="/network" component={NetworkPanel} />
+        <Route path="/cortex" component={CortexPanel} />
+        <Route path="/analytics" component={Analytics} />
+        <Route path="/portal" component={ClientPortal} />
+        <Route component={NotFound} />
+      </Switch>
+    </IVLayout>
   );
 }
-
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
           <Router />
