@@ -3,6 +3,7 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import GiggoNav from "@/components/GiggoNav";
+import { Link } from "wouter";
 
 // ─── REUSABLE COMPONENTS ─────────────────────────────────────────────────────
 
@@ -522,35 +523,47 @@ function AgencyComparisonSection() {
 
 const PROJECTS = [
   {
-    num: "01", category: "Web Development", name: "Nextlevel Studio",
-    col1: [
-      "/manus-storage/work-01a_a919dc06.jpg",
-      "/manus-storage/work-01b_d39b44dd.jpg",
-    ],
-    col2: "/manus-storage/work-01c_c220cd01.jpg",
+    num: "01",
+    category: "Web Development",
+    name: "Website & App Development",
+    slug: "/services/web-development",
+    headline: "From brief to live URL — no code required on your end.",
+    body: "You describe what you need. Giggo builds it. Whether it's a marketing landing page, a full SaaS product, a client portal, or a mobile app — we handle design, development, and deployment end-to-end. Every project is built with modern frameworks (React, Next.js, Tailwind), optimised for speed, and handed over as a live, production-ready URL.",
+    tags: ["Landing Pages", "SaaS Products", "Web Apps", "Mobile Apps", "E-commerce", "Client Portals"],
+    stat1: { value: "24–72h", label: "Typical delivery" },
+    stat2: { value: "100%", label: "Production-ready" },
+    stat3: { value: "∞", label: "Revisions included" },
   },
   {
-    num: "02", category: "Research", name: "Market Intelligence Report",
-    col1: [
-      "/manus-storage/work-02a_2722d362.jpg",
-      "/manus-storage/work-02b_7e6a6c46.jpg",
-    ],
-    col2: "/manus-storage/work-02c_9bd77144.jpg",
+    num: "02",
+    category: "Research & Analysis",
+    name: "Research & Market Analysis",
+    slug: "/services/research",
+    headline: "Deep intelligence, structured and ready to act on.",
+    body: "Giggo conducts thorough market research, competitive analysis, and industry deep-dives — then delivers structured reports you can present, publish, or act on immediately. Every report is sourced, cited, and formatted to a professional standard. No fluff, no filler. Just the intelligence you need to make better decisions faster.",
+    tags: ["Market Research", "Competitor Analysis", "Industry Reports", "Due Diligence", "Trend Analysis", "Investment Memos"],
+    stat1: { value: "10–50pg", label: "Report depth" },
+    stat2: { value: "Cited", label: "All sources verified" },
+    stat3: { value: "48h", label: "Average turnaround" },
   },
   {
-    num: "03", category: "Marketing", name: "Solaris Digital Campaign",
-    col1: [
-      "/manus-storage/work-03a_a3a82397.jpg",
-      "/manus-storage/work-03b_30601d76.jpg",
-    ],
-    col2: "/manus-storage/work-03c_a6fb29ae.jpg",
+    num: "03",
+    category: "Marketing",
+    name: "Marketing Content & Campaigns",
+    slug: "/services/marketing",
+    headline: "Content that converts — written, formatted, and ready to publish.",
+    body: "From SEO blog posts and email sequences to ad copy, social media content, and full campaign briefs — Giggo produces the complete content stack your business needs to grow. Every piece is written to your brand voice, optimised for your channel, and delivered ready to publish. No editing required.",
+    tags: ["Blog Posts", "Email Sequences", "Ad Copy", "Social Media", "SEO Content", "Campaign Briefs"],
+    stat1: { value: "30+", label: "Content pieces per session" },
+    stat2: { value: "On-brand", label: "Matched to your voice" },
+    stat3: { value: "24h", label: "Fastest turnaround" },
   },
 ];
 
 const TOTAL = PROJECTS.length;
 
 function ProjectCard({ project, index, progress }: {
-  project: (typeof PROJECTS)[0]; index: number;
+  project: typeof PROJECTS[0]; index: number;
   progress: ReturnType<typeof useScroll>["scrollYProgress"];
 }) {
   const targetScale = 1 - (TOTAL - 1 - index) * 0.03;
@@ -563,15 +576,39 @@ function ProjectCard({ project, index, progress }: {
           <span className="font-black leading-none" style={{ color: "#D7E2EA", fontSize: "clamp(1.4rem,4.5vw,70px)", fontFamily: "'Kanit',sans-serif" }}>{project.num}</span>
           <span className="uppercase tracking-widest text-[0.6rem] sm:text-xs font-medium opacity-50" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{project.category}</span>
           <span className="font-medium uppercase flex-1 min-w-0 truncate" style={{ color: "#D7E2EA", fontSize: "clamp(0.8rem,1.8vw,1.7rem)", fontFamily: "'Kanit',sans-serif" }}>{project.name}</span>
-          <button className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest px-3 py-1.5 sm:px-6 sm:py-2.5 text-[0.6rem] sm:text-sm transition-colors duration-200 hover:bg-[#D7E2EA]/10 cursor-pointer flex-shrink-0" style={{ fontFamily: "'Kanit',sans-serif" }}>View Work</button>
+          <Link href={project.slug}>
+            <span className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest px-3 py-1.5 sm:px-6 sm:py-2.5 text-[0.6rem] sm:text-sm transition-colors duration-200 hover:bg-[#D7E2EA]/10 cursor-pointer flex-shrink-0 inline-block" style={{ fontFamily: "'Kanit',sans-serif" }}>View Service →</span>
+          </Link>
         </div>
-        <div className="flex gap-2 sm:gap-3 md:gap-4">
-          <div className="flex flex-col gap-2 sm:gap-3" style={{ width: "40%" }}>
-            <img src={project.col1[0]} alt={project.name} loading="lazy" className="w-full object-cover rounded-[14px] sm:rounded-[28px] md:rounded-[44px]" style={{ height: "clamp(80px,13vw,210px)" }} />
-            <img src={project.col1[1]} alt={project.name} loading="lazy" className="w-full object-cover rounded-[14px] sm:rounded-[28px] md:rounded-[44px]" style={{ height: "clamp(100px,17vw,290px)" }} />
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+          {/* Left: headline + body */}
+          <div className="flex-1 flex flex-col gap-4">
+            <p className="font-medium leading-snug"
+              style={{ color: "#D7E2EA", fontSize: "clamp(1rem,2.2vw,1.6rem)", fontFamily: "'Kanit',sans-serif" }}>
+              {project.headline}
+            </p>
+            <p className="font-light leading-relaxed"
+              style={{ color: "rgba(215,226,234,0.6)", fontSize: "clamp(0.82rem,1.3vw,1.05rem)", fontFamily: "'Kanit',sans-serif" }}>
+              {project.body}
+            </p>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {project.tags.map(tag => (
+                <span key={tag} className="px-3 py-1 rounded-full text-[0.65rem] sm:text-xs font-medium uppercase tracking-wider"
+                  style={{ background: "rgba(182,0,168,0.12)", border: "1px solid rgba(182,0,168,0.3)", color: "rgba(215,226,234,0.75)", fontFamily: "'Kanit',sans-serif" }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
-          <div style={{ width: "60%" }}>
-            <img src={project.col2} alt={project.name} loading="lazy" className="w-full h-full object-cover rounded-[14px] sm:rounded-[28px] md:rounded-[44px]" />
+          {/* Right: 3 stats */}
+          <div className="flex flex-row lg:flex-col gap-3 lg:gap-4 lg:w-48 flex-shrink-0">
+            {[project.stat1, project.stat2, project.stat3].map((s) => (
+              <div key={s.label} className="flex-1 lg:flex-none rounded-[14px] sm:rounded-[20px] p-3 sm:p-4 flex flex-col gap-1"
+                style={{ background: "rgba(215,226,234,0.05)", border: "1px solid rgba(215,226,234,0.1)" }}>
+                <span className="font-black leading-none" style={{ color: "#fff", fontSize: "clamp(1.1rem,2.5vw,1.8rem)", fontFamily: "'Kanit',sans-serif" }}>{s.value}</span>
+                <span className="font-light uppercase tracking-wide text-[0.6rem] sm:text-xs" style={{ color: "rgba(215,226,234,0.45)", fontFamily: "'Kanit',sans-serif" }}>{s.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </motion.div>
