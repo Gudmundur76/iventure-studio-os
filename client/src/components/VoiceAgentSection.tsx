@@ -218,8 +218,13 @@ export default function VoiceAgentSection() {
     setTaskId(null);
 
     try {
-      // Set up AudioContext for playback
-      audioContextRef.current = new AudioContext({ sampleRate: 24000 });
+      // AudioContext may already exist (created synchronously in onClick for Android Chrome)
+      // If not, create it now (desktop browsers are fine with this)
+      if (!audioContextRef.current || audioContextRef.current.state === "closed") {
+        audioContextRef.current = new AudioContext();
+      }
+      // Always resume — Android Chrome requires explicit resume
+      try { await audioContextRef.current.resume(); } catch { /* ignore */ }
       audioQueueRef.current = [];
       isPlayingRef.current = false;
 
@@ -532,7 +537,17 @@ export default function VoiceAgentSection() {
 
             {/* Mic button */}
             <button
-              onClick={startSession}
+              onClick={() => {
+                // Android Chrome requires AudioContext created synchronously in click handler
+                if (sessionState === "idle") {
+                  try {
+                    const ctx = new AudioContext();
+                    ctx.resume().catch(() => {});
+                    audioContextRef.current = ctx;
+                  } catch { /* ignore */ }
+                }
+                startSession();
+              }}
               disabled={sessionState === "connecting"}
               className="flex items-center gap-3 px-8 py-3.5 rounded-full font-medium uppercase tracking-widest text-sm transition-all"
               style={{
