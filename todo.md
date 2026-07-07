@@ -68,3 +68,12 @@
 - [x] How it works 4-step section (Icelandic)
 - [x] ISK pricing: 4.900 kr / 9.900 kr / Sérsniðið
 - [x] Register /demo route in App.tsx
+
+## Phase 10: Manus Task API Integration
+- [x] Add MANUS_API_KEY to server/_core/env.ts as manusApiKey
+- [x] Add manusTask tRPC router: create, getMessages, getStatus procedures
+- [x] Wire task creation into VoiceAgentSection — "Senda verkefni til Gumma" button after session ends
+- [x] TaskResultPanel: polls status/messages every 4-5s, shows live progress
+- [x] Owner notification on task creation via notifyOwner
+- [x] TypeScript: 0 errors, all 16 tests pass
+- [x] Checkpoint saved: f249cb14
