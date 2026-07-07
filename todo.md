@@ -45,3 +45,15 @@
 - [x] Add "Fréttir" nav link to AmplifyNav
 - [x] Wire all routes in App.tsx
 - [x] Checkpoint and deliver updates feature
+
+## Phase 8: Giggo.io Rebrand (English / International)
+- [x] Build GiggoNav component with English nav items and Giggo wordmark
+- [x] Build GiggoHome.tsx — Hero, Marquee, About, Agency Comparison, Services, Work, Pricing, Contact
+- [x] Wire App.tsx to use GiggoHome as / route
+- [x] Wire App.tsx to use GiggoChat as /chat route
+- [x] Update client/index.html title to "Giggo — Your AI Agent"
+- [x] Rebrand chat page (GiggoChat.tsx) with English system prompt and Giggo persona
+- [ ] Add backend endpoints: POST /api/email, POST /api/reminder, POST /api/task
+- [ ] Verify invoice PDF generation end-to-end
+- [ ] Add voice agent integration (xAI WebSocket)
+- [ ] Connect giggo.io domain

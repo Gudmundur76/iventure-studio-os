@@ -10,6 +10,7 @@ import {
   chatMessages, InsertChatMessage,
 } from "../drizzle/schema";
 import { enquiries, InsertEnquiry, updates, InsertUpdate, Update } from "../drizzle/schema";
+import { invoices, InsertInvoice, Invoice } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -175,3 +176,45 @@ export async function deleteUpdate(id: number): Promise<void> {
   if (!db) throw new Error("Database not available");
   await db.delete(updates).where(eq(updates.id, id));
 }
+
+// ── Invoice helpers ──────────────────────────────────────────────────────────
+
+export async function getNextInvoiceNumber(): Promise<string> {
+  const db = await getDb();
+  if (!db) return `GG-${new Date().getFullYear()}-001`;
+  const year = new Date().getFullYear();
+  const all = await db
+    .select({ invoiceNumber: invoices.invoiceNumber })
+    .from(invoices)
+    .orderBy(desc(invoices.createdAt));
+  const thisYear = all.filter(r => r.invoiceNumber.startsWith(`GG-${year}-`));
+  const next = thisYear.length + 1;
+  return `GG-${year}-${String(next).padStart(3, '0')}`;
+}
+
+export async function createInvoice(data: Omit<InsertInvoice, 'id' | 'createdAt' | 'updatedAt'>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+  await db.insert(invoices).values(data);
+}
+
+export async function listInvoices(): Promise<Invoice[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(invoices).orderBy(desc(invoices.createdAt));
+}
+
+export async function getInvoiceById(id: number): Promise<Invoice | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(invoices).where(eq(invoices.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function updateInvoiceStatus(id: number, status: Invoice['status']): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(invoices).set({ status }).where(eq(invoices.id, id));
+}
+
+export type { Invoice };

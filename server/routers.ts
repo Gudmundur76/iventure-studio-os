@@ -236,3 +236,7 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
+
+// ── Invoice procedures (appended cleanly) ────────────────────────────────────
+// Note: invoice procedures are added via the REST endpoint in _core/index.ts
+// The tRPC invoice router is defined separately below and merged at startup

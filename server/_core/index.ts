@@ -2,6 +2,9 @@ import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import net from "net";
+import { createRequire } from 'module';
+const _require = createRequire(import.meta.url);
+const Busboy = _require('busboy') as (opts: import('busboy').BusboyConfig) => import('busboy').Busboy;
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
@@ -36,6 +39,64 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+
+  // Voice clone upload endpoint — receives audio from browser, proxies to xAI Custom Voices API
+  app.post('/api/upload-voice-clone', (req, res) => {
+    const bb = Busboy({ headers: req.headers });
+    const chunks: Buffer[] = [];
+    let filename = 'voice.webm';
+    let mimeType = 'audio/webm';
+
+    bb.on('file', (_field, file, info) => {
+      filename = info.filename || filename;
+      mimeType = info.mimeType || mimeType;
+      file.on('data', (d: Buffer) => chunks.push(d));
+    });
+
+    bb.on('close', async () => {
+      try {
+        const audioBuffer = Buffer.concat(chunks);
+        const apiKey = process.env.XAI_API_KEY;
+        if (!apiKey) { res.status(500).json({ error: 'XAI_API_KEY not configured' }); return; }
+
+        // Build multipart form for xAI API
+        const boundary = '----GummiVoiceBoundary' + Date.now();
+        const namePart = `--${boundary}\r\nContent-Disposition: form-data; name="name"\r\n\r\nGummi Eyberg\r\n`;
+        const descPart = `--${boundary}\r\nContent-Disposition: form-data; name="description"\r\n\r\nGummi Gúrú personal agent voice\r\n`;
+        const filePart = `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: ${mimeType}\r\n\r\n`;
+        const closing = `\r\n--${boundary}--\r\n`;
+
+        const body = Buffer.concat([
+          Buffer.from(namePart),
+          Buffer.from(descPart),
+          Buffer.from(filePart),
+          audioBuffer,
+          Buffer.from(closing),
+        ]);
+
+        const xaiRes = await fetch('https://api.x.ai/v1/audio/voice-clones', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': `multipart/form-data; boundary=${boundary}`,
+          },
+          body,
+        });
+
+        const data = await xaiRes.json() as Record<string, unknown>;
+        if (!xaiRes.ok) {
+          res.status(xaiRes.status).json({ error: (data.error as string) ?? 'xAI API error', details: data });
+          return;
+        }
+        res.json({ voice_id: data.voice_id ?? data.id ?? data, raw: data });
+      } catch (e: unknown) {
+        res.status(500).json({ error: e instanceof Error ? e.message : 'Upload failed' });
+      }
+    });
+
+    req.pipe(bb);
+  });
+
   // tRPC API
   app.use(
     "/api/trpc",

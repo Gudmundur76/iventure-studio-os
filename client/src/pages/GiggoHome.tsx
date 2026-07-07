@@ -1,0 +1,657 @@
+import { useRef, useEffect, useState, useCallback } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
+import GiggoNav from "@/components/GiggoNav";
+
+// ─── REUSABLE COMPONENTS ─────────────────────────────────────────────────────
+
+function FadeIn({
+  children, delay = 0, duration = 0.7, x = 0, y = 30, className, style,
+}: {
+  children: React.ReactNode; delay?: number; duration?: number;
+  x?: number; y?: number; className?: string; style?: React.CSSProperties;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "50px", amount: 0 });
+  return (
+    <motion.div ref={ref} className={className} style={style}
+      initial={{ opacity: 0, x, y }}
+      animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x, y }}
+      transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}>
+      {children}
+    </motion.div>
+  );
+}
+
+function Magnet({ children, padding = 150, strength = 3, className }: {
+  children: React.ReactNode; padding?: number; strength?: number; className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = e.clientX - cx;
+    const dy = e.clientY - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const threshold = Math.max(rect.width, rect.height) / 2 + padding;
+    if (dist < threshold) { setActive(true); setPos({ x: dx / strength, y: dy / strength }); }
+    else { setActive(false); setPos({ x: 0, y: 0 }); }
+  }, [padding, strength]);
+  const handleMouseLeave = useCallback(() => { setActive(false); setPos({ x: 0, y: 0 }); }, []);
+  return (
+    <div ref={ref} className={className} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
+      style={{ transform: `translate3d(${pos.x}px,${pos.y}px,0)`, transition: active ? "transform 0.3s ease-out" : "transform 0.6s ease-in-out", willChange: "transform" }}>
+      {children}
+    </div>
+  );
+}
+
+function AnimatedText({ text, className, style }: { text: string; className?: string; style?: React.CSSProperties }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.2"] });
+  const chars = text.split("");
+  return (
+    <p ref={ref} className={className} style={style} aria-label={text}>
+      {chars.map((char, i) => {
+        const start = i / chars.length;
+        const end = start + 1 / chars.length;
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
+        return (
+          <span key={i} className="relative inline-block">
+            <span className="invisible">{char === " " ? "\u00A0" : char}</span>
+            <motion.span className="absolute inset-0" style={{ opacity }}>{char === " " ? "\u00A0" : char}</motion.span>
+          </span>
+        );
+      })}
+    </p>
+  );
+}
+
+function CTA({ label = "Get Started", onClick }: { label?: string; onClick?: () => void }) {
+  return (
+    <button onClick={onClick}
+      className="rounded-full font-medium uppercase tracking-widest text-white cursor-pointer px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base transition-opacity duration-200 hover:opacity-90 whitespace-nowrap"
+      style={{ background: "linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)", boxShadow: "0px 4px 4px rgba(181,1,167,0.25),inset 4px 4px 12px #7721B1", outline: "2px solid white", outlineOffset: "-3px", fontFamily: "'Kanit',sans-serif" }}>
+      {label}
+    </button>
+  );
+}
+
+// ─── HERO ────────────────────────────────────────────────────────────────────
+
+function HeroSection() {
+  const scrollToContact = () => {
+    const el = document.querySelector("#contact");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+  return (
+    <section className="relative min-h-[100svh] flex flex-col pt-16 sm:pt-0" style={{ background: "#0C0C0C", overflowX: "clip" }}>
+      {/* Heading */}
+      <FadeIn delay={0.15} y={40} className="overflow-hidden">
+        <h1 className="hero-heading font-black uppercase tracking-tight leading-none w-full mt-6 sm:mt-4 md:-mt-2 px-1"
+          style={{ fontFamily: "'Kanit',sans-serif", fontSize: "clamp(3.5rem,14vw,220px)", whiteSpace: "nowrap" }}>
+          GIGGO
+        </h1>
+      </FadeIn>
+
+      {/* Floating visual — abstract AI orb instead of personal photo */}
+      <FadeIn delay={0.6} y={30}
+        className="relative sm:absolute sm:left-1/2 sm:-translate-x-1/2 sm:z-10 sm:bottom-0 mx-auto sm:mx-0 mt-4 sm:mt-0 flex flex-col items-center"
+        style={{ width: "clamp(200px,45vw,480px)" }}>
+        <Magnet padding={100} strength={3}>
+          <p className="text-center font-medium uppercase tracking-widest mb-3"
+            style={{ color: "#D7E2EA", fontSize: "clamp(0.65rem,1.2vw,1rem)", fontFamily: "'Kanit',sans-serif", opacity: 0.75 }}>
+            Your AI Agent. Always On.
+          </p>
+          {/* Abstract AI orb — CSS-only, no external image dependency */}
+          <div className="relative mx-auto" style={{ width: "clamp(180px,38vw,400px)", height: "clamp(180px,38vw,400px)" }}>
+            <div className="absolute inset-0 rounded-full"
+              style={{ background: "radial-gradient(circle at 35% 35%, #7621B0 0%, #B600A8 35%, #18011F 70%, #0C0C0C 100%)", filter: "blur(2px)" }} />
+            <div className="absolute inset-[8%] rounded-full"
+              style={{ background: "radial-gradient(circle at 40% 30%, rgba(255,255,255,0.18) 0%, transparent 60%)", mixBlendMode: "screen" }} />
+            <div className="absolute inset-0 rounded-full"
+              style={{ boxShadow: "0 0 60px 20px rgba(182,0,168,0.35), 0 0 120px 40px rgba(118,33,176,0.2)" }} />
+            {/* Orbit ring */}
+            <div className="absolute inset-[-10%] rounded-full"
+              style={{ border: "1px solid rgba(215,226,234,0.15)", transform: "rotateX(70deg)" }} />
+            {/* Center dot */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+              style={{ width: "clamp(16px,3vw,32px)", height: "clamp(16px,3vw,32px)", background: "radial-gradient(circle, #fff 0%, #B600A8 60%)", boxShadow: "0 0 20px 8px rgba(182,0,168,0.6)" }} />
+          </div>
+        </Magnet>
+      </FadeIn>
+
+      {/* Bottom bar */}
+      <div className="mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pb-6 sm:pb-8 md:pb-10 px-4 sm:px-6 md:px-10 pt-4 sm:pt-0">
+        <FadeIn delay={0.35} y={20}>
+          <p className="font-light uppercase tracking-wide leading-snug max-w-[240px] sm:max-w-[220px] md:max-w-[280px]"
+            style={{ color: "#D7E2EA", fontSize: "clamp(0.7rem,1.3vw,1.2rem)", fontFamily: "'Kanit',sans-serif" }}>
+            AI-powered personal agent. One request. Delivered.
+          </p>
+        </FadeIn>
+        <FadeIn delay={0.5} y={20}>
+          <CTA label="Get Started" onClick={scrollToContact} />
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+// ─── MARQUEE ─────────────────────────────────────────────────────────────────
+
+const GIFS = [
+  "https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif",
+  "https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif",
+  "https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif",
+  "https://motionsites.ai/assets/hero-stellar-ai-v2-preview-DjvxjG3C.gif",
+  "https://motionsites.ai/assets/hero-asme-preview-B_nGDnTP.gif",
+  "https://motionsites.ai/assets/hero-transform-data-preview-Cx5OU29N.gif",
+  "https://motionsites.ai/assets/hero-vitara-preview-Cjz2QYyU.gif",
+  "https://motionsites.ai/assets/hero-terra-preview-BFjrCr7T.gif",
+  "https://motionsites.ai/assets/hero-skyelite-preview-DHaZIgUv.gif",
+  "https://motionsites.ai/assets/hero-aethera-preview-DknSlcTa.gif",
+  "https://motionsites.ai/assets/hero-designpro-preview-D8c5_een.gif",
+  "https://motionsites.ai/assets/hero-stellar-ai-preview-D3HL6bw1.gif",
+  "https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif",
+  "https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif",
+  "https://motionsites.ai/assets/hero-nexora-preview-cx5HmUgo.gif",
+  "https://motionsites.ai/assets/hero-evr-ventures-preview-DZxeVFEX.gif",
+  "https://motionsites.ai/assets/hero-planet-orbit-preview-DWAP8Z1P.gif",
+  "https://motionsites.ai/assets/hero-new-era-preview-CocuDUm9.gif",
+  "https://motionsites.ai/assets/hero-wealth-preview-B70idl_u.gif",
+  "https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif",
+  "https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif",
+];
+const ROW1 = GIFS.slice(0, 11);
+const ROW2 = GIFS.slice(11);
+function triple<T>(arr: T[]): T[] { return [...arr, ...arr, ...arr]; }
+
+function MarqueeSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const sectionTop = window.scrollY + rect.top;
+      setOffset((window.scrollY - sectionTop + window.innerHeight) * 0.3);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  return (
+    <section ref={sectionRef} className="overflow-hidden pt-14 sm:pt-24 md:pt-36 pb-8" style={{ background: "#0C0C0C" }}>
+      <div className="flex gap-2 sm:gap-3 mb-2 sm:mb-3" style={{ transform: `translateX(${offset - 200}px)`, willChange: "transform" }}>
+        {triple(ROW1).map((src, i) => <img key={i} src={src} alt="" loading="lazy" className="rounded-xl sm:rounded-2xl object-cover flex-shrink-0" style={{ width: "clamp(180px,40vw,420px)", height: "clamp(115px,26vw,270px)" }} />)}
+      </div>
+      <div className="flex gap-2 sm:gap-3" style={{ transform: `translateX(${-(offset - 200)}px)`, willChange: "transform" }}>
+        {triple(ROW2).map((src, i) => <img key={i} src={src} alt="" loading="lazy" className="rounded-xl sm:rounded-2xl object-cover flex-shrink-0" style={{ width: "clamp(180px,40vw,420px)", height: "clamp(115px,26vw,270px)" }} />)}
+      </div>
+    </section>
+  );
+}
+
+// ─── ABOUT ───────────────────────────────────────────────────────────────────
+
+const ABOUT_TEXT = "Giggo is a fully autonomous AI agent platform. You describe what you need — a website, a research report, a marketing campaign, a proposal — and we deliver the finished work. Not a draft. Not a concept. The actual deliverable. Unlimited capability. Zero overhead. International reach.";
+
+function AboutSection() {
+  const scrollToContact = () => {
+    const el = document.querySelector("#contact");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+  return (
+    <section id="about" className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 md:px-10 py-16 sm:py-20" style={{ background: "#0C0C0C" }}>
+      {/* Decorative corner elements — abstract geometric shapes */}
+      <FadeIn delay={0.1} x={-80} y={0} duration={0.9} className="absolute top-[4%] left-[1%] sm:left-[2%] md:left-[4%] pointer-events-none">
+        <div className="rounded-full" style={{ width: "clamp(60px,10vw,140px)", height: "clamp(60px,10vw,140px)", background: "radial-gradient(circle, rgba(182,0,168,0.3) 0%, transparent 70%)", filter: "blur(20px)" }} />
+      </FadeIn>
+      <FadeIn delay={0.25} x={-80} y={0} duration={0.9} className="absolute bottom-[8%] left-[2%] sm:left-[6%] md:left-[10%] pointer-events-none">
+        <div style={{ width: "clamp(50px,8vw,110px)", height: "clamp(50px,8vw,110px)", border: "1px solid rgba(182,0,168,0.25)", borderRadius: "30% 70% 70% 30% / 30% 30% 70% 70%", background: "rgba(118,33,176,0.08)" }} />
+      </FadeIn>
+      <FadeIn delay={0.15} x={80} y={0} duration={0.9} className="absolute top-[4%] right-[1%] sm:right-[2%] md:right-[4%] pointer-events-none">
+        <div className="rounded-full" style={{ width: "clamp(60px,10vw,140px)", height: "clamp(60px,10vw,140px)", background: "radial-gradient(circle, rgba(118,33,176,0.3) 0%, transparent 70%)", filter: "blur(20px)" }} />
+      </FadeIn>
+      <FadeIn delay={0.3} x={80} y={0} duration={0.9} className="absolute bottom-[8%] right-[2%] sm:right-[6%] md:right-[10%] pointer-events-none">
+        <div style={{ width: "clamp(60px,9vw,130px)", height: "clamp(60px,9vw,130px)", border: "1px solid rgba(215,226,234,0.12)", borderRadius: "50% 50% 30% 70% / 50% 70% 30% 50%", background: "rgba(182,0,168,0.06)" }} />
+      </FadeIn>
+      <div className="flex flex-col items-center gap-8 sm:gap-12 md:gap-16 z-10 max-w-[90vw] sm:max-w-2xl">
+        <FadeIn delay={0} y={40}>
+          <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center"
+            style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>About</h2>
+        </FadeIn>
+        <AnimatedText text={ABOUT_TEXT} className="font-medium text-center leading-relaxed"
+          style={{ color: "#D7E2EA", fontSize: "clamp(0.9rem,1.8vw,1.3rem)", fontFamily: "'Kanit',sans-serif" }} />
+      </div>
+      <div className="mt-12 sm:mt-16 md:mt-20 z-10">
+        <CTA label="Talk to Giggo" onClick={scrollToContact} />
+      </div>
+    </section>
+  );
+}
+
+// ─── SERVICES ────────────────────────────────────────────────────────────────
+
+const SERVICES = [
+  { num: "01", name: "Website & App Development", desc: "Fully built, deployed websites and web apps. You send a brief, we deliver a live product. No coding required on your end." },
+  { num: "02", name: "Research & Market Analysis", desc: "In-depth research reports, competitive analysis, and market intelligence — structured, cited, and ready to use." },
+  { num: "03", name: "Marketing Content & Campaigns", desc: "Blog posts, email sequences, ad copy, social media content, and SEO material — written, formatted, and ready to publish." },
+  { num: "04", name: "Business Proposals & Documents", desc: "Professional proposals, business plans, pitch decks, contracts, and reports — written to your brief and ready to send." },
+  { num: "05", name: "Presentation Decks", desc: "Compelling slide decks for investor meetings, sales pitches, and board presentations — structured, polished, and presentation-ready." },
+  { num: "06", name: "Data Analysis & Spreadsheets", desc: "Raw data in, clear analysis out. Charts, summaries, and structured Excel reports built from your datasets." },
+  { num: "07", name: "Social Media Content Packages", desc: "Weeks of content planned and written in one session. Posts, captions, threads, and hooks across all platforms." },
+  { num: "08", name: "Lead Research & Prospect Lists", desc: "Targeted prospect lists with contact details, company context, and personalised outreach angles — ready to send." },
+];
+
+function ServicesSection() {
+  return (
+    <section id="services" className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] px-4 sm:px-8 md:px-10 py-14 sm:py-20 md:py-28" style={{ background: "#FFFFFF" }}>
+      <FadeIn y={40}>
+        <h2 className="font-black uppercase text-center mb-10 sm:mb-16 md:mb-24"
+          style={{ color: "#0C0C0C", fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Services</h2>
+      </FadeIn>
+      <div className="max-w-5xl mx-auto overflow-hidden">
+        {SERVICES.map((s, i) => (
+          <FadeIn key={s.num} delay={i * 0.08} y={20}>
+            <div className="flex items-start gap-3 sm:gap-6 md:gap-10 py-5 sm:py-8 md:py-10"
+              style={{ borderTop: i === 0 ? "1px solid rgba(12,12,12,0.15)" : undefined, borderBottom: "1px solid rgba(12,12,12,0.15)" }}>
+              <span className="font-black leading-none flex-shrink-0"
+                style={{ color: "#0C0C0C", fontSize: "clamp(2rem,7vw,110px)", fontFamily: "'Kanit',sans-serif" }}>{s.num}</span>
+              <div className="flex flex-col justify-center gap-1 sm:gap-2 pt-1 min-w-0">
+                <span className="font-medium uppercase" style={{ color: "#0C0C0C", fontSize: "clamp(0.85rem,1.9vw,1.9rem)", fontFamily: "'Kanit',sans-serif" }}>{s.name}</span>
+                <span className="font-light leading-relaxed" style={{ color: "#0C0C0C", opacity: 0.6, fontSize: "clamp(0.75rem,1.3vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>{s.desc}</span>
+              </div>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── AGENCY COMPARISON ───────────────────────────────────────────────────────
+
+const COMPARISON_ITEMS = [
+  { icon: "🔍", label: "We find the best agency quote", sub: "Giggo scours the market and gets you the real price from top human agencies." },
+  { icon: "⚡", label: "We deliver the same at 50% less", sub: "Our AI agent produces the identical output — same quality, half the cost, faster turnaround." },
+  { icon: "✅", label: "You choose what works for you", sub: "Take the human agency quote, or let Giggo do it. Total transparency, zero pressure." },
+];
+
+function AgencyComparisonSection() {
+  const scrollToContact = () => {
+    const el = document.querySelector("#contact");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+  return (
+    <section className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-8 sm:-mt-10 md:-mt-14 z-10 relative px-4 sm:px-8 md:px-10 py-14 sm:py-20 md:py-28"
+      style={{ background: "#0C0C0C" }}>
+      <FadeIn y={40} className="text-center mb-10 sm:mb-16 md:mb-20">
+        <h2 className="hero-heading font-black uppercase leading-none tracking-tight"
+          style={{ fontSize: "clamp(2rem,8vw,110px)", fontFamily: "'Kanit',sans-serif" }}>
+          The Giggo Edge
+        </h2>
+        <p className="mt-4 font-light uppercase tracking-wide"
+          style={{ color: "rgba(215,226,234,0.55)", fontSize: "clamp(0.8rem,1.5vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>
+          We find the best human agency quote — then beat it by 50%
+        </p>
+      </FadeIn>
+      <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
+        {COMPARISON_ITEMS.map((item, i) => (
+          <FadeIn key={i} delay={i * 0.12} y={30}>
+            <div className="flex flex-col gap-3 rounded-[20px] sm:rounded-[28px] p-5 sm:p-6 md:p-8 h-full"
+              style={{ background: "rgba(215,226,234,0.04)", border: "1px solid rgba(215,226,234,0.1)" }}>
+              <span style={{ fontSize: "clamp(1.5rem,3vw,2.2rem)" }}>{item.icon}</span>
+              <p className="font-medium uppercase" style={{ color: "#D7E2EA", fontSize: "clamp(0.8rem,1.4vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>{item.label}</p>
+              <p className="font-light leading-relaxed" style={{ color: "rgba(215,226,234,0.5)", fontSize: "clamp(0.75rem,1.1vw,0.9rem)", fontFamily: "'Kanit',sans-serif" }}>{item.sub}</p>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
+      {/* Side-by-side comparison bar */}
+      <FadeIn y={20} className="max-w-3xl mx-auto">
+        <div className="rounded-[20px] sm:rounded-[28px] overflow-hidden" style={{ border: "1px solid rgba(215,226,234,0.1)" }}>
+          <div className="grid grid-cols-2">
+            <div className="p-5 sm:p-7 flex flex-col gap-2" style={{ background: "rgba(215,226,234,0.04)" }}>
+              <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>Human Agency</p>
+              <p className="font-black" style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>$2,000+</p>
+              <p className="font-light text-xs sm:text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>5–10 business days</p>
+            </div>
+            <div className="p-5 sm:p-7 flex flex-col gap-2"
+              style={{ background: "linear-gradient(135deg,#18011F 0%,#7621B0 60%,#B600A8 100%)" }}>
+              <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Kanit',sans-serif" }}>Giggo AI ⚡</p>
+              <p className="font-black" style={{ color: "#fff", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>$99/mo</p>
+              <p className="font-light text-xs sm:text-sm" style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Kanit',sans-serif" }}>24–48 hours</p>
+            </div>
+          </div>
+        </div>
+      </FadeIn>
+      <div className="flex justify-center mt-10 sm:mt-14">
+        <CTA label="See How It Works" onClick={scrollToContact} />
+      </div>
+    </section>
+  );
+}
+
+// ─── WORK ────────────────────────────────────────────────────────────────────
+
+const PROJECTS = [
+  {
+    num: "01", category: "Web Development", name: "Nextlevel Studio",
+    col1: [
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png&w=1280&q=85",
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png&w=1280&q=85",
+    ],
+    col2: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png&w=1280&q=85",
+  },
+  {
+    num: "02", category: "Research", name: "Market Intelligence Report",
+    col1: [
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f.png&w=1280&q=85",
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055723_5ceda0b8-d9c2-4665-b2e3-83ba19ba76d1.png&w=1280&q=85",
+    ],
+    col2: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055753_adc5dcbd-a8e6-49c0-b43a-9b030d835cea.png&w=1280&q=85",
+  },
+  {
+    num: "03", category: "Marketing", name: "Solaris Digital Campaign",
+    col1: [
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f.png&w=1280&q=85",
+      "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_060108_438f781a-9846-4dcc-89ab-c4e6cb830f5b.png&w=1280&q=85",
+    ],
+    col2: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055818_9d062121-ad7e-46b9-999a-1a6a692ef1ee.png&w=1280&q=85",
+  },
+];
+
+const TOTAL = PROJECTS.length;
+
+function ProjectCard({ project, index, progress }: {
+  project: (typeof PROJECTS)[0]; index: number;
+  progress: ReturnType<typeof useScroll>["scrollYProgress"];
+}) {
+  const targetScale = 1 - (TOTAL - 1 - index) * 0.03;
+  const scale = useTransform(progress, [index / TOTAL, 1], [1, targetScale]);
+  return (
+    <div className="h-[75vh] sm:h-[80vh] flex items-start" style={{ paddingTop: `${index * 18}px` }}>
+      <motion.div className="sticky top-16 sm:top-20 md:top-28 w-full rounded-[20px] sm:rounded-[36px] md:rounded-[56px] border-2 border-[#D7E2EA] p-3 sm:p-5 md:p-8"
+        style={{ background: "#0C0C0C", scale, transformOrigin: "top center" }}>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-5">
+          <span className="font-black leading-none" style={{ color: "#D7E2EA", fontSize: "clamp(1.4rem,4.5vw,70px)", fontFamily: "'Kanit',sans-serif" }}>{project.num}</span>
+          <span className="uppercase tracking-widest text-[0.6rem] sm:text-xs font-medium opacity-50" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{project.category}</span>
+          <span className="font-medium uppercase flex-1 min-w-0 truncate" style={{ color: "#D7E2EA", fontSize: "clamp(0.8rem,1.8vw,1.7rem)", fontFamily: "'Kanit',sans-serif" }}>{project.name}</span>
+          <button className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest px-3 py-1.5 sm:px-6 sm:py-2.5 text-[0.6rem] sm:text-sm transition-colors duration-200 hover:bg-[#D7E2EA]/10 cursor-pointer flex-shrink-0" style={{ fontFamily: "'Kanit',sans-serif" }}>View Work</button>
+        </div>
+        <div className="flex gap-2 sm:gap-3 md:gap-4">
+          <div className="flex flex-col gap-2 sm:gap-3" style={{ width: "40%" }}>
+            <img src={project.col1[0]} alt={project.name} loading="lazy" className="w-full object-cover rounded-[14px] sm:rounded-[28px] md:rounded-[44px]" style={{ height: "clamp(80px,13vw,210px)" }} />
+            <img src={project.col1[1]} alt={project.name} loading="lazy" className="w-full object-cover rounded-[14px] sm:rounded-[28px] md:rounded-[44px]" style={{ height: "clamp(100px,17vw,290px)" }} />
+          </div>
+          <div style={{ width: "60%" }}>
+            <img src={project.col2} alt={project.name} loading="lazy" className="w-full h-full object-cover rounded-[14px] sm:rounded-[28px] md:rounded-[44px]" />
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+function WorkSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
+  return (
+    <section id="work" ref={containerRef}
+      className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-8 sm:-mt-10 md:-mt-14 z-10 relative px-4 sm:px-8 md:px-10 pt-14 sm:pt-20 pb-24 sm:pb-32"
+      style={{ background: "#0C0C0C" }}>
+      <FadeIn y={40} className="mb-10 sm:mb-16 md:mb-24">
+        <h2 className="hero-heading font-black uppercase text-center leading-none tracking-tight"
+          style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Our Work</h2>
+      </FadeIn>
+      {PROJECTS.map((project, i) => (
+        <ProjectCard key={project.num} project={project} index={i} progress={scrollYProgress} />
+      ))}
+    </section>
+  );
+}
+
+// ─── PRICING ─────────────────────────────────────────────────────────────────
+
+const PLANS = [
+  {
+    name: "Starter",
+    price: "$29",
+    unit: "/ project",
+    desc: "One completed deliverable. Perfect for your first project or a one-off task.",
+    features: [
+      "1 project at a time",
+      "Delivered in 2–5 days",
+      "Unlimited revisions",
+      "Finished work delivered",
+      "Email support",
+    ],
+    cta: "Get Started",
+    highlight: false,
+  },
+  {
+    name: "Growth",
+    price: "$99",
+    unit: "/ month",
+    desc: "Unlimited requests. Perfect for businesses that need a constant output stream.",
+    features: [
+      "Unlimited project requests",
+      "Priority queue",
+      "Delivered in 24–48 hours",
+      "Your own .top domain included",
+      "Dedicated account manager",
+      "Monthly reports",
+      "Slack / email comms",
+    ],
+    cta: "Start Monthly Plan",
+    highlight: true,
+  },
+  {
+    name: "Studio",
+    price: "Custom",
+    unit: "",
+    desc: "For large organisations and special needs. We build a package that fits you.",
+    features: [
+      "Everything in Growth",
+      "Custom integrations",
+      "API access",
+      "SLA guarantee",
+      "Dedicated development team",
+      "Strategy & consulting",
+    ],
+    cta: "Contact Us",
+    highlight: false,
+  },
+];
+
+function PricingSection() {
+  const scrollToContact = () => {
+    const el = document.querySelector("#contact");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+  return (
+    <section id="pricing" className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-8 sm:-mt-10 z-20 relative px-4 sm:px-8 md:px-10 py-14 sm:py-20 md:py-28" style={{ background: "#0C0C0C" }}>
+      <FadeIn y={40}>
+        <h2 className="hero-heading font-black uppercase text-center mb-3 leading-none tracking-tight"
+          style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Pricing</h2>
+        <p className="text-center font-light mb-10 sm:mb-14" style={{ color: "rgba(215,226,234,0.5)", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(0.85rem,1.6vw,1.2rem)" }}>
+          One project or unlimited output. You choose.
+        </p>
+      </FadeIn>
+      <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+        {PLANS.map((plan, i) => (
+          <FadeIn key={plan.name} delay={i * 0.1} y={30}>
+            <div
+              className="flex flex-col rounded-[20px] sm:rounded-[28px] p-5 sm:p-6 md:p-8 h-full transition-transform duration-300 hover:-translate-y-1"
+              style={{
+                background: plan.highlight ? "linear-gradient(135deg,#18011F 0%,#7621B0 60%,#B600A8 100%)" : "rgba(215,226,234,0.05)",
+                border: plan.highlight ? "2px solid #B600A8" : "2px solid rgba(215,226,234,0.12)",
+                boxShadow: plan.highlight ? "0 0 40px rgba(182,0,168,0.25)" : "none",
+              }}
+            >
+              {plan.highlight && (
+                <span className="self-start mb-3 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest"
+                  style={{ background: "rgba(255,255,255,0.15)", color: "#fff", fontFamily: "'Kanit',sans-serif" }}>
+                  Most Popular
+                </span>
+              )}
+              <p className="font-black uppercase mb-1" style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,2.5vw,1.9rem)", fontFamily: "'Kanit',sans-serif" }}>{plan.name}</p>
+              <div className="flex items-baseline gap-1 mb-2">
+                <span className="font-black" style={{ color: "#fff", fontSize: "clamp(1.5rem,3.5vw,2.6rem)", fontFamily: "'Kanit',sans-serif" }}>{plan.price}</span>
+                {plan.unit && <span className="font-light text-xs sm:text-sm" style={{ color: "rgba(215,226,234,0.5)", fontFamily: "'Kanit',sans-serif" }}>{plan.unit}</span>}
+              </div>
+              <p className="font-light mb-5 leading-relaxed" style={{ color: "rgba(215,226,234,0.6)", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(0.8rem,1.2vw,0.95rem)" }}>{plan.desc}</p>
+              <ul className="flex flex-col gap-2.5 mb-6 flex-1">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2 text-sm font-light" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>
+                    <span className="mt-0.5 flex-shrink-0" style={{ color: plan.highlight ? "#fff" : "rgba(182,0,168,0.9)" }}>✓</span>
+                    <span style={{ fontSize: "clamp(0.75rem,1.1vw,0.9rem)" }}>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={scrollToContact}
+                className="w-full rounded-full font-medium uppercase tracking-widest py-3 text-xs sm:text-sm transition-all duration-200 cursor-pointer"
+                style={{
+                  background: plan.highlight ? "#fff" : "transparent",
+                  color: plan.highlight ? "#0C0C0C" : "#D7E2EA",
+                  border: plan.highlight ? "none" : "2px solid rgba(215,226,234,0.3)",
+                  fontFamily: "'Kanit',sans-serif",
+                }}
+                onMouseEnter={(e) => { if (!plan.highlight) { e.currentTarget.style.borderColor = "rgba(215,226,234,0.7)"; } }}
+                onMouseLeave={(e) => { if (!plan.highlight) { e.currentTarget.style.borderColor = "rgba(215,226,234,0.3)"; } }}
+              >
+                {plan.cta}
+              </button>
+            </div>
+          </FadeIn>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── CONTACT ─────────────────────────────────────────────────────────────────
+
+function ContactSection() {
+  const [form, setForm] = useState({ name: "", email: "", service: "", message: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const submitEnquiry = trpc.enquiries.submit.useMutation({
+    onSuccess: () => { setSubmitted(true); toast.success("Message received! We'll be in touch within 24 hours."); },
+    onError: () => toast.error("Something went wrong. Please try again."),
+  });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name || !form.email || !form.message) { toast.error("Please fill in all required fields."); return; }
+    submitEnquiry.mutate(form);
+  };
+  return (
+    <section id="contact" className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-8 sm:-mt-10 z-20 relative px-4 sm:px-8 md:px-10 py-14 sm:py-20 md:py-28" style={{ background: "#FFFFFF" }}>
+      <FadeIn y={40}>
+        <h2 className="font-black uppercase text-center mb-10 sm:mb-14"
+          style={{ color: "#0C0C0C", fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Contact</h2>
+      </FadeIn>
+      <div className="max-w-2xl mx-auto">
+        {submitted ? (
+          <FadeIn y={20}>
+            <div className="text-center py-16">
+              <p className="font-black uppercase text-[#0C0C0C]" style={{ fontSize: "clamp(1.3rem,4vw,2.8rem)", fontFamily: "'Kanit',sans-serif" }}>Message received.</p>
+              <p className="mt-4 font-light" style={{ color: "rgba(12,12,12,0.6)", fontFamily: "'Kanit',sans-serif" }}>We'll be in touch within 24 hours.</p>
+            </div>
+          </FadeIn>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {[
+              { key: "name", label: "Your Name", type: "text", placeholder: "Jane Smith" },
+              { key: "email", label: "Email Address", type: "email", placeholder: "jane@company.com" },
+              { key: "service", label: "Service (optional)", type: "text", placeholder: "e.g. Website Development" },
+            ].map(({ key, label, type, placeholder }) => (
+              <FadeIn key={key} y={15} delay={0.1}>
+                <div className="flex flex-col gap-2">
+                  <label className="font-medium uppercase tracking-wider text-xs sm:text-sm" style={{ color: "#0C0C0C", fontFamily: "'Kanit',sans-serif" }}>{label}</label>
+                  <input
+                    type={type}
+                    placeholder={placeholder}
+                    value={form[key as keyof typeof form]}
+                    onChange={(e) => setForm(prev => ({ ...prev, [key]: e.target.value }))}
+                    className="w-full rounded-xl px-4 py-3 font-light outline-none transition-all duration-200"
+                    style={{ background: "rgba(12,12,12,0.06)", border: "1px solid rgba(12,12,12,0.15)", color: "#0C0C0C", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(0.85rem,1.3vw,1rem)" }}
+                    onFocus={(e) => { e.currentTarget.style.borderColor = "#B600A8"; }}
+                    onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(12,12,12,0.15)"; }}
+                  />
+                </div>
+              </FadeIn>
+            ))}
+            <FadeIn y={15} delay={0.2}>
+              <div className="flex flex-col gap-2">
+                <label className="font-medium uppercase tracking-wider text-xs sm:text-sm" style={{ color: "#0C0C0C", fontFamily: "'Kanit',sans-serif" }}>Message</label>
+                <textarea
+                  placeholder="Tell us what you need..."
+                  rows={5}
+                  value={form.message}
+                  onChange={(e) => setForm(prev => ({ ...prev, message: e.target.value }))}
+                  className="w-full rounded-xl px-4 py-3 font-light outline-none transition-all duration-200 resize-none"
+                  style={{ background: "rgba(12,12,12,0.06)", border: "1px solid rgba(12,12,12,0.15)", color: "#0C0C0C", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(0.85rem,1.3vw,1rem)" }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = "#B600A8"; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(12,12,12,0.15)"; }}
+                />
+              </div>
+            </FadeIn>
+            <FadeIn y={15} delay={0.3}>
+              <button
+                type="submit"
+                disabled={submitEnquiry.isPending}
+                className="w-full rounded-full font-medium uppercase tracking-widest text-white py-3.5 sm:py-4 text-sm transition-opacity duration-200 hover:opacity-90 disabled:opacity-60 cursor-pointer"
+                style={{ background: "linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)", boxShadow: "0px 4px 4px rgba(181,1,167,0.25),inset 4px 4px 12px #7721B1", outline: "2px solid #0C0C0C", outlineOffset: "-3px", fontFamily: "'Kanit',sans-serif" }}
+              >
+                {submitEnquiry.isPending ? "Sending..." : "Send Message"}
+              </button>
+            </FadeIn>
+          </form>
+        )}
+      </div>
+      {/* Footer */}
+      <div className="mt-20 sm:mt-28 pt-8 border-t border-[rgba(12,12,12,0.1)] flex flex-col sm:flex-row justify-between items-center gap-4">
+        <span className="font-black uppercase tracking-tight"
+          style={{ fontFamily: "'Kanit',sans-serif", fontSize: "clamp(1.1rem,2vw,1.5rem)", background: "linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+          GIGGO
+        </span>
+        <p className="font-light text-center" style={{ color: "rgba(12,12,12,0.4)", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(0.7rem,1.1vw,0.85rem)" }}>
+          © {new Date().getFullYear()} Giggo. All rights reserved. · giggo.io
+        </p>
+        <div className="flex gap-4">
+          <button onClick={() => window.location.href = "/chat"}
+            className="font-medium uppercase tracking-wider text-xs transition-opacity duration-200 hover:opacity-70 cursor-pointer bg-transparent border-none"
+            style={{ color: "rgba(12,12,12,0.5)", fontFamily: "'Kanit',sans-serif" }}>
+            AI Chat
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── PAGE ─────────────────────────────────────────────────────────────────────
+
+export default function GiggoHome() {
+  return (
+    <div style={{ background: "#0C0C0C", fontFamily: "'Kanit',sans-serif", overflowX: "clip" }}>
+      <GiggoNav />
+      <HeroSection />
+      <MarqueeSection />
+      <AboutSection />
+      <ServicesSection />
+      <AgencyComparisonSection />
+      <WorkSection />
+      <PricingSection />
+      <ContactSection />
+    </div>
+  );
+}

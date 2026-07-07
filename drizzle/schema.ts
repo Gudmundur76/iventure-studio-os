@@ -148,3 +148,24 @@ export const updates = mysqlTable("updates", {
 
 export type Update = typeof updates.$inferSelect;
 export type InsertUpdate = typeof updates.$inferInsert;
+
+export const invoices = mysqlTable("invoices", {
+  id: int("id").autoincrement().primaryKey(),
+  invoiceNumber: varchar("invoiceNumber", { length: 32 }).notNull().unique(),
+  clientName: varchar("clientName", { length: 256 }).notNull(),
+  clientAddress: text("clientAddress"),
+  clientKennitala: varchar("clientKennitala", { length: 32 }),
+  clientEmail: varchar("clientEmail", { length: 320 }),
+  lineItems: json("lineItems").$type<{ description: string; amount: number }[]>().notNull(),
+  totalAmount: int("totalAmount").notNull(),
+  currency: varchar("currency", { length: 8 }).default("ISK").notNull(),
+  issueDate: timestamp("issueDate").defaultNow().notNull(),
+  dueDate: timestamp("dueDate").notNull(),
+  status: mysqlEnum("status", ["draft", "sent", "paid", "overdue"]).default("draft").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Invoice = typeof invoices.$inferSelect;
+export type InsertInvoice = typeof invoices.$inferInsert;
