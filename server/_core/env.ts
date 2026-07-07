@@ -9,4 +9,5 @@ export const ENV = {
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
   xaiApiKey: process.env.XAI_API_KEY ?? "",
   xaiAgentId: "agent_fgrublDXzNDfu5MT",
+  manusApiKey: process.env.MANUS_API_KEY ?? "",
 };

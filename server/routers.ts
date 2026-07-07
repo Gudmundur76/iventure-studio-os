@@ -3,14 +3,6 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
-
-// Owner/admin guard — only the site owner (admin role) can manage updates
-const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
-  if (ctx.user?.role !== "admin") {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Aðeins stjórnendur hafa aðgang" });
-  }
-  return next({ ctx });
-});
 import { TRPCError } from "@trpc/server";
 import {
   getAllAgents, getAllSkills, getMemoryEntries,
@@ -23,6 +15,15 @@ import { createEnquiry, listEnquiries } from "./db";
 import { listUpdates, getUpdateBySlug, createUpdate, updatePost, deleteUpdate } from "./db";
 import { invokeLLM, listLLMModels } from "./_core/llm";
 import { notifyOwner } from "./_core/notification";
+import { ENV } from "./_core/env";
+
+// Owner/admin guard — only the site owner (admin role) can manage updates
+const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (ctx.user?.role !== "admin") {
+    throw new TRPCError({ code: "FORBIDDEN", message: "Aðeins stjórnendur hafa aðgang" });
+  }
+  return next({ ctx });
+});
 
 export const appRouter = router({
   system: systemRouter,
@@ -233,10 +234,78 @@ export const appRouter = router({
       return listEnquiries();
     }),
   }),
+
+  // ── Manus Task API — create real agent tasks from voice/text briefs ──────────
+  manusTask: router({
+    create: publicProcedure
+      .input(z.object({
+        brief: z.string().min(1, "Verkefnislýsing er nauðsynleg"),
+        clientName: z.string().optional(),
+        serviceType: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const apiKey = ENV.manusApiKey;
+        if (!apiKey) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Manus API lykill vantar" });
+
+        const systemContext = `Þú ert Gummi Gúrú — íslenskt gervigreindarstofa. Viðskiptavinur: ${input.clientName ?? "Nafnlaus"}. Þjónusta: ${input.serviceType ?? "Almenn"}. Kláraðu verkefnið og skilaðu fullunnum niðurstöðum.`;
+        const message = `${systemContext}\n\nVerkefni: ${input.brief}`;
+
+        const res = await fetch("https://api.manus.ai/v2/task.create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-manus-api-key": apiKey,
+          },
+          body: JSON.stringify({
+            message: { content: message },
+            agent_profile: "standard",
+          }),
+        });
+
+        const data = await res.json() as { ok: boolean; task_id?: string; error?: { message: string } };
+        if (!data.ok) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: data.error?.message ?? "Villa við að búa til verkefni" });
+
+        // Notify owner of new task created via voice brief
+        await notifyOwner({
+          title: `Nýtt Gummi verkefni frá ${input.clientName ?? "Nafnlaus"}`,
+          content: `**Þjónusta:** ${input.serviceType ?? "Almenn"}\n**Verkefni:** ${input.brief}\n**Task ID:** ${data.task_id}`,
+        });
+
+        return { success: true, taskId: data.task_id };
+      }),
+
+    getMessages: publicProcedure
+      .input(z.object({ taskId: z.string() }))
+      .query(async ({ input }) => {
+        const apiKey = ENV.manusApiKey;
+        if (!apiKey) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Manus API lykill vantar" });
+
+        const res = await fetch(`https://api.manus.ai/v2/task.listMessages?task_id=${encodeURIComponent(input.taskId)}`, {
+          headers: { "x-manus-api-key": apiKey },
+        });
+
+        const data = await res.json() as { ok: boolean; data?: Array<{ role: string; content: string; created_at: string }>; error?: { message: string } };
+        if (!data.ok) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: data.error?.message ?? "Villa við að sækja skilaboð" });
+
+        return { messages: data.data ?? [] };
+      }),
+
+    getStatus: publicProcedure
+      .input(z.object({ taskId: z.string() }))
+      .query(async ({ input }) => {
+        const apiKey = ENV.manusApiKey;
+        if (!apiKey) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Manus API lykill vantar" });
+
+        const res = await fetch(`https://api.manus.ai/v2/task.get?task_id=${encodeURIComponent(input.taskId)}`, {
+          headers: { "x-manus-api-key": apiKey },
+        });
+
+        const data = await res.json() as { ok: boolean; status?: string; error?: { message: string } };
+        if (!data.ok) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: data.error?.message ?? "Villa við að sækja stöðu" });
+
+        return { status: data.status ?? "unknown" };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
-
-// ── Invoice procedures (appended cleanly) ────────────────────────────────────
-// Note: invoice procedures are added via the REST endpoint in _core/index.ts
-// The tRPC invoice router is defined separately below and merged at startup

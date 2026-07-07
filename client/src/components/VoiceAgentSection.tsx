@@ -1,9 +1,11 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { Mic, MicOff, Volume2, Zap, Clock, CheckCircle } from "lucide-react";
+import { Mic, MicOff, Volume2, Zap, CheckCircle, Send, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { trpc } from "@/lib/trpc";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type SessionState = "idle" | "connecting" | "listening" | "speaking" | "error";
 type TranscriptLine = { role: "user" | "agent"; text: string };
+type TaskState = "none" | "creating" | "created" | "error";
 
 // ─── Waveform bars ────────────────────────────────────────────────────────────
 function Waveform({ active, color }: { active: boolean; color: string }) {
@@ -30,17 +32,122 @@ function Waveform({ active, color }: { active: boolean; color: string }) {
   );
 }
 
+// ─── Task Result Panel ────────────────────────────────────────────────────────
+function TaskResultPanel({ taskId }: { taskId: string }) {
+  const [expanded, setExpanded] = useState(true);
+
+  const { data: statusData } = trpc.manusTask.getStatus.useQuery(
+    { taskId },
+    { refetchInterval: (query) => {
+        const s = query.state.data?.status;
+        return s === "completed" || s === "failed" ? false : 4000;
+      }
+    }
+  );
+
+  const { data: messagesData } = trpc.manusTask.getMessages.useQuery(
+    { taskId },
+    { refetchInterval: (query) => {
+        const s = statusData?.status;
+        return s === "completed" || s === "failed" ? false : 5000;
+      }
+    }
+  );
+
+  const status = statusData?.status ?? "running";
+  const messages = messagesData?.messages ?? [];
+  const lastAssistantMsg = [...messages].reverse().find(m => m.role === "assistant");
+
+  const statusColor = status === "completed" ? "#22c55e" : status === "failed" ? "#ef4444" : "#B600A8";
+  const statusLabel = {
+    running: "Í gangi...",
+    completed: "Lokið",
+    failed: "Villa",
+    pending: "Bíður...",
+  }[status] ?? status;
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden mt-6"
+      style={{ border: "1px solid rgba(182,0,168,0.3)", background: "rgba(12,12,12,0.95)" }}
+    >
+      {/* Header */}
+      <button
+        onClick={() => setExpanded(e => !e)}
+        className="w-full flex items-center justify-between px-5 py-3.5"
+        style={{ borderBottom: expanded ? "1px solid rgba(215,226,234,0.06)" : "none", background: "rgba(182,0,168,0.06)" }}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{ background: statusColor, boxShadow: `0 0 6px ${statusColor}`, animation: status === "running" || status === "pending" ? "pulse 1.5s ease-in-out infinite" : "none" }}
+          />
+          <span className="text-sm font-medium uppercase tracking-widest" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>
+            Gummi er að vinna
+          </span>
+          <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "rgba(182,0,168,0.15)", color: statusColor, fontFamily: "'Kanit',sans-serif" }}>
+            {statusLabel}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono" style={{ color: "rgba(182,0,168,0.5)" }}>{taskId.slice(0, 12)}…</span>
+          {expanded ? <ChevronUp size={14} style={{ color: "rgba(215,226,234,0.4)" }} /> : <ChevronDown size={14} style={{ color: "rgba(215,226,234,0.4)" }} />}
+        </div>
+      </button>
+
+      {/* Body */}
+      {expanded && (
+        <div className="px-5 py-4">
+          {lastAssistantMsg ? (
+            <div>
+              <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "rgba(215,226,234,0.35)", fontFamily: "'Kanit',sans-serif" }}>
+                Síðasta skilaboð frá Gumma
+              </p>
+              <p className="text-sm leading-relaxed" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>
+                {lastAssistantMsg.content}
+              </p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3" style={{ color: "rgba(215,226,234,0.4)" }}>
+              <Loader2 size={16} className="animate-spin" />
+              <span className="text-sm" style={{ fontFamily: "'Kanit',sans-serif" }}>Gummi er að ræsa verkefnið...</span>
+            </div>
+          )}
+          {messages.length > 1 && (
+            <p className="text-xs mt-3" style={{ color: "rgba(215,226,234,0.25)", fontFamily: "'Kanit',sans-serif" }}>
+              {messages.length} skilaboð í heildina
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Section ─────────────────────────────────────────────────────────────
 export default function VoiceAgentSection() {
   const [sessionState, setSessionState] = useState<SessionState>("idle");
   const [transcript, setTranscript] = useState<TranscriptLine[]>([]);
   const [currentText, setCurrentText] = useState("");
+  const [taskState, setTaskState] = useState<TaskState>("none");
+  const [taskId, setTaskId] = useState<string | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
   const audioQueueRef = useRef<ArrayBuffer[]>([]);
   const isPlayingRef = useRef(false);
+
+  // tRPC mutation for creating Manus tasks
+  const createTask = trpc.manusTask.create.useMutation({
+    onSuccess: (data) => {
+      if (data.taskId) {
+        setTaskId(data.taskId);
+        setTaskState("created");
+      }
+    },
+    onError: () => setTaskState("error"),
+  });
 
   // Scroll transcript to bottom
   useEffect(() => {
@@ -70,24 +177,26 @@ export default function VoiceAgentSection() {
   }, []);
 
   const stopSession = useCallback(() => {
-  // Stop audio capture (ScriptProcessor or MediaRecorder)
-  mediaRecorderRef.current?.stop();
-  wsRef.current?.close();
-  wsRef.current = null;
-  mediaRecorderRef.current = null;
-  if (audioContextRef.current) {
-    audioContextRef.current.close().catch(() => {});
-    audioContextRef.current = null;
-  }
-  setSessionState("idle");
-  setCurrentText("");
-}, []);
+    // Stop audio capture (ScriptProcessor or MediaRecorder)
+    mediaRecorderRef.current?.stop();
+    wsRef.current?.close();
+    wsRef.current = null;
+    mediaRecorderRef.current = null;
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+    setSessionState("idle");
+    setCurrentText("");
+  }, []);
 
   const startSession = useCallback(async () => {
     if (sessionState !== "idle") { stopSession(); return; }
     setSessionState("connecting");
     setTranscript([]);
     setCurrentText("");
+    setTaskState("none");
+    setTaskId(null);
 
     try {
       // Set up AudioContext for playback
@@ -107,7 +216,7 @@ export default function VoiceAgentSection() {
           type: "session.update",
           session: {
             modalities: ["audio", "text"],
-            instructions: "Þú ert Gummi — persónulegur AI aðstoðarmaður á Íslandi. Svaraðu alltaf á íslensku. Vertu vingjarnlegur, stuttorður og hjálplegur. Þú getur hjálpað með: að finna veitingastaði, finna iðnaðarmenn, bera saman verð og minna á tíma.",
+            instructions: "Þú ert Gummi — persónulegur AI aðstoðarmaður á Íslandi. Svaraðu alltaf á íslensku. Vertu vingjarnlegur, stuttorður og hjálplegur. Þú getur hjálpað með: að finna veitingastaði, finna iðnaðarmenn, bera saman verð og minna á tíma. Þegar viðskiptavinur lýsir verkefni skaltu staðfesta það og segja honum að þú sendir það til Gumma til að vinna.",
             voice: "nova",
             input_audio_format: "pcm16",
             output_audio_format: "pcm16",
@@ -192,7 +301,19 @@ export default function VoiceAgentSection() {
     }
   }, [sessionState, stopSession, playNextChunk, currentText]);
 
+  // Build brief from transcript and send to Manus
+  const handleSendToManus = useCallback(() => {
+    const userLines = transcript.filter(l => l.role === "user").map(l => l.text).join(" ");
+    const agentLines = transcript.filter(l => l.role === "agent").map(l => l.text).join(" ");
+    if (!userLines.trim()) return;
+
+    const brief = `Viðskiptavinur sagði: ${userLines}\n\nGummi staðfesti: ${agentLines}`;
+    setTaskState("creating");
+    createTask.mutate({ brief, serviceType: "Raddlota" });
+  }, [transcript, createTask]);
+
   const isActive = sessionState !== "idle" && sessionState !== "error";
+  const hasTranscript = transcript.length > 0;
   const btnLabel = {
     idle: "Tala við Gumma",
     connecting: "Tengist...",
@@ -245,7 +366,7 @@ export default function VoiceAgentSection() {
             className="text-center mt-4 font-light uppercase tracking-widest"
             style={{ color: "rgba(215,226,234,0.45)", fontSize: "clamp(0.75rem,1.4vw,1rem)", fontFamily: "'Kanit',sans-serif" }}
           >
-            Your personal voice agent — live, right now
+            Persónulegur raddaðstoðarmaður — í gangi núna
           </p>
         </div>
 
@@ -276,7 +397,7 @@ export default function VoiceAgentSection() {
 
         {/* Live voice widget */}
         <div
-          className="rounded-3xl overflow-hidden mb-16 sm:mb-20"
+          className="rounded-3xl overflow-hidden mb-6"
           style={{ border: "1px solid rgba(182,0,168,0.25)", background: "rgba(12,12,12,0.9)" }}
         >
           {/* Widget header */}
@@ -316,7 +437,7 @@ export default function VoiceAgentSection() {
                 style={{ color: "rgba(215,226,234,0.2)", fontFamily: "'Kanit',sans-serif", fontSize: "0.9rem" }}
               >
                 {sessionState === "idle"
-                  ? "Click the mic button below to start a live voice session with Giggo"
+                  ? "Smelltu á hljóðnemann til að hefja lotu með Gumma"
                   : sessionState === "connecting"
                   ? "Tengist við Gumma..."
                   : "Hlusta..."}
@@ -334,7 +455,7 @@ export default function VoiceAgentSection() {
                     fontFamily: "'Kanit',sans-serif",
                   }}
                 >
-                  {line.role === "agent" ? "G" : "U"}
+                  {line.role === "agent" ? "G" : "Þ"}
                 </div>
                 <div
                   className="max-w-[80%] px-4 py-2.5 text-sm leading-relaxed"
@@ -418,11 +539,61 @@ export default function VoiceAgentSection() {
                 className="text-xs uppercase tracking-widest"
                 style={{ color: "rgba(215,226,234,0.2)", fontFamily: "'Kanit',sans-serif" }}
               >
-                {sessionState === "speaking" ? "Speaking" : "Audio"}
+                {sessionState === "speaking" ? "Talar" : "Hljóð"}
               </span>
             </div>
           </div>
         </div>
+
+        {/* Send to Manus button — shown after voice session has transcript */}
+        {hasTranscript && sessionState === "idle" && taskState === "none" && (
+          <div className="flex justify-center mb-6">
+            <button
+              onClick={handleSendToManus}
+              className="flex items-center gap-3 px-8 py-3.5 rounded-full font-medium uppercase tracking-widest text-sm"
+              style={{
+                background: "linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)",
+                border: "2px solid transparent",
+                color: "#fff",
+                fontFamily: "'Kanit',sans-serif",
+                boxShadow: "0 0 24px rgba(182,0,168,0.3)",
+                cursor: "pointer",
+                transition: "all 0.2s ease-out",
+              }}
+              onMouseDown={e => (e.currentTarget.style.transform = "scale(0.97)")}
+              onMouseUp={e => (e.currentTarget.style.transform = "scale(1)")}
+            >
+              <Send size={18} />
+              Senda verkefni til Gumma
+            </button>
+          </div>
+        )}
+
+        {/* Creating task indicator */}
+        {taskState === "creating" && (
+          <div className="flex justify-center items-center gap-3 mb-6" style={{ color: "rgba(215,226,234,0.5)" }}>
+            <Loader2 size={18} className="animate-spin" style={{ color: "#B600A8" }} />
+            <span className="text-sm uppercase tracking-widest" style={{ fontFamily: "'Kanit',sans-serif" }}>
+              Sendir verkefni til Gumma...
+            </span>
+          </div>
+        )}
+
+        {/* Task error */}
+        {taskState === "error" && (
+          <div className="flex justify-center mb-6">
+            <p className="text-sm" style={{ color: "#ef4444", fontFamily: "'Kanit',sans-serif" }}>
+              Villa við að senda verkefni. Reyndu aftur.
+            </p>
+          </div>
+        )}
+
+        {/* Task result panel */}
+        {taskState === "created" && taskId && (
+          <div className="mb-16 sm:mb-20">
+            <TaskResultPanel taskId={taskId} />
+          </div>
+        )}
 
         {/* How it works — 4 steps */}
         <div>
