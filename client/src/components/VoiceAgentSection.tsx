@@ -255,7 +255,7 @@ export default function VoiceAgentSection() {
         }));
         setSessionState("listening");
         // Capture raw PCM16 at 24kHz using ScriptProcessorNode (required by xAI realtime)
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 24000, channelCount: 1, echoCancellation: true, noiseSuppression: true } });
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
         // Reuse the existing AudioContext (already unlocked by the user gesture that triggered startSession)
         const ctx = audioContextRef.current!;
         if (ctx.state === "suspended") {
@@ -264,13 +264,28 @@ export default function VoiceAgentSection() {
         const source = ctx.createMediaStreamSource(stream);
         // eslint-disable-next-line @typescript-eslint/no-deprecated
         const processor = ctx.createScriptProcessor(4096, 1, 1);
+        const deviceRate = ctx.sampleRate; // device native rate (44100 or 48000 on Samsung)
+        const targetRate = 24000; // xAI requires 24kHz
         processor.onaudioprocess = (e) => {
           if (ws.readyState !== WebSocket.OPEN) return;
           const float32 = e.inputBuffer.getChannelData(0);
+          // Resample from device native rate to 24kHz if needed
+          let samples = float32;
+          if (deviceRate !== targetRate) {
+            const ratio = deviceRate / targetRate;
+            const outLen = Math.round(float32.length / ratio);
+            samples = new Float32Array(outLen);
+            for (let i = 0; i < outLen; i++) {
+              const srcIdx = i * ratio;
+              const lo = Math.floor(srcIdx);
+              const hi = Math.min(lo + 1, float32.length - 1);
+              samples[i] = float32[lo] + (float32[hi] - float32[lo]) * (srcIdx - lo);
+            }
+          }
           // Convert Float32 → Int16 PCM
-          const int16 = new Int16Array(float32.length);
-          for (let i = 0; i < float32.length; i++) {
-            const s = Math.max(-1, Math.min(1, float32[i]));
+          const int16 = new Int16Array(samples.length);
+          for (let i = 0; i < samples.length; i++) {
+            const s = Math.max(-1, Math.min(1, samples[i]));
             int16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
           }
           const b64 = btoa(Array.from(new Uint8Array(int16.buffer), b => String.fromCharCode(b)).join(""));
