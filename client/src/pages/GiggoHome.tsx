@@ -95,8 +95,8 @@ function HeroSection() {
       {/* Heading */}
       <FadeIn delay={0.15} y={40} className="overflow-hidden">
         <h1 className="hero-heading font-black uppercase tracking-tight leading-none w-full mt-6 sm:mt-4 md:-mt-2 px-1"
-          style={{ fontFamily: "'Kanit',sans-serif", fontSize: "clamp(3.5rem,14vw,220px)", whiteSpace: "nowrap" }}>
-          GIGGO
+          style={{ fontFamily: "'Kanit',sans-serif", fontSize: "clamp(2.8rem,12vw,190px)", whiteSpace: "nowrap" }}>
+          Hi, i&apos;m giggo
         </h1>
       </FadeIn>
 
@@ -226,14 +226,14 @@ function AboutSection() {
 // ─── SERVICES ────────────────────────────────────────────────────────────────
 
 const SERVICES = [
-  { num: "01", name: "Website & App Development", desc: "Fully built, deployed websites and web apps. You send a brief, we deliver a live product. No coding required on your end." },
-  { num: "02", name: "Research & Market Analysis", desc: "In-depth research reports, competitive analysis, and market intelligence — structured, cited, and ready to use." },
-  { num: "03", name: "Marketing Content & Campaigns", desc: "Blog posts, email sequences, ad copy, social media content, and SEO material — written, formatted, and ready to publish." },
-  { num: "04", name: "Business Proposals & Documents", desc: "Professional proposals, business plans, pitch decks, contracts, and reports — written to your brief and ready to send." },
-  { num: "05", name: "Presentation Decks", desc: "Compelling slide decks for investor meetings, sales pitches, and board presentations — structured, polished, and presentation-ready." },
-  { num: "06", name: "Data Analysis & Spreadsheets", desc: "Raw data in, clear analysis out. Charts, summaries, and structured Excel reports built from your datasets." },
-  { num: "07", name: "Social Media Content Packages", desc: "Weeks of content planned and written in one session. Posts, captions, threads, and hooks across all platforms." },
-  { num: "08", name: "Lead Research & Prospect Lists", desc: "Targeted prospect lists with contact details, company context, and personalised outreach angles — ready to send." },
+  { num: "01", name: "Website & App Development", desc: "Fully built, deployed websites and web apps. You send a brief, we deliver a live product. No coding required on your end.", img: "/manus-storage/web-dev_9f3ed2d4.jpg" },
+  { num: "02", name: "Research & Market Analysis", desc: "In-depth research reports, competitive analysis, and market intelligence — structured, cited, and ready to use.", img: "/manus-storage/research_d21f261b.jpg" },
+  { num: "03", name: "Marketing Content & Campaigns", desc: "Blog posts, email sequences, ad copy, social media content, and SEO material — written, formatted, and ready to publish.", img: "/manus-storage/marketing_de815124.jpg" },
+  { num: "04", name: "Business Proposals & Documents", desc: "Professional proposals, business plans, pitch decks, contracts, and reports — written to your brief and ready to send.", img: "/manus-storage/proposals_9184996c.jpg" },
+  { num: "05", name: "Presentation Decks", desc: "Compelling slide decks for investor meetings, sales pitches, and board presentations — structured, polished, and presentation-ready.", img: "/manus-storage/presentations_e0a10063.jpg" },
+  { num: "06", name: "Data Analysis & Spreadsheets", desc: "Raw data in, clear analysis out. Charts, summaries, and structured Excel reports built from your datasets.", img: "/manus-storage/data_a19e38e9.jpg" },
+  { num: "07", name: "Social Media Content Packages", desc: "Weeks of content planned and written in one session. Posts, captions, threads, and hooks across all platforms.", img: "/manus-storage/social_9058f934.jpg" },
+  { num: "08", name: "Lead Research & Prospect Lists", desc: "Targeted prospect lists with contact details, company context, and personalised outreach angles — ready to send.", img: "/manus-storage/leads_7daa99e9.jpg" },
 ];
 
 function ServicesSection() {
@@ -246,17 +246,210 @@ function ServicesSection() {
       <div className="max-w-5xl mx-auto overflow-hidden">
         {SERVICES.map((s, i) => (
           <FadeIn key={s.num} delay={i * 0.08} y={20}>
-            <div className="flex items-start gap-3 sm:gap-6 md:gap-10 py-5 sm:py-8 md:py-10"
+            <div className="flex items-start gap-3 sm:gap-6 md:gap-8 py-5 sm:py-8 md:py-10"
               style={{ borderTop: i === 0 ? "1px solid rgba(12,12,12,0.15)" : undefined, borderBottom: "1px solid rgba(12,12,12,0.15)" }}>
               <span className="font-black leading-none flex-shrink-0"
                 style={{ color: "#0C0C0C", fontSize: "clamp(2rem,7vw,110px)", fontFamily: "'Kanit',sans-serif" }}>{s.num}</span>
-              <div className="flex flex-col justify-center gap-1 sm:gap-2 pt-1 min-w-0">
+              <div className="flex flex-col justify-center gap-1 sm:gap-2 pt-1 min-w-0 flex-1">
                 <span className="font-medium uppercase" style={{ color: "#0C0C0C", fontSize: "clamp(0.85rem,1.9vw,1.9rem)", fontFamily: "'Kanit',sans-serif" }}>{s.name}</span>
                 <span className="font-light leading-relaxed" style={{ color: "#0C0C0C", opacity: 0.6, fontSize: "clamp(0.75rem,1.3vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>{s.desc}</span>
               </div>
+              {s.img && (
+                <img src={s.img} alt={s.name} loading="lazy"
+                  className="hidden sm:block flex-shrink-0 object-cover rounded-xl sm:rounded-2xl"
+                  style={{ width: "clamp(80px,14vw,180px)", height: "clamp(55px,9vw,115px)" }} />
+              )}
             </div>
           </FadeIn>
         ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── AGENT SESSION ────────────────────────────────────────────────────────────
+
+const SESSION_STEPS = [
+  {
+    step: "01",
+    title: "You describe what you need",
+    detail: "Type a plain-English brief — 'Build me a landing page for my SaaS', 'Write a 10-page market report on EV charging in Europe', 'Create 30 days of LinkedIn content for a fintech brand'. No forms, no briefs, no calls.",
+    icon: "💬",
+    color: "#B600A8",
+  },
+  {
+    step: "02",
+    title: "Giggo spins up a dedicated session",
+    detail: "A fresh agent session is assigned to your request. Giggo reads your brief, identifies the deliverable type, selects the right tools and models, and begins autonomous execution — all within seconds of your message.",
+    icon: "⚡",
+    color: "#7621B0",
+  },
+  {
+    step: "03",
+    title: "The agent works end-to-end",
+    detail: "Giggo researches, writes, builds, and formats. It browses the web, writes code, generates assets, structures documents, and quality-checks its own output — without you lifting a finger. You can watch progress in real time.",
+    icon: "🤖",
+    color: "#B600A8",
+  },
+  {
+    step: "04",
+    title: "You receive the finished deliverable",
+    detail: "Not a draft. Not a concept. The actual finished work — a live URL, a PDF report, a ready-to-send document, a published post. Delivered to your inbox or dashboard, typically within 24–48 hours.",
+    icon: "✅",
+    color: "#7621B0",
+  },
+  {
+    step: "05",
+    title: "Revise, iterate, or start the next one",
+    detail: "Request changes in plain English. The session remembers full context. Or close it and open a new one for your next project. Growth plan clients get unlimited concurrent sessions — your output scales with your ambition.",
+    icon: "🔄",
+    color: "#BE4C00",
+  },
+];
+
+const LIVE_MESSAGES = [
+  { role: "user", text: "Build me a landing page for a B2B SaaS that does invoice automation. Dark theme, purple accents, pricing section, contact form." },
+  { role: "agent", text: "Session started. Analysing brief...\n\n✓ Deliverable type: Landing page\n✓ Stack: React + Tailwind\n✓ Sections identified: Hero, Features, Pricing, Contact\n\nBuilding now. I'll have a live URL for you within 2 hours." },
+  { role: "agent", text: "✓ Hero section complete — headline, subheadline, CTA button\n✓ Features grid — 6 cards with icons\n✓ Pricing section — 3 tiers, monthly/annual toggle\n⏳ Contact form + deployment in progress..." },
+  { role: "agent", text: "✅ Done. Your landing page is live:\n\nhttps://invoice-auto.giggo.io\n\nAll sections complete. Lighthouse score: 97. Ready to review — reply with any changes." },
+];
+
+function AgentSessionSection() {
+  const [activeStep, setActiveStep] = useState(0);
+  const [visibleMessages, setVisibleMessages] = useState(1);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const playSession = useCallback(() => {
+    setIsPlaying(true);
+    setVisibleMessages(1);
+    let count = 1;
+    const tick = () => {
+      count++;
+      if (count <= LIVE_MESSAGES.length) {
+        setVisibleMessages(count);
+        timerRef.current = setTimeout(tick, 1800);
+      } else {
+        setIsPlaying(false);
+      }
+    };
+    timerRef.current = setTimeout(tick, 1800);
+  }, []);
+
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
+
+  return (
+    <section id="session" className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-8 sm:-mt-10 md:-mt-14 z-10 relative px-4 sm:px-8 md:px-10 py-14 sm:py-20 md:py-28"
+      style={{ background: "#0C0C0C" }}>
+      <FadeIn y={40} className="text-center mb-10 sm:mb-16 md:mb-20">
+        <h2 className="hero-heading font-black uppercase leading-none tracking-tight"
+          style={{ fontSize: "clamp(2rem,8vw,110px)", fontFamily: "'Kanit',sans-serif" }}>
+          A Giggo Session
+        </h2>
+        <p className="mt-4 font-light uppercase tracking-wide"
+          style={{ color: "rgba(215,226,234,0.55)", fontSize: "clamp(0.8rem,1.5vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>
+          From brief to deliverable — here's exactly what happens
+        </p>
+      </FadeIn>
+
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
+        {/* Left: step-by-step explainer */}
+        <div className="flex flex-col gap-3">
+          {SESSION_STEPS.map((s, i) => (
+            <FadeIn key={s.step} delay={i * 0.1} y={20}>
+              <button
+                onClick={() => setActiveStep(i)}
+                className="w-full text-left rounded-[18px] sm:rounded-[24px] p-4 sm:p-6 transition-all duration-300 cursor-pointer"
+                style={{
+                  background: activeStep === i ? "rgba(182,0,168,0.12)" : "rgba(215,226,234,0.03)",
+                  border: activeStep === i ? `1px solid ${s.color}` : "1px solid rgba(215,226,234,0.08)",
+                  boxShadow: activeStep === i ? `0 0 24px rgba(182,0,168,0.15)` : "none",
+                }}>
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <span style={{ fontSize: "clamp(1.2rem,2.5vw,1.8rem)", lineHeight: 1 }}>{s.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-black text-xs opacity-40" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{s.step}</span>
+                      <span className="font-medium uppercase" style={{ color: "#D7E2EA", fontSize: "clamp(0.8rem,1.5vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>{s.title}</span>
+                    </div>
+                    {activeStep === i && (
+                      <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
+                        className="font-light leading-relaxed mt-2"
+                        style={{ color: "rgba(215,226,234,0.6)", fontSize: "clamp(0.78rem,1.2vw,0.95rem)", fontFamily: "'Kanit',sans-serif" }}>
+                        {s.detail}
+                      </motion.p>
+                    )}
+                  </div>
+                </div>
+              </button>
+            </FadeIn>
+          ))}
+        </div>
+
+        {/* Right: live session demo terminal */}
+        <FadeIn delay={0.3} y={30} className="sticky top-24">
+          <div className="rounded-[24px] sm:rounded-[32px] overflow-hidden"
+            style={{ background: "#111", border: "1px solid rgba(215,226,234,0.12)" }}>
+            {/* Terminal header */}
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-[rgba(215,226,234,0.08)]"
+              style={{ background: "rgba(215,226,234,0.04)" }}>
+              <span className="w-3 h-3 rounded-full bg-red-500/70" />
+              <span className="w-3 h-3 rounded-full bg-yellow-500/70" />
+              <span className="w-3 h-3 rounded-full bg-green-500/70" />
+              <span className="ml-3 font-medium text-xs uppercase tracking-widest opacity-40" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>
+                giggo session · agent_fgrublDXzNDfu5MT
+              </span>
+            </div>
+            {/* Messages */}
+            <div className="p-4 sm:p-6 flex flex-col gap-4 min-h-[320px] sm:min-h-[400px]">
+              {LIVE_MESSAGES.slice(0, visibleMessages).map((msg, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+                  className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                  <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs"
+                    style={{ background: msg.role === "user" ? "rgba(215,226,234,0.15)" : "linear-gradient(135deg,#7621B0,#B600A8)" }}>
+                    {msg.role === "user" ? "U" : "G"}
+                  </div>
+                  <div className="max-w-[80%] rounded-2xl px-4 py-3"
+                    style={{
+                      background: msg.role === "user" ? "rgba(215,226,234,0.08)" : "rgba(182,0,168,0.12)",
+                      border: msg.role === "agent" ? "1px solid rgba(182,0,168,0.25)" : "1px solid rgba(215,226,234,0.1)",
+                    }}>
+                    <p className="font-light leading-relaxed whitespace-pre-line text-xs sm:text-sm"
+                      style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{msg.text}</p>
+                  </div>
+                </motion.div>
+              ))}
+              {isPlaying && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs"
+                    style={{ background: "linear-gradient(135deg,#7621B0,#B600A8)" }}>G</div>
+                  <div className="rounded-2xl px-4 py-3 flex gap-1.5 items-center"
+                    style={{ background: "rgba(182,0,168,0.12)", border: "1px solid rgba(182,0,168,0.25)" }}>
+                    {[0, 0.2, 0.4].map(d => (
+                      <motion.span key={d} className="w-1.5 h-1.5 rounded-full bg-[#B600A8]"
+                        animate={{ opacity: [0.3, 1, 0.3] }} transition={{ duration: 1, delay: d, repeat: Infinity }} />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+            {/* Play button */}
+            <div className="px-4 sm:px-6 pb-4 sm:pb-6">
+              <button
+                onClick={playSession}
+                disabled={isPlaying}
+                className="w-full rounded-full font-medium uppercase tracking-widest py-3 text-xs sm:text-sm transition-all duration-200 cursor-pointer disabled:opacity-50"
+                style={{
+                  background: isPlaying ? "rgba(215,226,234,0.06)" : "linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)",
+                  color: "#fff",
+                  border: isPlaying ? "1px solid rgba(215,226,234,0.1)" : "none",
+                  fontFamily: "'Kanit',sans-serif",
+                }}>
+                {isPlaying ? "Session running..." : visibleMessages >= LIVE_MESSAGES.length ? "▶ Replay Session" : "▶ Watch a Live Session"}
+              </button>
+            </div>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
@@ -634,6 +827,7 @@ export default function GiggoHome() {
       <MarqueeSection />
       <AboutSection />
       <ServicesSection />
+      <AgentSessionSection />
       <AgencyComparisonSection />
       <WorkSection />
       <PricingSection />

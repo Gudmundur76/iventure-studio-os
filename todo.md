@@ -54,6 +54,9 @@
 - [x] Update client/index.html title to "Giggo — Your AI Agent"
 - [x] Rebrand chat page (GiggoChat.tsx) with English system prompt and Giggo persona
 - [ ] Add backend endpoints: POST /api/email, POST /api/reminder, POST /api/task
+- [x] Hero heading renamed to "Hi, i'm giggo" (lowercase i, curly apostrophe)
+- [x] 8 service images generated via xAI grok-imagine-image, uploaded to /manus-storage/, wired into ServicesSection
+- [x] AgentSessionSection built — 5-step explainer + live session terminal demo with replay button
 - [ ] Verify invoice PDF generation end-to-end
 - [ ] Add voice agent integration (xAI WebSocket)
 - [ ] Connect giggo.io domain
