@@ -161,9 +161,9 @@ export default function VoiceAgentSection() {
 
   const isActive = sessionState !== "idle" && sessionState !== "error";
   const btnLabel = {
-    idle: "Start Talking",
-    connecting: "Connecting...",
-    listening: "Listening...",
+    idle: "Tala við Gumma",
+    connecting: "Tengist...",
+    listening: "Hlusta...",
     speaking: "Giggo is speaking",
     error: "Try Again",
   }[sessionState];
@@ -171,26 +171,26 @@ export default function VoiceAgentSection() {
   const PILLARS = [
     {
       icon: <Mic size={28} />,
-      title: "Voice-First",
-      body: "Talk to Giggo like you would a colleague. No forms, no briefs, no back-and-forth emails. Just speak.",
+      title: "Raddstýrt",
+      body: "Tala við Gumma like you would a colleague. No forms, no briefs, no back-and-forth emails. Just speak.",
     },
     {
       icon: <Zap size={28} />,
-      title: "Always On",
-      body: "Your agent is live 24/7. Start a session any time, from any device. No waiting, no scheduling.",
+      title: "Alltaf til staðar",
+      body: "Gummi er í gangi allan sólarhringinn. Byrjaðu lotu hvenær sem er, á hvaða tæki sem er. Engin bið, engin tímasetning.",
     },
     {
       icon: <CheckCircle size={28} />,
-      title: "Delivers the Work",
-      body: "Giggo doesn't just answer questions. It executes the full task and delivers the finished result.",
+      title: "Afhendir verkið",
+      body: "Gummi svarar ekki bara spurningum. Hann framkvæmir verkefnið í heild og afhendir fullunna niðurstöðu.",
     },
   ];
 
   const STEPS = [
-    { num: "01", label: "Click the mic", desc: "Describe what you need in plain speech — no form, no email." },
-    { num: "02", label: "Giggo confirms", desc: "The agent acknowledges your brief and starts working immediately." },
-    { num: "03", label: "Agent executes", desc: "Giggo works autonomously end-to-end — research, build, write, deliver." },
-    { num: "04", label: "You receive it", desc: "The finished deliverable lands in your inbox — URL, PDF, or file." },
+    { num: "01", label: "Smelltu á hljóðnemann", desc: "Lýstu því sem þú þarft í venjulegu tali — engin eyðublöð, enginn tölvupóstur." },
+    { num: "02", label: "Gummi staðfestir", desc: "Gummi staðfestir lýsinguna þína og byrjar að vinna strax." },
+    { num: "03", label: "Gummi framkvæmir", desc: "Gummi vinnur sjálfstætt frá upphafi til enda — rannsakar, byggir, skrifar, afhendir." },
+    { num: "04", label: "Þú færð niðurstöðuna", desc: "Fullunna niðurstaðan berst í pósthólf þitt — vefslóð, PDF eða skrá." },
   ];
 
   return (
@@ -206,7 +206,7 @@ export default function VoiceAgentSection() {
             className="hero-heading font-black uppercase leading-none tracking-tight text-center"
             style={{ fontSize: "clamp(2.5rem,9vw,110px)", fontFamily: "'Kanit',sans-serif" }}
           >
-            Talk to Giggo
+            Tala við Gumma
           </h2>
           <p
             className="text-center mt-4 font-light uppercase tracking-widest"
@@ -285,8 +285,8 @@ export default function VoiceAgentSection() {
                 {sessionState === "idle"
                   ? "Click the mic button below to start a live voice session with Giggo"
                   : sessionState === "connecting"
-                  ? "Connecting to your agent..."
-                  : "Listening..."}
+                  ? "Tengist við Gumma..."
+                  : "Hlusta..."}
               </div>
             )}
             {transcript.map((line, i) => (
