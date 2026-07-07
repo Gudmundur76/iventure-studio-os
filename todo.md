@@ -58,5 +58,5 @@
 - [x] 8 service images generated via xAI grok-imagine-image, uploaded to /manus-storage/, wired into ServicesSection
 - [x] AgentSessionSection built — 5-step explainer + live session terminal demo with replay button
 - [ ] Verify invoice PDF generation end-to-end
-- [ ] Add voice agent integration (xAI WebSocket)
+- [x] Add voice agent integration (xAI WebSocket) — VoiceAgentSection with live WebSocket mic widget, waveform, transcript
 - [ ] Connect giggo.io domain

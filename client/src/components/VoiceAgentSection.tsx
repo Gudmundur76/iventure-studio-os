@@ -85,18 +85,15 @@ export default function VoiceAgentSection() {
     setCurrentText("");
 
     try {
-      // Get credentials from server (key never exposed in bundle)
-      const res = await fetch("/api/voice-session-token");
-      if (!res.ok) throw new Error("Could not get session token");
-      const { apiKey, wsUrl } = await res.json() as { apiKey: string; wsUrl: string };
-
       // Set up AudioContext for playback
       audioContextRef.current = new AudioContext({ sampleRate: 24000 });
       audioQueueRef.current = [];
       isPlayingRef.current = false;
 
-      // Connect to xAI realtime WebSocket
-      const ws = new WebSocket(wsUrl, { headers: { Authorization: `Bearer ${apiKey}` } } as never);
+      // Connect via server-side proxy (proxy adds Authorization header to xAI — key never in browser)
+      const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const proxyUrl = `${proto}//${window.location.host}/api/voice-proxy`;
+      const ws = new WebSocket(proxyUrl);
       wsRef.current = ws;
 
       ws.onopen = async () => {

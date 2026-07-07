@@ -5,6 +5,7 @@ import net from "net";
 import { createRequire } from 'module';
 const _require = createRequire(import.meta.url);
 const Busboy = _require('busboy') as (opts: import('busboy').BusboyConfig) => import('busboy').Busboy;
+import { WebSocket as WsClient, WebSocketServer } from 'ws';
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
@@ -40,7 +41,47 @@ async function startServer() {
   registerStorageProxy(app);
   registerOAuthRoutes(app);
 
-  // Voice session token — returns xAI credentials for browser WebSocket (key stays server-side)
+  // ── xAI Realtime WebSocket proxy ──────────────────────────────────────────
+  // Browser cannot send Authorization headers on WebSocket connections.
+  // This proxy: browser → ws://server/api/voice-proxy → wss://api.x.ai/v1/realtime
+  const voiceWss = new WebSocketServer({ noServer: true });
+  voiceWss.on('connection', (browserWs) => {
+    const apiKey = process.env.XAI_API_KEY;
+    const agentId = 'agent_fgrublDXzNDfu5MT';
+    if (!apiKey) {
+      browserWs.close(1011, 'XAI_API_KEY not configured');
+      return;
+    }
+    const xaiWs = new WsClient(
+      `wss://api.x.ai/v1/realtime?agent_id=${agentId}`,
+      { headers: { Authorization: `Bearer ${apiKey}` } }
+    );
+    xaiWs.on('open', () => {
+      // Relay browser → xAI
+      browserWs.on('message', (data) => {
+        if (xaiWs.readyState === WsClient.OPEN) xaiWs.send(data);
+      });
+    });
+    // Relay xAI → browser
+    xaiWs.on('message', (data) => {
+      if (browserWs.readyState === browserWs.OPEN) browserWs.send(data);
+    });
+    xaiWs.on('error', (err) => {
+      console.error('[voice-proxy] xAI WS error:', err.message);
+      browserWs.close(1011, 'xAI connection error');
+    });
+    xaiWs.on('close', (code, reason) => {
+      browserWs.close(code, reason);
+    });
+    browserWs.on('close', () => {
+      xaiWs.close();
+    });
+    browserWs.on('error', () => {
+      xaiWs.close();
+    });
+  });
+
+  // Voice session token endpoint — returns xAI credentials for browser WebSocket (key stays server-side)
   app.get('/api/voice-session-token', (_req, res) => {
     const apiKey = process.env.XAI_API_KEY;
     const agentId = "agent_fgrublDXzNDfu5MT";
@@ -126,6 +167,17 @@ async function startServer() {
   if (port !== preferredPort) {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
+
+  // Upgrade HTTP → WebSocket for /api/voice-proxy
+  server.on('upgrade', (request, socket, head) => {
+    if (request.url?.startsWith('/api/voice-proxy')) {
+      voiceWss.handleUpgrade(request, socket as import('net').Socket, head, (ws) => {
+        voiceWss.emit('connection', ws, request);
+      });
+    } else {
+      socket.destroy();
+    }
+  });
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
