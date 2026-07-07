@@ -13,11 +13,13 @@ import VoiceClone from "./pages/VoiceClone";
 import WebDevService from "./pages/WebDevService";
 import ResearchService from "./pages/ResearchService";
 import MarketingService from "./pages/MarketingService";
+import GummiDemo from "./pages/GummiDemo";
 
 function Router() {
   return (
     <Switch>
       <Route path="/chat" component={GiggoChat} />
+      <Route path="/demo" component={GummiDemo} />
       <Route path="/voice-clone" component={VoiceClone} />
       <Route path="/services/web-development" component={WebDevService} />
       <Route path="/services/research" component={ResearchService} />
