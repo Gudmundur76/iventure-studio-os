@@ -59,4 +59,12 @@
 - [x] AgentSessionSection built — 5-step explainer + live session terminal demo with replay button
 - [ ] Verify invoice PDF generation end-to-end
 - [x] Add voice agent integration (xAI WebSocket) — VoiceAgentSection with live WebSocket mic widget, waveform, transcript
-- [ ] Connect giggo.io domain
+- [ ] Connect giggo.io domain (requires DNS management outside Manus)
+
+## Phase 9: Gummi Guru — Icelandic Demo
+- [x] Build GummiDemo.tsx — full Icelandic personal agent demo page at /demo
+- [x] Gummi character with live xAI voice widget (server-side proxy, Icelandic instructions)
+- [x] 4 tool cards: veitingastaður, iðnaðarmaður, verðsamanburður, minnismiðar
+- [x] How it works 4-step section (Icelandic)
+- [x] ISK pricing: 4.900 kr / 9.900 kr / Sérsniðið
+- [x] Register /demo route in App.tsx

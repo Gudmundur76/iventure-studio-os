@@ -88,11 +88,11 @@ export default function ServicePage({
           <div className="flex flex-wrap gap-4 mt-8">
             <div className="rounded-[14px] px-5 py-3 flex flex-col gap-0.5" style={{ background: "rgba(182,0,168,0.12)", border: "1px solid rgba(182,0,168,0.3)" }}>
               <span className="font-black text-white" style={{ fontSize: "clamp(1.1rem,2vw,1.5rem)", fontFamily: FONT }}>{turnaround}</span>
-              <span className="font-light uppercase tracking-wide text-xs" style={{ color: "rgba(215,226,234,0.45)", fontFamily: FONT }}>Turnaround</span>
+              <span className="font-light uppercase tracking-wide text-xs" style={{ color: "rgba(215,226,234,0.45)", fontFamily: FONT }}>Afhendingartími</span>
             </div>
             <div className="rounded-[14px] px-5 py-3 flex flex-col gap-0.5" style={{ background: "rgba(215,226,234,0.05)", border: "1px solid rgba(215,226,234,0.1)" }}>
               <span className="font-black text-white" style={{ fontSize: "clamp(1.1rem,2vw,1.5rem)", fontFamily: FONT }}>{startingAt}</span>
-              <span className="font-light uppercase tracking-wide text-xs" style={{ color: "rgba(215,226,234,0.45)", fontFamily: FONT }}>Starting at</span>
+              <span className="font-light uppercase tracking-wide text-xs" style={{ color: "rgba(215,226,234,0.45)", fontFamily: FONT }}>Frá</span>
             </div>
           </div>
         </FadeIn>
@@ -102,7 +102,7 @@ export default function ServicePage({
       <section className="rounded-t-[40px] sm:rounded-t-[60px] px-5 sm:px-10 md:px-16 py-14 sm:py-20" style={{ background: "#fff" }}>
         <FadeIn y={40}>
           <h2 className="font-black uppercase mb-10 sm:mb-14"
-            style={{ color: DARK, fontSize: "clamp(1.8rem,6vw,80px)", fontFamily: FONT }}>What You Get</h2>
+            style={{ color: DARK, fontSize: "clamp(1.8rem,6vw,80px)", fontFamily: FONT }}>Hvað færðu</h2>
         </FadeIn>
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {whatYouGet.map((item, i) => (
@@ -122,7 +122,7 @@ export default function ServicePage({
       <section className="rounded-t-[40px] sm:rounded-t-[60px] -mt-6 px-5 sm:px-10 md:px-16 py-14 sm:py-20" style={{ background: DARK }}>
         <FadeIn y={40}>
           <h2 className="font-black uppercase mb-10 sm:mb-14"
-            style={{ color: LIGHT, fontSize: "clamp(1.8rem,6vw,80px)", fontFamily: FONT }}>How It Works</h2>
+            style={{ color: LIGHT, fontSize: "clamp(1.8rem,6vw,80px)", fontFamily: FONT }}>Hvernig virkar þetta</h2>
         </FadeIn>
         <div className="max-w-4xl mx-auto flex flex-col gap-4">
           {howItWorks.map((step, i) => (
@@ -144,7 +144,7 @@ export default function ServicePage({
       <section className="rounded-t-[40px] sm:rounded-t-[60px] -mt-6 px-5 sm:px-10 md:px-16 py-14 sm:py-20" style={{ background: "#fff" }}>
         <FadeIn y={40}>
           <h2 className="font-black uppercase mb-8 sm:mb-12"
-            style={{ color: DARK, fontSize: "clamp(1.8rem,6vw,80px)", fontFamily: FONT }}>Use Cases</h2>
+            style={{ color: DARK, fontSize: "clamp(1.8rem,6vw,80px)", fontFamily: FONT }}>Notkunardæmi</h2>
         </FadeIn>
         <div className="max-w-4xl mx-auto flex flex-wrap gap-3">
           {useCases.map((uc, i) => (
@@ -165,7 +165,7 @@ export default function ServicePage({
             Ready to start?
           </h2>
           <p className="font-light mb-8" style={{ color: "rgba(215,226,234,0.5)", fontFamily: FONT, fontSize: "clamp(0.85rem,1.5vw,1.1rem)" }}>
-            Describe what you need and Giggo will handle the rest.
+            Lýstu því sem þú þarft og Gummi sér um restina.
           </p>
           <Link href="/#contact">
             <span className="inline-block rounded-full font-medium uppercase tracking-widest px-8 py-4 text-sm cursor-pointer transition-opacity hover:opacity-90"
@@ -177,7 +177,7 @@ export default function ServicePage({
             <Link href="/">
               <span className="font-light text-xs uppercase tracking-widest cursor-pointer transition-opacity hover:opacity-70"
                 style={{ color: "rgba(215,226,234,0.35)", fontFamily: FONT }}>
-                ← Back to Giggo
+                ← Til baka
               </span>
             </Link>
           </div>

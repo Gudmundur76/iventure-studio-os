@@ -4,31 +4,31 @@ export default function ResearchService() {
   return (
     <ServicePage
       num="02"
-      category="Research & Analysis"
-      title="Research & Market Analysis"
-      tagline="Deep intelligence, structured and ready to act on."
-      intro="Giggo conducts thorough market research, competitive analysis, and industry deep-dives — then delivers structured reports you can present, publish, or act on immediately. Every report is sourced, cited, and formatted to a professional standard. No fluff, no filler. Just the intelligence you need to make better decisions faster."
+      category="Rannsóknir og greining"
+      title="Rannsóknir og markaðsgreining"
+      tagline="Djúp greind, skipulögð og tilbúin til aðgerða."
+      intro="Gummi framkvæmir ítarlegar markaðsrannsóknir, samkeppnisgreiningu og iðnaðarkannanir — og afhendir síðan skipulagðar skýrslur sem þú getur kynnt, birt eða brugðist við strax. Sérhver skýrsla er heimildagreind, tilvísaðar og sniðin að faglegum stöðlum. Ekkert flauð, ekkert fyllefni. Bara greind sem þú þarft til að taka betri ákvarðanir hraðar."
       whatYouGet={[
-        { icon: "📊", title: "Structured Reports", desc: "Every deliverable is a fully formatted document — executive summary, key findings, data tables, and recommendations — ready to present or share." },
-        { icon: "🔍", title: "Primary Source Research", desc: "We go beyond surface-level summaries. Reports draw from industry databases, company filings, academic sources, and verified market data." },
-        { icon: "📈", title: "Competitive Analysis", desc: "Understand exactly where your competitors stand — their positioning, pricing, strengths, weaknesses, and strategic direction." },
-        { icon: "🎯", title: "Actionable Recommendations", desc: "Every report ends with clear, prioritised recommendations. Not just data — a path forward." },
-        { icon: "📝", title: "Cited & Verifiable", desc: "All claims are sourced and referenced. You can verify every data point and share the report with confidence." },
-        { icon: "🔄", title: "Unlimited Revisions", desc: "Need a different angle, more depth on a section, or a different format? Just ask. We revise until it's exactly what you need." },
+        { icon: "📊", title: "Skipulagðar skýrslur", desc: "Sérhver afhending er fullsniðið skjal — framkvæmdastjórasamantekt, lykilniðurstöður, gagnaborð og tillögur — tilbúið til kynningar eða deilingar." },
+        { icon: "🔍", title: "Rannsóknir frá frumheimildum", desc: "Við förum lengra en yfirborðslegar samantektir. Skýrslur sækja í iðnaðargagnagrunna, skráningar fyrirtækja, fræðilegar heimildir og staðfestar markaðsgögn." },
+        { icon: "📈", title: "Samkeppnisgreining", desc: "Skildu nákvæmlega hvar keppinautar þínir standa — staðsetning þeirra, verðlag, styrkleika, veikleika og stefnulega stefnu." },
+        { icon: "🎯", title: "Framkvæmanlegar tillögur", desc: "Sérhver skýrsla endar með skýrum, forgangsröðuðum tillögum. Ekki bara gögn — leið áfram." },
+        { icon: "📝", title: "Tilvísað og staðfestanlegt", desc: "Allar fullyrðingar eru heimildagreindar og tilvísaðar. Þú getur staðfest sérhvert gagnapunkt og deilt skýrslunni með öryggi." },
+        { icon: "🔄", title: "Ótakmarkaðar endurskoðanir", desc: "Þarftu annan sjónarhorn, meiri dýpt á kafla eða annað snið? Spurðu bara. Við endurskoðum þar til það er nákvæmlega það sem þú þarft." },
       ]}
       howItWorks={[
-        { step: "01", title: "You define the research question", desc: "Tell us what you need to understand. A market opportunity, a competitor landscape, an industry trend, an investment thesis — whatever the question is." },
-        { step: "02", title: "Giggo researches and structures", desc: "We identify the right sources, gather the data, and structure the findings into a clear, logical report framework." },
-        { step: "03", title: "We write and format the report", desc: "The full report is written, formatted, and reviewed for accuracy — typically delivered within 48 hours." },
-        { step: "04", title: "You receive the finished document", desc: "Delivered as a PDF, Word document, or Google Doc — whichever format works best for your workflow." },
+        { step: "01", title: "Þú skilgreinir rannsóknarspurningu", desc: "Segðu okkur hvað þú þarft að skilja. Markaðstækifæri, samkeppnislandslag, iðnaðarþróun, fjárfestingarkenningu — hvert sem spurningin er." },
+        { step: "02", title: "Gummi rannsakar og skipuleggur", desc: "Við finnum réttar heimildir, söfnum gögnunum og skipuleggjum niðurstöðurnar í skýrt, rökrétt skýrslurammi." },
+        { step: "03", title: "Við skrifum og sníðum skýrsluna", desc: "Full skýrslan er skrifuð, sniðin og yfirfarin fyrir nákvæmni — venjulega afhent innan 48 klukkustunda." },
+        { step: "04", title: "Þú færð fullunna skjalið", desc: "Afhent sem PDF, Word-skjal eða Google-skjal — hvaða snið sem hentar best verkflæði þínu." },
       ]}
       useCases={[
-        "Market entry research", "Competitor landscape", "Investment memo", "Due diligence report", "Industry trend analysis",
-        "Customer persona research", "Pricing benchmarking", "Technology landscape", "Regulatory overview", "Partnership evaluation",
-        "Product-market fit analysis", "Academic literature review",
+        "Markaðsinngangsrannsókn", "Samkeppnislandslag", "Fjárfestingarminnisblað", "Áreiðanleikakönnunarskýrsla", "Iðnaðarþróunargreining",
+        "Viðskiptavinaeinstaklingsrannsókn", "Verðlagsvísbending", "Tæknilandslag", "Reglugerðaryfirlit", "Samstarfsmat",
+        "Greining á samræmi vöru og markaðar", "Fræðileg bókmenntayfirferð",
       ]}
-      turnaround="24–48h"
-      startingAt="$29"
+      turnaround="24–48klst"
+      startingAt="kr. 4.900"
     />
   );
 }

@@ -98,7 +98,7 @@ function HeroSection() {
       <FadeIn delay={0.15} y={40} className="overflow-hidden">
         <h1 className="hero-heading font-black uppercase tracking-tight leading-none w-full mt-6 sm:mt-4 md:-mt-2 px-1"
           style={{ fontFamily: "'Kanit',sans-serif", fontSize: "clamp(2.8rem,12vw,190px)", whiteSpace: "nowrap" }}>
-          Hi, i&apos;m giggo
+          Hæ, ég er Gummi
         </h1>
       </FadeIn>
 
@@ -120,11 +120,11 @@ function HeroSection() {
         <FadeIn delay={0.35} y={20}>
           <p className="font-light uppercase tracking-wide leading-snug max-w-[240px] sm:max-w-[220px] md:max-w-[280px]"
             style={{ color: "#D7E2EA", fontSize: "clamp(0.7rem,1.3vw,1.2rem)", fontFamily: "'Kanit',sans-serif" }}>
-            AI-powered personal agent. One request. Delivered.
+            Persónulegur AI aðstoðarmaður. Ein beiðni. Afhent.
           </p>
         </FadeIn>
         <FadeIn delay={0.5} y={20}>
-          <CTA label="Get Started" onClick={scrollToContact} />
+          <CTA label="Hefjast handa" onClick={scrollToContact} />
         </FadeIn>
       </div>
     </section>
@@ -188,7 +188,7 @@ function MarqueeSection() {
 
 // ─── ABOUT ───────────────────────────────────────────────────────────────────
 
-const ABOUT_TEXT = "Giggo is a fully autonomous AI agent platform. You describe what you need — a website, a research report, a marketing campaign, a proposal — and we deliver the finished work. Not a draft. Not a concept. The actual deliverable. Unlimited capability. Zero overhead. International reach.";
+const ABOUT_TEXT = "Gummi er persónulegur AI aðstoðarmaður þinn. Þú lýsir því sem þú þarft — vefsíðu, rannsóknarskýrslu, markaðsherferð, tillögu — og við afhentum fullunna vinnu. Ekki drög. Ekki hugmynd. Heldur raunverulega niðurstöðuna. Ótakmarkaður möguleiki. Ekkert umfram. Íslenskt þjónustulag.";
 
 function AboutSection() {
   const scrollToContact = () => {
@@ -200,13 +200,13 @@ function AboutSection() {
       <div className="flex flex-col items-center gap-8 sm:gap-12 md:gap-16 z-10 max-w-[90vw] sm:max-w-2xl">
         <FadeIn delay={0} y={40}>
           <h2 className="hero-heading font-black uppercase leading-none tracking-tight text-center"
-            style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>About</h2>
+            style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Um okkur</h2>
         </FadeIn>
         <AnimatedText text={ABOUT_TEXT} className="font-medium text-center leading-relaxed"
           style={{ color: "#D7E2EA", fontSize: "clamp(0.9rem,1.8vw,1.3rem)", fontFamily: "'Kanit',sans-serif" }} />
       </div>
       <div className="mt-12 sm:mt-16 md:mt-20 z-10">
-        <CTA label="Talk to Giggo" onClick={scrollToContact} />
+        <CTA label="Tala við Gumma" onClick={scrollToContact} />
       </div>
     </section>
   );
@@ -215,14 +215,14 @@ function AboutSection() {
 // ─── SERVICES ────────────────────────────────────────────────────────────────
 
 const SERVICES = [
-  { num: "01", name: "Website & App Development", desc: "Fully built, deployed websites and web apps. You send a brief, we deliver a live product. No coding required on your end.", img: "/manus-storage/web-dev_9f3ed2d4.jpg" },
-  { num: "02", name: "Research & Market Analysis", desc: "In-depth research reports, competitive analysis, and market intelligence — structured, cited, and ready to use.", img: "/manus-storage/research_d21f261b.jpg" },
-  { num: "03", name: "Marketing Content & Campaigns", desc: "Blog posts, email sequences, ad copy, social media content, and SEO material — written, formatted, and ready to publish.", img: "/manus-storage/marketing_de815124.jpg" },
-  { num: "04", name: "Business Proposals & Documents", desc: "Professional proposals, business plans, pitch decks, contracts, and reports — written to your brief and ready to send.", img: "/manus-storage/proposals_9184996c.jpg" },
-  { num: "05", name: "Presentation Decks", desc: "Compelling slide decks for investor meetings, sales pitches, and board presentations — structured, polished, and presentation-ready.", img: "/manus-storage/presentations_e0a10063.jpg" },
-  { num: "06", name: "Data Analysis & Spreadsheets", desc: "Raw data in, clear analysis out. Charts, summaries, and structured Excel reports built from your datasets.", img: "/manus-storage/data_a19e38e9.jpg" },
-  { num: "07", name: "Social Media Content Packages", desc: "Weeks of content planned and written in one session. Posts, captions, threads, and hooks across all platforms.", img: "/manus-storage/social_9058f934.jpg" },
-  { num: "08", name: "Lead Research & Prospect Lists", desc: "Targeted prospect lists with contact details, company context, and personalised outreach angles — ready to send.", img: "/manus-storage/leads_7daa99e9.jpg" },
+  { num: "01", name: "Vefsíður og forrit", desc: "Fullbygðar, keyrðar vefsíður og vefforrit. Þú sendir lýsingu, við afhentum lifandi vöru. Engin kóðun þarf af þinni hálfu.", img: "/manus-storage/web-dev_9f3ed2d4.jpg" },
+  { num: "02", name: "Rannsóknir og markaðsgreining", desc: "Ítarlegar rannsóknarskýrslur, samkeppnisgreining og markaðsgreind — skipulögð, tilvísaðar og tilbúnar til notkunar.", img: "/manus-storage/research_d21f261b.jpg" },
+  { num: "03", name: "Markaðsefni og herferðir", desc: "Bloggfærslur, tölvupóstrunur, auglýsingatextar, efni í samfélagsmiðla og SEO-efni — skrifað, sniðið og tilbúið til birtingar.", img: "/manus-storage/marketing_de815124.jpg" },
+  { num: "04", name: "Viðskiptatillögur og skjöl", desc: "Faglegar tillögur, viðskiptaáætlanir, kynningarefni, samningar og skýrslur — skrifaðar að lýsingu þinni og tilbúnar til sendingar.", img: "/manus-storage/proposals_9184996c.jpg" },
+  { num: "05", name: "Kynningarsett", desc: "Sannfærandi kynningarsett fyrir fjárfestafundi, sölukynninar og stjórnarfundi — skipulögð, pússuð og kynningartilbúin.", img: "/manus-storage/presentations_e0a10063.jpg" },
+  { num: "06", name: "Gagnagreining og töflureiknar", desc: "Hrátt gögn inn, skýr greining út. Línurit, samantektir og skipulagðar Excel-skýrslur byggðar á gagnasettum þínum.", img: "/manus-storage/data_a19e38e9.jpg" },
+  { num: "07", name: "Samfélagsmiðlapakkar", desc: "Vikur af efni skipulögð og skrifað í einni lotu. Færslur, myndatextar, þræðir og krókur yfir alla vettvanga.", img: "/manus-storage/social_9058f934.jpg" },
+  { num: "08", name: "Viðtakendakannanir og listi", desc: "Markvissar viðtakendalistar með tengiliðaupplýsingum, samhengi fyrirtækis og sérsniðnum samskiptasjónarmiðum — tilbúnar til sendingar.", img: "/manus-storage/leads_7daa99e9.jpg" },
 ];
 
 function ServicesSection() {
@@ -230,7 +230,7 @@ function ServicesSection() {
     <section id="services" className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] px-4 sm:px-8 md:px-10 py-14 sm:py-20 md:py-28" style={{ background: "#FFFFFF" }}>
       <FadeIn y={40}>
         <h2 className="font-black uppercase text-center mb-10 sm:mb-16 md:mb-24"
-          style={{ color: "#0C0C0C", fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Services</h2>
+          style={{ color: "#0C0C0C", fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Þjónusta</h2>
       </FadeIn>
       <div className="max-w-5xl mx-auto overflow-hidden">
         {SERVICES.map((s, i) => (
@@ -290,7 +290,7 @@ const SESSION_STEPS = [
   {
     step: "05",
     title: "Revise, iterate, or start the next one",
-    detail: "Request changes in plain English. The session remembers full context. Or close it and open a new one for your next project. Growth plan clients get unlimited concurrent sessions — your output scales with your ambition.",
+    detail: "Request changes in plain English. The session remembers full context. Or close it and open a new one for your next project. Vöxtur plan clients get unlimited concurrent sessions — your output scales with your ambition.",
     icon: "🔄",
     color: "#BE4C00",
   },
@@ -447,9 +447,9 @@ function AgentSessionSection() {
 // ─── AGENCY COMPARISON ───────────────────────────────────────────────────────
 
 const COMPARISON_ITEMS = [
-  { icon: "🔍", label: "We find the best agency quote", sub: "Giggo scours the market and gets you the real price from top human agencies." },
-  { icon: "⚡", label: "We deliver the same at 50% less", sub: "Our AI agent produces the identical output — same quality, half the cost, faster turnaround." },
-  { icon: "✅", label: "You choose what works for you", sub: "Take the human agency quote, or let Giggo do it. Total transparency, zero pressure." },
+  { icon: "🔍", label: "Við finnum bestu stofnanatilboðið", sub: "Gummi skannar markaðinn og fær þér raunverulegt verð frá bestu mannlegu stofnunum." },
+  { icon: "⚡", label: "Við afhentum það sama á 50% lægra verði", sub: "AI-umboðsmaðurinn okkar framleiðir sömu niðurstöðu — sama gæði, helmingur kostnaðar, hraðari afhending." },
+  { icon: "✅", label: "Þú velur það sem hentar þér", sub: "Taktu tilboð mannlegu stofnunarinnar, eða láttu Gumma gera það. Fullkominn gagnsæi, engin þrýstingur." },
 ];
 
 function AgencyComparisonSection() {
@@ -463,7 +463,7 @@ function AgencyComparisonSection() {
       <FadeIn y={40} className="text-center mb-10 sm:mb-16 md:mb-20">
         <h2 className="hero-heading font-black uppercase leading-none tracking-tight"
           style={{ fontSize: "clamp(2rem,8vw,110px)", fontFamily: "'Kanit',sans-serif" }}>
-          The Giggo Edge
+          Kosturinn við Gumma
         </h2>
         <p className="mt-4 font-light uppercase tracking-wide"
           style={{ color: "rgba(215,226,234,0.55)", fontSize: "clamp(0.8rem,1.5vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>
@@ -487,13 +487,13 @@ function AgencyComparisonSection() {
         <div className="rounded-[20px] sm:rounded-[28px] overflow-hidden" style={{ border: "1px solid rgba(215,226,234,0.1)" }}>
           <div className="grid grid-cols-2">
             <div className="p-5 sm:p-7 flex flex-col gap-2" style={{ background: "rgba(215,226,234,0.04)" }}>
-              <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>Human Agency</p>
+              <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>Mannleg stofnun</p>
               <p className="font-black" style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>$2,000+</p>
               <p className="font-light text-xs sm:text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>5–10 business days</p>
             </div>
             <div className="p-5 sm:p-7 flex flex-col gap-2"
               style={{ background: "linear-gradient(135deg,#18011F 0%,#7621B0 60%,#B600A8 100%)" }}>
-              <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Kanit',sans-serif" }}>Giggo AI ⚡</p>
+              <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Kanit',sans-serif" }}>Gummi AI ⚡</p>
               <p className="font-black" style={{ color: "#fff", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>$99/mo</p>
               <p className="font-light text-xs sm:text-sm" style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Kanit',sans-serif" }}>24–48 hours</p>
             </div>
@@ -501,7 +501,7 @@ function AgencyComparisonSection() {
         </div>
       </FadeIn>
       <div className="flex justify-center mt-10 sm:mt-14">
-        <CTA label="See How It Works" onClick={scrollToContact} />
+        <CTA label="Sjá hvernig virkar" onClick={scrollToContact} />
       </div>
     </section>
   );
@@ -512,39 +512,39 @@ function AgencyComparisonSection() {
 const PROJECTS = [
   {
     num: "01",
-    category: "Web Development",
-    name: "Website & App Development",
+    category: "Vefþróun",
+    name: "Vefsíður og forrit",
     slug: "/services/web-development",
-    headline: "From brief to live URL — no code required on your end.",
-    body: "You describe what you need. Giggo builds it. Whether it's a marketing landing page, a full SaaS product, a client portal, or a mobile app — we handle design, development, and deployment end-to-end. Every project is built with modern frameworks (React, Next.js, Tailwind), optimised for speed, and handed over as a live, production-ready URL.",
-    tags: ["Landing Pages", "SaaS Products", "Web Apps", "Mobile Apps", "E-commerce", "Client Portals"],
-    stat1: { value: "24–72h", label: "Typical delivery" },
-    stat2: { value: "100%", label: "Production-ready" },
-    stat3: { value: "∞", label: "Revisions included" },
+    headline: "Frá lýsingu að lifandi vefslóð — engin kóðun þarf af þinni hálfu.",
+    body: "Þú lýsir því sem þú þarft. Gummi byggir það. Hvort sem það er markaðsvefsíða, fullt SaaS-verkefni, viðskiptavinagátt eða farsímaforrit — við sjáum um hönnun, þróun og dreifingu frá upphafi til enda. Hvert verkefni er byggt með nútímalegum ramma, fínstillt fyrir hraða og afhent sem lifandi, framleiðslutilbúin vefslóð.",
+    tags: ["Lendingarsíður", "SaaS-vörur", "Vefforrit", "Farsímaforrit", "Netverslun", "Viðskiptavinagáttir"],
+    stat1: { value: "24–72h", label: "Venjuleg afhending" },
+    stat2: { value: "100%", label: "Framleiðslutilbúið" },
+    stat3: { value: "∞", label: "Endurskoðanir innifaldar" },
   },
   {
     num: "02",
-    category: "Research & Analysis",
-    name: "Research & Market Analysis",
+    category: "Rannsóknir og greining",
+    name: "Rannsóknir og markaðsgreining",
     slug: "/services/research",
-    headline: "Deep intelligence, structured and ready to act on.",
-    body: "Giggo conducts thorough market research, competitive analysis, and industry deep-dives — then delivers structured reports you can present, publish, or act on immediately. Every report is sourced, cited, and formatted to a professional standard. No fluff, no filler. Just the intelligence you need to make better decisions faster.",
-    tags: ["Market Research", "Competitor Analysis", "Industry Reports", "Due Diligence", "Trend Analysis", "Investment Memos"],
-    stat1: { value: "10–50pg", label: "Report depth" },
-    stat2: { value: "Cited", label: "All sources verified" },
-    stat3: { value: "48h", label: "Average turnaround" },
+    headline: "Djúp greind, skipulögð og tilbúin til aðgerða.",
+    body: "Gummi framkvæmir ítarlegar markaðsrannsóknir, samkeppnisgreiningu og iðnaðarkannanir — og afhendir síðan skipulagðar skýrslur sem þú getur kynnt, birt eða brugðist við strax. Sérhver skýrsla er heimildagreind og sniðin að faglegum stöðlum.",
+    tags: ["Markaðsrannsókn", "Samkeppnisgreining", "Iðnaðarskýrslur", "Áreiðanleikakönnun", "Þróunargreining", "Fjárfestingarminnisblöð"],
+    stat1: { value: "10–50pg", label: "Dýpt skýrslu" },
+    stat2: { value: "Cited", label: "Allar heimildir staðfestar" },
+    stat3: { value: "48h", label: "Meðalafhendingartími" },
   },
   {
     num: "03",
-    category: "Marketing",
-    name: "Marketing Content & Campaigns",
+    category: "Markaðsstarf",
+    name: "Markaðsefni og herferðir",
     slug: "/services/marketing",
-    headline: "Content that converts — written, formatted, and ready to publish.",
-    body: "From SEO blog posts and email sequences to ad copy, social media content, and full campaign briefs — Giggo produces the complete content stack your business needs to grow. Every piece is written to your brand voice, optimised for your channel, and delivered ready to publish. No editing required.",
-    tags: ["Blog Posts", "Email Sequences", "Ad Copy", "Social Media", "SEO Content", "Campaign Briefs"],
-    stat1: { value: "30+", label: "Content pieces per session" },
-    stat2: { value: "On-brand", label: "Matched to your voice" },
-    stat3: { value: "24h", label: "Fastest turnaround" },
+    headline: "Efni sem umbreytir — skrifað, sniðið og tilbúið til birtingar.",
+    body: "Frá SEO-bloggfærslum og tölvupóstrunur til auglýsingatexta, efnis í samfélagsmiðla og fullra herferðarlýsinga — Gummi framleiðir heildstæðan efnispakka sem fyrirtæki þitt þarf til að vaxa.",
+    tags: ["Bloggfærslur", "Tölvupóstrunur", "Auglýsingatextar", "Samfélagsmiðlar", "SEO-efni", "Herferðarlýsingar"],
+    stat1: { value: "30+", label: "Efnishlutir á lotu" },
+    stat2: { value: "On-brand", label: "Í takt við rödd þína" },
+    stat3: { value: "24h", label: "Hraðasta afhending" },
   },
 ];
 
@@ -565,7 +565,7 @@ function ProjectCard({ project, index, progress }: {
           <span className="uppercase tracking-widest text-[0.6rem] sm:text-xs font-medium opacity-50" style={{ color: "#D7E2EA", fontFamily: "'Kanit',sans-serif" }}>{project.category}</span>
           <span className="font-medium uppercase flex-1 min-w-0 truncate" style={{ color: "#D7E2EA", fontSize: "clamp(0.8rem,1.8vw,1.7rem)", fontFamily: "'Kanit',sans-serif" }}>{project.name}</span>
           <Link href={project.slug}>
-            <span className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest px-3 py-1.5 sm:px-6 sm:py-2.5 text-[0.6rem] sm:text-sm transition-colors duration-200 hover:bg-[#D7E2EA]/10 cursor-pointer flex-shrink-0 inline-block" style={{ fontFamily: "'Kanit',sans-serif" }}>View Service →</span>
+            <span className="rounded-full border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest px-3 py-1.5 sm:px-6 sm:py-2.5 text-[0.6rem] sm:text-sm transition-colors duration-200 hover:bg-[#D7E2EA]/10 cursor-pointer flex-shrink-0 inline-block" style={{ fontFamily: "'Kanit',sans-serif" }}>Skoða þjónustu →</span>
           </Link>
         </div>
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
@@ -626,7 +626,7 @@ function WorkSection() {
 
 const PLANS = [
   {
-    name: "Starter",
+    name: "Grunnur",
     price: "$29",
     unit: "/ project",
     desc: "One completed deliverable. Perfect for your first project or a one-off task.",
@@ -641,7 +641,7 @@ const PLANS = [
     highlight: false,
   },
   {
-    name: "Growth",
+    name: "Vöxtur",
     price: "$99",
     unit: "/ month",
     desc: "Unlimited requests. Perfect for businesses that need a constant output stream.",
@@ -658,12 +658,12 @@ const PLANS = [
     highlight: true,
   },
   {
-    name: "Studio",
+    name: "Stúdíó",
     price: "Custom",
     unit: "",
     desc: "For large organisations and special needs. We build a package that fits you.",
     features: [
-      "Everything in Growth",
+      "Everything in Vöxtur",
       "Custom integrations",
       "API access",
       "SLA guarantee",
@@ -684,7 +684,7 @@ function PricingSection() {
     <section id="pricing" className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-8 sm:-mt-10 z-20 relative px-4 sm:px-8 md:px-10 py-14 sm:py-20 md:py-28" style={{ background: "#0C0C0C" }}>
       <FadeIn y={40}>
         <h2 className="hero-heading font-black uppercase text-center mb-3 leading-none tracking-tight"
-          style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Pricing</h2>
+          style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Verðlag</h2>
         <p className="text-center font-light mb-10 sm:mb-14" style={{ color: "rgba(215,226,234,0.5)", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(0.85rem,1.6vw,1.2rem)" }}>
           One project or unlimited output. You choose.
         </p>
@@ -760,7 +760,7 @@ function ContactSection() {
     <section id="contact" className="rounded-t-[32px] sm:rounded-t-[50px] md:rounded-t-[60px] -mt-8 sm:-mt-10 z-20 relative px-4 sm:px-8 md:px-10 py-14 sm:py-20 md:py-28" style={{ background: "#FFFFFF" }}>
       <FadeIn y={40}>
         <h2 className="font-black uppercase text-center mb-10 sm:mb-14"
-          style={{ color: "#0C0C0C", fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Contact</h2>
+          style={{ color: "#0C0C0C", fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Samband</h2>
       </FadeIn>
       <div className="max-w-2xl mx-auto">
         {submitted ? (
@@ -815,7 +815,7 @@ function ContactSection() {
                 className="w-full rounded-full font-medium uppercase tracking-widest text-white py-3.5 sm:py-4 text-sm transition-opacity duration-200 hover:opacity-90 disabled:opacity-60 cursor-pointer"
                 style={{ background: "linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)", boxShadow: "0px 4px 4px rgba(181,1,167,0.25),inset 4px 4px 12px #7721B1", outline: "2px solid #0C0C0C", outlineOffset: "-3px", fontFamily: "'Kanit',sans-serif" }}
               >
-                {submitEnquiry.isPending ? "Sending..." : "Send Message"}
+                {submitEnquiry.isPending ? "Sendi..." : "Senda skilaboð"}
               </button>
             </FadeIn>
           </form>
@@ -828,7 +828,7 @@ function ContactSection() {
           GIGGO
         </span>
         <p className="font-light text-center" style={{ color: "rgba(12,12,12,0.4)", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(0.7rem,1.1vw,0.85rem)" }}>
-          © {new Date().getFullYear()} Giggo. All rights reserved. · giggo.io
+          © {new Date().getFullYear()} Gummi Gúrú. Öll réttindi áskilin. · gummiguru.is
         </p>
         <div className="flex gap-4">
           <button onClick={() => window.location.href = "/chat"}

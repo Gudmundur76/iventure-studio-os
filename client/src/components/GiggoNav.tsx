@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
-  { label: "Services", href: "#services" },
-  { label: "Work", href: "#work" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Contact", href: "#contact" },
+  { label: "Þjónusta", href: "#services" },
+  { label: "Verk", href: "#work" },
+  { label: "Verðlag", href: "#pricing" },
+  { label: "Samband", href: "#contact" },
 ];
 
 function GiggoLogo() {
@@ -21,7 +21,7 @@ function GiggoLogo() {
         backgroundClip: "text",
       }}
     >
-      GIGGO
+      GUMMI
     </span>
   );
 }
@@ -80,7 +80,7 @@ export default function GiggoNav() {
               fontFamily: "'Kanit', sans-serif",
             }}
           >
-            Get Started
+            Hefjast handa
           </button>
         </div>
       </motion.nav>
@@ -161,7 +161,7 @@ export default function GiggoNav() {
                 fontSize: "clamp(0.75rem, 3vw, 1rem)",
               }}
             >
-              Get Started
+              Hefjast handa
             </motion.button>
           </motion.div>
         )}
