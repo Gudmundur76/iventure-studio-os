@@ -174,9 +174,8 @@ async function startServer() {
       voiceWss.handleUpgrade(request, socket as import('net').Socket, head, (ws) => {
         voiceWss.emit('connection', ws, request);
       });
-    } else {
-      socket.destroy();
     }
+    // All other upgrade requests (Vite HMR, etc.) are left untouched
   });
 
   server.listen(port, () => {
