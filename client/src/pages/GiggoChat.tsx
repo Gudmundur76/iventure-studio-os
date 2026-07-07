@@ -37,7 +37,7 @@ We're an AI-powered agency — you describe what you need and we deliver the fin
 
 Whether you need a website built, a research report written, a marketing campaign mapped out, or a proposal put together — we handle it end to end.
 
-We also find the best human agency quote for your project, then deliver the same at 50% less.
+Við finnum einnig besta stofnanatilboðið fyrir verkefnið þitt og afhentum sömu vinnu á 50% lægra verði.
 
 **What are you working on?**`;
 

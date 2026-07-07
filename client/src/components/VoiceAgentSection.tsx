@@ -397,7 +397,7 @@ export default function VoiceAgentSection() {
             className="font-black uppercase text-center mb-10 sm:mb-14"
             style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif", letterSpacing: "0.05em" }}
           >
-            How a session works
+            Hvernig lota virkar
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {STEPS.map((step) => (

@@ -467,7 +467,7 @@ function AgencyComparisonSection() {
         </h2>
         <p className="mt-4 font-light uppercase tracking-wide"
           style={{ color: "rgba(215,226,234,0.55)", fontSize: "clamp(0.8rem,1.5vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>
-          We find the best human agency quote — then beat it by 50%
+          Við finnum besta stofnanatilboðið — og slægjum 50% af verðinu
         </p>
       </FadeIn>
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
