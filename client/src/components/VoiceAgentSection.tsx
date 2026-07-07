@@ -157,15 +157,34 @@ export default function VoiceAgentSection() {
   // Play PCM audio chunks from xAI
   const playNextChunk = useCallback(async () => {
     if (isPlayingRef.current || audioQueueRef.current.length === 0) return;
+    const ctx = audioContextRef.current;
+    if (!ctx) return;
+    // Resume AudioContext if suspended — required on iOS/Android after user gesture
+    if (ctx.state === "suspended") {
+      try { await ctx.resume(); } catch { /* ignore */ }
+    }
     isPlayingRef.current = true;
     const chunk = audioQueueRef.current.shift()!;
-    const ctx = audioContextRef.current!;
-    // xAI sends 24kHz 16-bit mono PCM
+    // xAI sends 24kHz 16-bit mono PCM — resample if device rate differs (iOS ignores sampleRate hint)
     const pcm = new Int16Array(chunk);
     const float32 = new Float32Array(pcm.length);
     for (let i = 0; i < pcm.length; i++) float32[i] = pcm[i] / 32768;
-    const buffer = ctx.createBuffer(1, float32.length, 24000);
-    buffer.copyToChannel(float32, 0);
+    const srcRate = 24000;
+    const dstRate = ctx.sampleRate;
+    let finalFloat32 = float32;
+    if (dstRate !== srcRate) {
+      const ratio = srcRate / dstRate;
+      const outLen = Math.round(float32.length / ratio);
+      finalFloat32 = new Float32Array(outLen);
+      for (let i = 0; i < outLen; i++) {
+        const srcIdx = i * ratio;
+        const lo = Math.floor(srcIdx);
+        const hi = Math.min(lo + 1, float32.length - 1);
+        finalFloat32[i] = float32[lo] + (float32[hi] - float32[lo]) * (srcIdx - lo);
+      }
+    }
+    const buffer = ctx.createBuffer(1, finalFloat32.length, dstRate);
+    buffer.copyToChannel(finalFloat32, 0);
     const source = ctx.createBufferSource();
     source.buffer = buffer;
     source.connect(ctx.destination);
@@ -232,8 +251,11 @@ export default function VoiceAgentSection() {
         setSessionState("listening");
         // Capture raw PCM16 at 24kHz using ScriptProcessorNode (required by xAI realtime)
         const stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 24000, channelCount: 1, echoCancellation: true, noiseSuppression: true } });
-        const ctx = new AudioContext({ sampleRate: 24000 });
-        audioContextRef.current = ctx;
+        // Reuse the existing AudioContext (already unlocked by the user gesture that triggered startSession)
+        const ctx = audioContextRef.current!;
+        if (ctx.state === "suspended") {
+          try { await ctx.resume(); } catch { /* ignore */ }
+        }
         const source = ctx.createMediaStreamSource(stream);
         // eslint-disable-next-line @typescript-eslint/no-deprecated
         const processor = ctx.createScriptProcessor(4096, 1, 1);
