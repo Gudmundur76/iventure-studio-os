@@ -70,13 +70,18 @@ export default function VoiceAgentSection() {
   }, []);
 
   const stopSession = useCallback(() => {
-    mediaRecorderRef.current?.stop();
-    wsRef.current?.close();
-    wsRef.current = null;
-    mediaRecorderRef.current = null;
-    setSessionState("idle");
-    setCurrentText("");
-  }, []);
+  // Stop audio capture (ScriptProcessor or MediaRecorder)
+  mediaRecorderRef.current?.stop();
+  wsRef.current?.close();
+  wsRef.current = null;
+  mediaRecorderRef.current = null;
+  if (audioContextRef.current) {
+    audioContextRef.current.close().catch(() => {});
+    audioContextRef.current = null;
+  }
+  setSessionState("idle");
+  setCurrentText("");
+}, []);
 
   const startSession = useCallback(async () => {
     if (sessionState !== "idle") { stopSession(); return; }
@@ -97,21 +102,49 @@ export default function VoiceAgentSection() {
       wsRef.current = ws;
 
       ws.onopen = async () => {
+        // Send Icelandic session config + server-side VAD
+        ws.send(JSON.stringify({
+          type: "session.update",
+          session: {
+            modalities: ["audio", "text"],
+            instructions: "Þú ert Gummi — persónulegur AI aðstoðarmaður á Íslandi. Svaraðu alltaf á íslensku. Vertu vingjarnlegur, stuttorður og hjálplegur. Þú getur hjálpað með: að finna veitingastaði, finna iðnaðarmenn, bera saman verð og minna á tíma.",
+            voice: "nova",
+            input_audio_format: "pcm16",
+            output_audio_format: "pcm16",
+            input_audio_transcription: { model: "whisper-1" },
+            turn_detection: {
+              type: "server_vad",
+              threshold: 0.5,
+              prefix_padding_ms: 300,
+              silence_duration_ms: 700,
+            },
+          },
+        }));
         setSessionState("listening");
-        // Start microphone capture
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 16000, channelCount: 1 } });
-        const mr = new MediaRecorder(stream, { mimeType: "audio/webm;codecs=opus" });
-        mediaRecorderRef.current = mr;
-        mr.ondataavailable = async (e) => {
-          if (e.data.size > 0 && ws.readyState === WebSocket.OPEN) {
-            const buf = await e.data.arrayBuffer();
-            // Convert to base64 and send as input_audio_buffer.append
-            const bytes = new Uint8Array(buf);
-            const b64 = btoa(Array.from(bytes, b => String.fromCharCode(b)).join(""));
-            ws.send(JSON.stringify({ type: "input_audio_buffer.append", audio: b64 }));
+        // Capture raw PCM16 at 24kHz using ScriptProcessorNode (required by xAI realtime)
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: { sampleRate: 24000, channelCount: 1, echoCancellation: true, noiseSuppression: true } });
+        const ctx = new AudioContext({ sampleRate: 24000 });
+        audioContextRef.current = ctx;
+        const source = ctx.createMediaStreamSource(stream);
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        const processor = ctx.createScriptProcessor(4096, 1, 1);
+        processor.onaudioprocess = (e) => {
+          if (ws.readyState !== WebSocket.OPEN) return;
+          const float32 = e.inputBuffer.getChannelData(0);
+          // Convert Float32 → Int16 PCM
+          const int16 = new Int16Array(float32.length);
+          for (let i = 0; i < float32.length; i++) {
+            const s = Math.max(-1, Math.min(1, float32[i]));
+            int16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
           }
+          const b64 = btoa(Array.from(new Uint8Array(int16.buffer), b => String.fromCharCode(b)).join(""));
+          ws.send(JSON.stringify({ type: "input_audio_buffer.append", audio: b64 }));
         };
-        mr.start(250); // 250ms chunks
+        source.connect(processor);
+        processor.connect(ctx.destination);
+        // Keep stream ref for cleanup
+        (processor as unknown as { _stream: MediaStream })._stream = stream;
+        mediaRecorderRef.current = { stop: () => { processor.disconnect(); source.disconnect(); stream.getTracks().forEach(t => t.stop()); } } as unknown as MediaRecorder;
       };
 
       ws.onmessage = (raw) => {
@@ -164,15 +197,15 @@ export default function VoiceAgentSection() {
     idle: "Tala við Gumma",
     connecting: "Tengist...",
     listening: "Hlusta...",
-    speaking: "Giggo is speaking",
-    error: "Try Again",
+    speaking: "Gummi er að tala...",
+    error: "Reyna aftur",
   }[sessionState];
 
   const PILLARS = [
     {
       icon: <Mic size={28} />,
       title: "Raddstýrt",
-      body: "Tala við Gumma like you would a colleague. No forms, no briefs, no back-and-forth emails. Just speak.",
+      body: "Talaðu við Gumma eins og þú myndir tala við samstarfsmann. Engar eyðublöð, engar lýsingar, engin tölvupóstsamskipti. Talaðu bara.",
     },
     {
       icon: <Zap size={28} />,
