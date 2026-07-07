@@ -7,4 +7,6 @@ export const ENV = {
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+  xaiApiKey: process.env.XAI_API_KEY ?? "",
+  xaiAgentId: "agent_fgrublDXzNDfu5MT",
 };

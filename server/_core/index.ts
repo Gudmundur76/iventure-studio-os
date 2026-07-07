@@ -40,6 +40,14 @@ async function startServer() {
   registerStorageProxy(app);
   registerOAuthRoutes(app);
 
+  // Voice session token — returns xAI credentials for browser WebSocket (key stays server-side)
+  app.get('/api/voice-session-token', (_req, res) => {
+    const apiKey = process.env.XAI_API_KEY;
+    const agentId = "agent_fgrublDXzNDfu5MT";
+    if (!apiKey) { res.status(500).json({ error: 'XAI_API_KEY not configured' }); return; }
+    res.json({ apiKey, agentId, wsUrl: `wss://api.x.ai/v1/realtime?agent_id=${agentId}` });
+  });
+
   // Voice clone upload endpoint — receives audio from browser, proxies to xAI Custom Voices API
   app.post('/api/upload-voice-clone', (req, res) => {
     const bb = Busboy({ headers: req.headers });

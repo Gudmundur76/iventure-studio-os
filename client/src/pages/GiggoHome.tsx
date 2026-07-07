@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import GiggoNav from "@/components/GiggoNav";
 import { Link } from "wouter";
+import VoiceAgentSection from "@/components/VoiceAgentSection";
 
 // ─── REUSABLE COMPONENTS ─────────────────────────────────────────────────────
 
@@ -851,7 +852,7 @@ export default function GiggoHome() {
       <MarqueeSection />
       <AboutSection />
       <ServicesSection />
-      <AgentSessionSection />
+      <VoiceAgentSection />
       <AgencyComparisonSection />
       <WorkSection />
       <PricingSection />
