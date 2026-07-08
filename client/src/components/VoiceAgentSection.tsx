@@ -241,7 +241,7 @@ export default function VoiceAgentSection() {
           session: {
             modalities: ["audio", "text"],
             instructions: "Þú ert Gummi — persónulegur AI aðstoðarmaður á Íslandi. Svaraðu alltaf á íslensku. Vertu vingjarnlegur, stuttorður og hjálplegur. Þú getur hjálpað með: að finna veitingastaði, finna iðnaðarmenn, bera saman verð og minna á tíma. Þegar viðskiptavinur lýsir verkefni skaltu staðfesta það og segja honum að þú sendir það til Gumma til að vinna.",
-            voice: "nova",
+            voice: "alloy",
             input_audio_format: "pcm16",
             output_audio_format: "pcm16",
             input_audio_transcription: { model: "whisper-1" },
@@ -303,7 +303,7 @@ export default function VoiceAgentSection() {
           const event = JSON.parse(raw.data as string) as Record<string, unknown>;
           const type = event.type as string;
 
-          if (type === "response.output_audio.delta") {
+          if (type === "response.audio.delta" || type === "response.output_audio.delta") {
             // Decode base64 PCM and queue for playback
             const pcmB64 = event.delta as string;
             const binary = atob(pcmB64);
@@ -313,9 +313,9 @@ export default function VoiceAgentSection() {
             audioQueueRef.current.push(buf);
             setSessionState("speaking");
             playNextChunk();
-          } else if (type === "response.output_audio_transcript.delta") {
+          } else if (type === "response.audio_transcript.delta" || type === "response.output_audio_transcript.delta") {
             setCurrentText(prev => prev + (event.delta as string));
-          } else if (type === "response.output_audio_transcript.done") {
+          } else if (type === "response.audio_transcript.done" || type === "response.output_audio_transcript.done") {
             const text = (event.transcript as string) || currentText;
             if (text.trim()) {
               setTranscript(prev => [...prev, { role: "agent", text: text.trim() }]);

@@ -43,50 +43,48 @@ async function startServer() {
 
   // ── xAI Realtime WebSocket proxy ──────────────────────────────────────────
   // Browser cannot send Authorization headers on WebSocket connections.
-  // This proxy: browser → ws://server/api/voice-proxy → wss://api.x.ai/v1/realtime
+  // This proxy: browser → ws://server/api/voice-proxy → wss://api.openai.com/v1/realtime
   const voiceWss = new WebSocketServer({ noServer: true });
   voiceWss.on('connection', (browserWs) => {
-    const apiKey = process.env.XAI_API_KEY;
-    const agentId = 'agent_fgrublDXzNDfu5MT';
+    const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      browserWs.close(1011, 'XAI_API_KEY not configured');
+      browserWs.close(1011, 'OPENAI_API_KEY not configured');
       return;
     }
-    const xaiWs = new WsClient(
-      `wss://api.x.ai/v1/realtime?agent_id=${agentId}`,
-      { headers: { Authorization: `Bearer ${apiKey}` } }
+    const openaiWs = new WsClient(
+      'wss://api.openai.com/v1/realtime?model=gpt-realtime-2.1',
+      { headers: { Authorization: `Bearer ${apiKey}`, 'OpenAI-Beta': 'realtime=v1' } }
     );
-    xaiWs.on('open', () => {
-      // Relay browser → xAI
+    openaiWs.on('open', () => {
+      // Relay browser → OpenAI
       browserWs.on('message', (data) => {
-        if (xaiWs.readyState === WsClient.OPEN) xaiWs.send(data);
+        if (openaiWs.readyState === WsClient.OPEN) openaiWs.send(data);
       });
     });
-    // Relay xAI → browser
-    xaiWs.on('message', (data) => {
+    // Relay OpenAI → browser
+    openaiWs.on('message', (data) => {
       if (browserWs.readyState === browserWs.OPEN) browserWs.send(data);
     });
-    xaiWs.on('error', (err) => {
-      console.error('[voice-proxy] xAI WS error:', err.message);
-      browserWs.close(1011, 'xAI connection error');
+    openaiWs.on('error', (err) => {
+      console.error('[voice-proxy] OpenAI WS error:', err.message);
+      browserWs.close(1011, 'OpenAI connection error');
     });
-    xaiWs.on('close', (code, reason) => {
+    openaiWs.on('close', (code, reason) => {
       browserWs.close(code, reason);
     });
     browserWs.on('close', () => {
-      xaiWs.close();
+      openaiWs.close();
     });
     browserWs.on('error', () => {
-      xaiWs.close();
+      openaiWs.close();
     });
   });
 
-  // Voice session token endpoint — returns xAI credentials for browser WebSocket (key stays server-side)
+  // Voice session token endpoint (key stays server-side)
   app.get('/api/voice-session-token', (_req, res) => {
-    const apiKey = process.env.XAI_API_KEY;
-    const agentId = "agent_fgrublDXzNDfu5MT";
-    if (!apiKey) { res.status(500).json({ error: 'XAI_API_KEY not configured' }); return; }
-    res.json({ apiKey, agentId, wsUrl: `wss://api.x.ai/v1/realtime?agent_id=${agentId}` });
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) { res.status(500).json({ error: 'OPENAI_API_KEY not configured' }); return; }
+    res.json({ wsUrl: 'wss://api.openai.com/v1/realtime?model=gpt-realtime-2.1' });
   });
 
   // Voice clone upload endpoint — receives audio from browser, proxies to xAI Custom Voices API
