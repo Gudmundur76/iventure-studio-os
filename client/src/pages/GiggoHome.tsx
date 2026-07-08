@@ -188,7 +188,7 @@ function MarqueeSection() {
 
 // ─── ABOUT ───────────────────────────────────────────────────────────────────
 
-const ABOUT_TEXT = "Gummi er persónulegur AI aðstoðarmaður þinn. Þú lýsir því sem þú þarft — vefsíðu, rannsóknarskýrslu, markaðsherferð, tillögu — og við afhentum fullunna vinnu. Ekki drög. Ekki hugmynd. Heldur raunverulega niðurstöðuna. Ótakmarkaðar möguleikar. Ekkert óþarft. Íslenskt þjónustulag.";
+const ABOUT_TEXT = "Gummi er persónulegur AI aðstoðarmaður þinn. Þú lýsir því sem þú þarft — vefsíðu, rannsóknarskýrslu, markaðsherferð, tillögu — og við afhentum fullunna vinnu. Ekki drög. Ekki hugmynd. Heldur raunverulega niðurstöðuna. AI framkvæmir. Maðurinn stýrir. Við erum opin um það.";
 
 function AboutSection() {
   const scrollToContact = () => {
@@ -444,15 +444,15 @@ function AgentSessionSection() {
   );
 }
 
-// ─── AGENCY COMPARISON ───────────────────────────────────────────────────────
+// ─── HOW WE WORK ─────────────────────────────────────────────────────────────
 
-const COMPARISON_ITEMS = [
-  { icon: "🔍", label: "Við finnum bestu stofnanatilboðið", sub: "Gummi skannar markaðinn og fær þér raunverulegt verð frá bestu mannlegu stofnunum." },
-  { icon: "⚡", label: "Við afhentum það sama á 50% lægra verði", sub: "AI-umboðsmaðurinn okkar framleiðir sömu niðurstöðu — sama gæði, helmingur kostnaðar, hraðari afhending." },
-  { icon: "✅", label: "Þú velur það sem hentar þér", sub: "Taktu tilboð mannlegu stofnunarinnar, eða láttu Gumma gera það. Fullkominn gagnsæi, engin þrýstingur." },
+const HOW_WE_WORK_ITEMS = [
+  { icon: "🤖", label: "AI framkvæmir", sub: "Verkefnið er sent til AI-kerfisins okkar sem vinnur það frá upphafi til enda — rannsóknir, skrif, kóðun, greining — allt sjálfvirkt og nákvæmt." },
+  { icon: "🧭", label: "Maðurinn stýrir", sub: "Þú gefur leiðbeiningar og við tryggjum gæði. Við erum opin um að við notum AI — það er styrkur okkar, ekki leyndarmál." },
+  { icon: "📦", label: "Þú færð fullunna vinnu", sub: "Ekki drög. Ekki hugmynd. Raunverulega niðurstöðuna — tilbúna til notkunar, sendingar eða birtingar." },
 ];
 
-function AgencyComparisonSection() {
+function HowWeWorkSection() {
   const scrollToContact = () => {
     const el = document.querySelector("#contact");
     if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -463,15 +463,15 @@ function AgencyComparisonSection() {
       <FadeIn y={40} className="text-center mb-10 sm:mb-16 md:mb-20">
         <h2 className="hero-heading font-black uppercase leading-none tracking-tight"
           style={{ fontSize: "clamp(2rem,8vw,110px)", fontFamily: "'Kanit',sans-serif" }}>
-          Kosturinn við Gumma
+          Hvernig við vinnum
         </h2>
         <p className="mt-4 font-light uppercase tracking-wide"
           style={{ color: "rgba(215,226,234,0.55)", fontSize: "clamp(0.8rem,1.5vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>
-          Við finnum besta stofnanatilboðið — og spörum þér 50% af verðinu
+          AI framkvæmir. Maðurinn stýrir. Við erum opin um það.
         </p>
       </FadeIn>
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
-        {COMPARISON_ITEMS.map((item, i) => (
+        {HOW_WE_WORK_ITEMS.map((item, i) => (
           <FadeIn key={i} delay={i * 0.12} y={30}>
             <div className="flex flex-col gap-3 rounded-[20px] sm:rounded-[28px] p-5 sm:p-6 md:p-8 h-full"
               style={{ background: "rgba(215,226,234,0.04)", border: "1px solid rgba(215,226,234,0.1)" }}>
@@ -482,32 +482,35 @@ function AgencyComparisonSection() {
           </FadeIn>
         ))}
       </div>
-      {/* Side-by-side comparison bar */}
       <FadeIn y={20} className="max-w-3xl mx-auto">
         <div className="rounded-[20px] sm:rounded-[28px] overflow-hidden" style={{ border: "1px solid rgba(215,226,234,0.1)" }}>
-          <div className="grid grid-cols-2">
-            <div className="p-5 sm:p-7 flex flex-col gap-2" style={{ background: "rgba(215,226,234,0.04)" }}>
-              <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>Mannleg stofnun</p>
-              <p className="font-black" style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>$2,000+</p>
-              <p className="font-light text-xs sm:text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>5–10 virkir dagar</p>
+          <div className="grid grid-cols-3">
+            <div className="p-5 sm:p-7 flex flex-col gap-1 items-center text-center" style={{ background: "rgba(215,226,234,0.04)" }}>
+              <p className="font-black" style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>24–48h</p>
+              <p className="font-light text-xs sm:text-sm uppercase tracking-wide" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>Afhendingartími</p>
             </div>
-            <div className="p-5 sm:p-7 flex flex-col gap-2"
+            <div className="p-5 sm:p-7 flex flex-col gap-1 items-center text-center"
               style={{ background: "linear-gradient(135deg,#18011F 0%,#7621B0 60%,#B600A8 100%)" }}>
-              <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Kanit',sans-serif" }}>Gummi AI ⚡</p>
-              <p className="font-black" style={{ color: "#fff", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>$99/mo</p>
-              <p className="font-light text-xs sm:text-sm" style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Kanit',sans-serif" }}>24–48 hours</p>
+              <p className="font-black" style={{ color: "#fff", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>100%</p>
+              <p className="font-light text-xs sm:text-sm uppercase tracking-wide" style={{ color: "rgba(255,255,255,0.7)", fontFamily: "'Kanit',sans-serif" }}>Gagnsæi</p>
+            </div>
+            <div className="p-5 sm:p-7 flex flex-col gap-1 items-center text-center" style={{ background: "rgba(215,226,234,0.04)" }}>
+              <p className="font-black" style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>∞</p>
+              <p className="font-light text-xs sm:text-sm uppercase tracking-wide" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>Endurskoðanir</p>
             </div>
           </div>
         </div>
       </FadeIn>
       <div className="flex justify-center mt-10 sm:mt-14">
-        <CTA label="Sjá hvernig virkar" onClick={scrollToContact} />
+        <CTA label="Hefjast handa" onClick={scrollToContact} />
       </div>
     </section>
   );
 }
 
 // ─── WORK ────────────────────────────────────────────────────────────────────
+
+
 
 const PROJECTS = [
   {
@@ -853,7 +856,7 @@ export default function GiggoHome() {
       <AboutSection />
       <ServicesSection />
       <VoiceAgentSection />
-      <AgencyComparisonSection />
+      <HowWeWorkSection />
       <WorkSection />
       <PricingSection />
       <ContactSection />
