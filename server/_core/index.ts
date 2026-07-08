@@ -53,7 +53,7 @@ async function startServer() {
     }
     const openaiWs = new WsClient(
       'wss://api.openai.com/v1/realtime?model=gpt-realtime-2.1',
-      { headers: { Authorization: `Bearer ${apiKey}`, 'OpenAI-Beta': 'realtime=v1' } }
+      { headers: { Authorization: `Bearer ${apiKey}` } }
     );
     openaiWs.on('open', () => {
       // Relay browser → OpenAI

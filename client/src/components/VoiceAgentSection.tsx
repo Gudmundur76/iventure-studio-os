@@ -127,6 +127,7 @@ function TaskResultPanel({ taskId }: { taskId: string }) {
 // ─── Main Section ─────────────────────────────────────────────────────────────
 export default function VoiceAgentSection() {
   const [sessionState, setSessionState] = useState<SessionState>("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [transcript, setTranscript] = useState<TranscriptLine[]>([]);
   const [currentText, setCurrentText] = useState("");
   const [taskState, setTaskState] = useState<TaskState>("none");
@@ -134,6 +135,7 @@ export default function VoiceAgentSection() {
   const wsRef = useRef<WebSocket | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const pendingStreamRef = useRef<Promise<MediaStream> | null>(null);
   const transcriptEndRef = useRef<HTMLDivElement>(null);
   const audioQueueRef = useRef<ArrayBuffer[]>([]);
   const isPlayingRef = useRef(false);
@@ -207,6 +209,7 @@ export default function VoiceAgentSection() {
     }
     setSessionState("idle");
     setCurrentText("");
+    setErrorMessage("");
   }, []);
 
   const startSession = useCallback(async () => {
@@ -219,11 +222,13 @@ export default function VoiceAgentSection() {
 
     try {
       // ── Step 1: Get mic permission FIRST while still in user gesture context ──
-      // getUserMedia MUST be called synchronously in the click handler on Android Chrome.
-      // Calling it inside ws.onopen (async, after network roundtrip) loses the gesture context.
-      const stream = await navigator.mediaDevices.getUserMedia({
+      // Samsung Internet & Android Chrome require getUserMedia to be triggered synchronously
+      // in the click handler. We pre-trigger it in onClick and await the result here.
+      const streamPromise = pendingStreamRef.current || navigator.mediaDevices.getUserMedia({
         audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true }
       });
+      pendingStreamRef.current = null;
+      const stream = await streamPromise;
 
       // ── Step 2: Set up AudioContext (already created in onClick for Android) ──
       if (!audioContextRef.current || audioContextRef.current.state === "closed") {
@@ -282,6 +287,7 @@ export default function VoiceAgentSection() {
         ws.send(JSON.stringify({
           type: "session.update",
           session: {
+            type: "realtime",
             modalities: ["audio", "text"],
             instructions: "Þú ert Gummi — persónulegur AI aðstoðarmaður á Íslandi. Svaraðu alltaf á íslensku. Vertu vingjarnlegur, stuttorður og hjálplegur. Þú getur hjálpað með: að finna veitingastaði, finna iðnaðarmenn, bera saman verð og minna á tíma. Þegar viðskiptavinur lýsir verkefni skaltu staðfesta það og segja honum að þú sendir það til Gumma til að vinna.",
             voice: "alloy",
@@ -305,8 +311,8 @@ export default function VoiceAgentSection() {
           const event = JSON.parse(raw.data as string) as Record<string, unknown>;
           const type = event.type as string;
 
-          if (type === "response.audio.delta" || type === "response.output_audio.delta") {
-            // Decode base64 PCM and queue for playback
+          if (type === "response.output_audio.delta" || type === "response.audio.delta") {
+            // Decode base64 PCM and queue for playback (GA API uses response.output_audio.delta)
             const pcmB64 = event.delta as string;
             const binary = atob(pcmB64);
             const buf = new ArrayBuffer(binary.length);
@@ -315,9 +321,11 @@ export default function VoiceAgentSection() {
             audioQueueRef.current.push(buf);
             setSessionState("speaking");
             playNextChunk();
-          } else if (type === "response.audio_transcript.delta" || type === "response.output_audio_transcript.delta") {
+          } else if (type === "response.output_audio_transcript.delta" || type === "response.audio_transcript.delta") {
+            // GA API: response.output_audio_transcript.delta
             setCurrentText(prev => prev + (event.delta as string));
-          } else if (type === "response.audio_transcript.done" || type === "response.output_audio_transcript.done") {
+          } else if (type === "response.output_audio_transcript.done" || type === "response.audio_transcript.done") {
+            // GA API: response.output_audio_transcript.done
             const text = (event.transcript as string) || currentText;
             if (text.trim()) {
               setTranscript(prev => [...prev, { role: "agent", text: text.trim() }]);
@@ -340,8 +348,18 @@ export default function VoiceAgentSection() {
       ws.onclose = () => { if (sessionState !== "idle") setSessionState("idle"); };
     } catch (err) {
       console.error("Voice session error:", err);
+      const e = err as Error;
+      let msg = "Villa við tengingu";
+      if (e?.name === "NotAllowedError" || e?.message?.includes("Permission denied") || e?.message?.includes("denied")) {
+        msg = "Leyfðu hljóðnemanum — smelltu á lásinn í veffangastikunni og veldu 'Leyfa'";
+      } else if (e?.name === "NotFoundError") {
+        msg = "Enginn hljóðnemi fannst í tækinu";
+      } else if (e?.message) {
+        msg = e.message.slice(0, 80);
+      }
+      setErrorMessage(msg);
       setSessionState("error");
-      setTimeout(() => setSessionState("idle"), 3000);
+      setTimeout(() => { setSessionState("idle"); setErrorMessage(""); }, 6000);
     }
   }, [sessionState, stopSession, playNextChunk, currentText]);
 
@@ -478,9 +496,11 @@ export default function VoiceAgentSection() {
             {transcript.length === 0 && !currentText && (
               <div
                 className="flex-1 flex items-center justify-center text-center"
-                style={{ color: "rgba(215,226,234,0.2)", fontFamily: "'Kanit',sans-serif", fontSize: "0.9rem" }}
+                style={{ color: sessionState === "error" ? "#ef4444" : "rgba(215,226,234,0.2)", fontFamily: "'Kanit',sans-serif", fontSize: "0.9rem" }}
               >
-                {sessionState === "idle"
+                {sessionState === "error" && errorMessage
+                  ? errorMessage
+                  : sessionState === "idle"
                   ? "Smelltu á hljóðnemann til að hefja lotu með Gumma"
                   : sessionState === "connecting"
                   ? "Tengist við Gumma..."
@@ -555,13 +575,19 @@ export default function VoiceAgentSection() {
             {/* Mic button */}
             <button
               onClick={() => {
-                // Android Chrome requires AudioContext created synchronously in click handler
                 if (sessionState === "idle") {
+                  // Samsung Internet & Android Chrome: trigger getUserMedia and AudioContext
+                  // SYNCHRONOUSLY in the click handler to preserve the user gesture context.
+                  // Store the promise so startSession can await it without re-requesting.
                   try {
                     const ctx = new AudioContext();
                     ctx.resume().catch(() => {});
                     audioContextRef.current = ctx;
                   } catch { /* ignore */ }
+                  // Pre-trigger mic permission synchronously — this is the key fix for Samsung
+                  pendingStreamRef.current = navigator.mediaDevices.getUserMedia({
+                    audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+                  });
                 }
                 startSession();
               }}
