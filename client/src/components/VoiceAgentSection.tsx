@@ -218,23 +218,66 @@ export default function VoiceAgentSection() {
     setTaskId(null);
 
     try {
-      // AudioContext may already exist (created synchronously in onClick for Android Chrome)
-      // If not, create it now (desktop browsers are fine with this)
+      // ── Step 1: Get mic permission FIRST while still in user gesture context ──
+      // getUserMedia MUST be called synchronously in the click handler on Android Chrome.
+      // Calling it inside ws.onopen (async, after network roundtrip) loses the gesture context.
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+      });
+
+      // ── Step 2: Set up AudioContext (already created in onClick for Android) ──
       if (!audioContextRef.current || audioContextRef.current.state === "closed") {
         audioContextRef.current = new AudioContext();
       }
-      // Always resume — Android Chrome requires explicit resume
-      try { await audioContextRef.current.resume(); } catch { /* ignore */ }
+      const ctx = audioContextRef.current;
+      try { await ctx.resume(); } catch { /* ignore */ }
       audioQueueRef.current = [];
       isPlayingRef.current = false;
 
-      // Connect via server-side proxy (proxy adds Authorization header to xAI — key never in browser)
+      // ── Step 3: Wire up PCM capture pipeline ──
+      const source = ctx.createMediaStreamSource(stream);
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
+      const processor = ctx.createScriptProcessor(4096, 1, 1);
+      const deviceRate = ctx.sampleRate;
+      const targetRate = 24000;
+      // We'll start sending audio once the WebSocket is open
+      let wsReady = false;
+      processor.onaudioprocess = (e) => {
+        if (!wsReady || wsRef.current?.readyState !== WebSocket.OPEN) return;
+        const float32 = e.inputBuffer.getChannelData(0);
+        let samples = float32;
+        if (deviceRate !== targetRate) {
+          const ratio = deviceRate / targetRate;
+          const outLen = Math.round(float32.length / ratio);
+          samples = new Float32Array(outLen);
+          for (let i = 0; i < outLen; i++) {
+            const srcIdx = i * ratio;
+            const lo = Math.floor(srcIdx);
+            const hi = Math.min(lo + 1, float32.length - 1);
+            samples[i] = float32[lo] + (float32[hi] - float32[lo]) * (srcIdx - lo);
+          }
+        }
+        const int16 = new Int16Array(samples.length);
+        for (let i = 0; i < samples.length; i++) {
+          const s = Math.max(-1, Math.min(1, samples[i]));
+          int16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+        }
+        const b64 = btoa(Array.from(new Uint8Array(int16.buffer), b => String.fromCharCode(b)).join(""));
+        wsRef.current!.send(JSON.stringify({ type: "input_audio_buffer.append", audio: b64 }));
+      };
+      source.connect(processor);
+      processor.connect(ctx.destination);
+      mediaRecorderRef.current = {
+        stop: () => { processor.disconnect(); source.disconnect(); stream.getTracks().forEach(t => t.stop()); }
+      } as unknown as MediaRecorder;
+
+      // ── Step 4: Connect WebSocket proxy ──
       const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
       const proxyUrl = `${proto}//${window.location.host}/api/voice-proxy`;
       const ws = new WebSocket(proxyUrl);
       wsRef.current = ws;
 
-      ws.onopen = async () => {
+      ws.onopen = () => {
         // Send Icelandic session config + server-side VAD
         ws.send(JSON.stringify({
           type: "session.update",
@@ -253,49 +296,8 @@ export default function VoiceAgentSection() {
             },
           },
         }));
+        wsReady = true;
         setSessionState("listening");
-        // Capture raw PCM16 at 24kHz using ScriptProcessorNode (required by xAI realtime)
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
-        // Reuse the existing AudioContext (already unlocked by the user gesture that triggered startSession)
-        const ctx = audioContextRef.current!;
-        if (ctx.state === "suspended") {
-          try { await ctx.resume(); } catch { /* ignore */ }
-        }
-        const source = ctx.createMediaStreamSource(stream);
-        // eslint-disable-next-line @typescript-eslint/no-deprecated
-        const processor = ctx.createScriptProcessor(4096, 1, 1);
-        const deviceRate = ctx.sampleRate; // device native rate (44100 or 48000 on Samsung)
-        const targetRate = 24000; // xAI requires 24kHz
-        processor.onaudioprocess = (e) => {
-          if (ws.readyState !== WebSocket.OPEN) return;
-          const float32 = e.inputBuffer.getChannelData(0);
-          // Resample from device native rate to 24kHz if needed
-          let samples = float32;
-          if (deviceRate !== targetRate) {
-            const ratio = deviceRate / targetRate;
-            const outLen = Math.round(float32.length / ratio);
-            samples = new Float32Array(outLen);
-            for (let i = 0; i < outLen; i++) {
-              const srcIdx = i * ratio;
-              const lo = Math.floor(srcIdx);
-              const hi = Math.min(lo + 1, float32.length - 1);
-              samples[i] = float32[lo] + (float32[hi] - float32[lo]) * (srcIdx - lo);
-            }
-          }
-          // Convert Float32 → Int16 PCM
-          const int16 = new Int16Array(samples.length);
-          for (let i = 0; i < samples.length; i++) {
-            const s = Math.max(-1, Math.min(1, samples[i]));
-            int16[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
-          }
-          const b64 = btoa(Array.from(new Uint8Array(int16.buffer), b => String.fromCharCode(b)).join(""));
-          ws.send(JSON.stringify({ type: "input_audio_buffer.append", audio: b64 }));
-        };
-        source.connect(processor);
-        processor.connect(ctx.destination);
-        // Keep stream ref for cleanup
-        (processor as unknown as { _stream: MediaStream })._stream = stream;
-        mediaRecorderRef.current = { stop: () => { processor.disconnect(); source.disconnect(); stream.getTracks().forEach(t => t.stop()); } } as unknown as MediaRecorder;
       };
 
       ws.onmessage = (raw) => {
