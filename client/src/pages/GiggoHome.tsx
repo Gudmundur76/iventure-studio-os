@@ -75,7 +75,7 @@ function AnimatedText({ text, className, style }: { text: string; className?: st
   );
 }
 
-function CTA({ label = "Get Started", onClick }: { label?: string; onClick?: () => void }) {
+function CTA({ label = "Hefjast handa", onClick }: { label?: string; onClick?: () => void }) {
   return (
     <button onClick={onClick}
       className="rounded-full font-medium uppercase tracking-widest text-white cursor-pointer px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 text-xs sm:text-sm md:text-base transition-opacity duration-200 hover:opacity-90 whitespace-nowrap"
@@ -120,7 +120,7 @@ function HeroSection() {
         <FadeIn delay={0.35} y={20}>
           <p className="font-light uppercase tracking-wide leading-snug max-w-[240px] sm:max-w-[220px] md:max-w-[280px]"
             style={{ color: "#D7E2EA", fontSize: "clamp(0.7rem,1.3vw,1.2rem)", fontFamily: "'Kanit',sans-serif" }}>
-            Persónulegur AI aðstoðarmaður. Ein beiðni. Afhent.
+            Persónulegur AI aðstoðarmaður. Ein beiðni. Afhendið.
           </p>
         </FadeIn>
         <FadeIn delay={0.5} y={20}>
@@ -188,7 +188,7 @@ function MarqueeSection() {
 
 // ─── ABOUT ───────────────────────────────────────────────────────────────────
 
-const ABOUT_TEXT = "Gummi er persónulegur AI aðstoðarmaður þinn. Þú lýsir því sem þú þarft — vefsíðu, rannsóknarskýrslu, markaðsherferð, tillögu — og við afhentum fullunna vinnu. Ekki drög. Ekki hugmynd. Heldur raunverulega niðurstöðuna. Ótakmarkaður möguleiki. Ekkert umfram. Íslenskt þjónustulag.";
+const ABOUT_TEXT = "Gummi er persónulegur AI aðstoðarmaður þinn. Þú lýsir því sem þú þarft — vefsíðu, rannsóknarskýrslu, markaðsherferð, tillögu — og við afhentum fullunna vinnu. Ekki drög. Ekki hugmynd. Heldur raunverulega niðurstöðuna. Ótakmarkaðar möguleikar. Ekkert óþarft. Íslenskt þjónustulag.";
 
 function AboutSection() {
   const scrollToContact = () => {
@@ -218,11 +218,11 @@ const SERVICES = [
   { num: "01", name: "Vefsíður og forrit", desc: "Fullbygðar, keyrðar vefsíður og vefforrit. Þú sendir lýsingu, við afhentum lifandi vöru. Engin kóðun þarf af þinni hálfu.", img: "/manus-storage/web-dev_9f3ed2d4.jpg" },
   { num: "02", name: "Rannsóknir og markaðsgreining", desc: "Ítarlegar rannsóknarskýrslur, samkeppnisgreining og markaðsgreind — skipulögð, tilvísaðar og tilbúnar til notkunar.", img: "/manus-storage/research_d21f261b.jpg" },
   { num: "03", name: "Markaðsefni og herferðir", desc: "Bloggfærslur, tölvupóstrunur, auglýsingatextar, efni í samfélagsmiðla og SEO-efni — skrifað, sniðið og tilbúið til birtingar.", img: "/manus-storage/marketing_de815124.jpg" },
-  { num: "04", name: "Viðskiptatillögur og skjöl", desc: "Faglegar tillögur, viðskiptaáætlanir, kynningarefni, samningar og skýrslur — skrifaðar að lýsingu þinni og tilbúnar til sendingar.", img: "/manus-storage/proposals_9184996c.jpg" },
+  { num: "04", name: "Viðskiptatillögur og skjöl", desc: "Faglegar tillögur, viðskiptaáætlanir, kynningarefni, samningar og skýrslur — skrifaðar að lýsingu þinni og tilbúnir til sendingar.", img: "/manus-storage/proposals_9184996c.jpg" },
   { num: "05", name: "Kynningarsett", desc: "Sannfærandi kynningarsett fyrir fjárfestafundi, sölukynninar og stjórnarfundi — skipulögð, pússuð og kynningartilbúin.", img: "/manus-storage/presentations_e0a10063.jpg" },
   { num: "06", name: "Gagnagreining og töflureiknar", desc: "Hrátt gögn inn, skýr greining út. Línurit, samantektir og skipulagðar Excel-skýrslur byggðar á gagnasettum þínum.", img: "/manus-storage/data_a19e38e9.jpg" },
   { num: "07", name: "Samfélagsmiðlapakkar", desc: "Vikur af efni skipulögð og skrifað í einni lotu. Færslur, myndatextar, þræðir og krókur yfir alla vettvanga.", img: "/manus-storage/social_9058f934.jpg" },
-  { num: "08", name: "Viðtakendakannanir og listi", desc: "Markvissar viðtakendalistar með tengiliðaupplýsingum, samhengi fyrirtækis og sérsniðnum samskiptasjónarmiðum — tilbúnar til sendingar.", img: "/manus-storage/leads_7daa99e9.jpg" },
+  { num: "08", name: "Viðtakendakannanir og listar", desc: "Markvissar viðtakendalistar með tengiliðaupplýsingum, samhengi fyrirtækis og sérsniðnum samskiptasjónarmiðum — tilbúnir til sendingar.", img: "/manus-storage/leads_7daa99e9.jpg" },
 ];
 
 function ServicesSection() {
@@ -261,46 +261,46 @@ function ServicesSection() {
 const SESSION_STEPS = [
   {
     step: "01",
-    title: "You describe what you need",
-    detail: "Type a plain-English brief — 'Build me a landing page for my SaaS', 'Write a 10-page market report on EV charging in Europe', 'Create 30 days of LinkedIn content for a fintech brand'. No forms, no briefs, no calls.",
+    title: "Þú lýsir því sem þú þarft",
+    detail: "Skrifaðu einfalda lýsingu — 'Byggðu mér lendingarsíðu fyrir SaaS-vöruna mína', 'Skrifaðu 10 blaðsíðna markaðsskýrslu um rafbíla í Evrópu', 'Búðu til 30 daga LinkedIn-efni fyrir fintech-fyrirtæki'. Engar eyðublöð, engar fundarboðanir.",
     icon: "💬",
     color: "#B600A8",
   },
   {
     step: "02",
-    title: "Giggo spins up a dedicated session",
-    detail: "A fresh agent session is assigned to your request. Giggo reads your brief, identifies the deliverable type, selects the right tools and models, and begins autonomous execution — all within seconds of your message.",
+    title: "Gummi ræsir sérstaka lotu",
+    detail: "Ný umboðsmannslota er úthlutað á beiðni þína. Gummi les lýsinguna, greinir tegund afurðar, velur réttar verkfæri og líkön og hefur sjálfvirka framkvæmd — allt á sekúndum frá skilaboðum þínum.",
     icon: "⚡",
     color: "#7621B0",
   },
   {
     step: "03",
-    title: "The agent works end-to-end",
-    detail: "Giggo researches, writes, builds, and formats. It browses the web, writes code, generates assets, structures documents, and quality-checks its own output — without you lifting a finger. You can watch progress in real time.",
+    title: "Umboðsmaðurinn vinnur frá upphafi til enda",
+    detail: "Gummi rannsakar, skrifar, byggir og sniðar. Hann vafrar um netið, skrifar kóða, framleiðir efni, skipuleggur skjöl og gæðaskoðar eigin úttak — án þess að þú þurfir að gera neitt. Þú getur fylgst með framvindu í rauntíma.",
     icon: "🤖",
     color: "#B600A8",
   },
   {
     step: "04",
-    title: "You receive the finished deliverable",
-    detail: "Not a draft. Not a concept. The actual finished work — a live URL, a PDF report, a ready-to-send document, a published post. Delivered to your inbox or dashboard, typically within 24–48 hours.",
+    title: "Þú færð fullunna afurð",
+    detail: "Ekki drög. Ekki hugmynd. Raunverulega fullunna verkið — lifandi vefslóð, PDF-skýrsla, sendingartilbúið skjal, birt færsla. Afhent í pósthólf þitt eða mælaborð, venjulega innan 24–48 klukkustunda.",
     icon: "✅",
     color: "#7621B0",
   },
   {
     step: "05",
-    title: "Revise, iterate, or start the next one",
-    detail: "Request changes in plain English. The session remembers full context. Or close it and open a new one for your next project. Vöxtur plan clients get unlimited concurrent sessions — your output scales with your ambition.",
+    title: "Endurskoðaðu, þróaðu eða byrjaðu næsta verkefni",
+    detail: "Biddu um breytingar á einföldu máli. Lotan man alla samhengi. Eða lokaðu henni og opnaðu nýja fyrir næsta verkefni. Vöxtur-viðskiptavinir fá ótakmarkaðar samhliða lotur — framleiðni þín eykst með metnaðinum.",
     icon: "🔄",
     color: "#BE4C00",
   },
 ];
 
 const LIVE_MESSAGES = [
-  { role: "user", text: "Build me a landing page for a B2B SaaS that does invoice automation. Dark theme, purple accents, pricing section, contact form." },
-  { role: "agent", text: "Session started. Analysing brief...\n\n✓ Deliverable type: Landing page\n✓ Stack: React + Tailwind\n✓ Sections identified: Hero, Features, Pricing, Contact\n\nBuilding now. I'll have a live URL for you within 2 hours." },
-  { role: "agent", text: "✓ Hero section complete — headline, subheadline, CTA button\n✓ Features grid — 6 cards with icons\n✓ Pricing section — 3 tiers, monthly/annual toggle\n⏳ Contact form + deployment in progress..." },
-  { role: "agent", text: "✅ Done. Your landing page is live:\n\nhttps://invoice-auto.giggo.io\n\nAll sections complete. Lighthouse score: 97. Ready to review — reply with any changes." },
+  { role: "user", text: "Byggðu mér lendingarsíðu fyrir B2B SaaS sem gerir reikningssjálfvirkni. Dökkt þema, fjólubláar áherslur, verðlagshluti, sambandseyðublað." },
+  { role: "agent", text: "Lota hafin. Greinir lýsingu...\n\n✓ Tegund afurðar: Lendingarsíða\n✓ Tæknirammi: React + Tailwind\n✓ Hlutar greindir: Hero, Eiginleikar, Verðlag, Samband\n\nBý til núna. Ég mun hafa lifandi vefslóð fyrir þig innan 2 klukkustunda." },
+  { role: "agent", text: "✓ Hero-hluti fullgerður — fyrirsögn, undirfyrirsögn, CTA-hnappur\n✓ Eiginleikarist — 6 kort með táknum\n✓ Verðlagshluti — 3 þrep, mánaðarlegt/árlegt skipti\n⏳ Sambandseyðublað + dreifing í gangi..." },
+  { role: "agent", text: "✅ Lokið. Lendingarsíðan þín er í loftinu:\n\nhttps://invoice-auto.giggo.io\n\nAllir hlutar fullgerðir. Lighthouse-skor: 97. Tilbúið til skoðunar — svaraðu með breytingum ef þörf er á." },
 ];
 
 function AgentSessionSection() {
@@ -337,7 +337,7 @@ function AgentSessionSection() {
         </h2>
         <p className="mt-4 font-light uppercase tracking-wide"
           style={{ color: "rgba(215,226,234,0.55)", fontSize: "clamp(0.8rem,1.5vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>
-          From brief to deliverable — here's exactly what happens
+          Frá lýsingu að afurð — þetta er nákvæmlega það sem gerist
         </p>
       </FadeIn>
 
@@ -434,7 +434,7 @@ function AgentSessionSection() {
                   border: isPlaying ? "1px solid rgba(215,226,234,0.1)" : "none",
                   fontFamily: "'Kanit',sans-serif",
                 }}>
-                {isPlaying ? "Session running..." : visibleMessages >= LIVE_MESSAGES.length ? "▶ Replay Session" : "▶ Watch a Live Session"}
+                {isPlaying ? "Lota í gangi..." : visibleMessages >= LIVE_MESSAGES.length ? "▶ Spila aftur" : "▶ Horfa á lifandi lotu"}
               </button>
             </div>
           </div>
@@ -467,7 +467,7 @@ function AgencyComparisonSection() {
         </h2>
         <p className="mt-4 font-light uppercase tracking-wide"
           style={{ color: "rgba(215,226,234,0.55)", fontSize: "clamp(0.8rem,1.5vw,1.1rem)", fontFamily: "'Kanit',sans-serif" }}>
-          Við finnum besta stofnanatilboðið — og slægjum 50% af verðinu
+          Við finnum besta stofnanatilboðið — og spörum þér 50% af verðinu
         </p>
       </FadeIn>
       <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
@@ -489,7 +489,7 @@ function AgencyComparisonSection() {
             <div className="p-5 sm:p-7 flex flex-col gap-2" style={{ background: "rgba(215,226,234,0.04)" }}>
               <p className="font-medium uppercase tracking-widest text-xs" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>Mannleg stofnun</p>
               <p className="font-black" style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,3vw,2rem)", fontFamily: "'Kanit',sans-serif" }}>$2,000+</p>
-              <p className="font-light text-xs sm:text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>5–10 business days</p>
+              <p className="font-light text-xs sm:text-sm" style={{ color: "rgba(215,226,234,0.4)", fontFamily: "'Kanit',sans-serif" }}>5–10 virkir dagar</p>
             </div>
             <div className="p-5 sm:p-7 flex flex-col gap-2"
               style={{ background: "linear-gradient(135deg,#18011F 0%,#7621B0 60%,#B600A8 100%)" }}>
@@ -613,7 +613,7 @@ function WorkSection() {
       style={{ background: "#0C0C0C" }}>
       <FadeIn y={40} className="mb-10 sm:mb-16 md:mb-24">
         <h2 className="hero-heading font-black uppercase text-center leading-none tracking-tight"
-          style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Our Work</h2>
+          style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Verk okkar</h2>
       </FadeIn>
       {PROJECTS.map((project, i) => (
         <ProjectCard key={project.num} project={project} index={i} progress={scrollYProgress} />
@@ -628,49 +628,49 @@ const PLANS = [
   {
     name: "Grunnur",
     price: "$29",
-    unit: "/ project",
-    desc: "One completed deliverable. Perfect for your first project or a one-off task.",
+    unit: "/ verkefni",
+    desc: "Ein fullunnin afurð. Fullkomið fyrir fyrsta verkefnið þitt eða einskiptisverkefni.",
     features: [
-      "1 project at a time",
-      "Delivered in 2–5 days",
-      "Unlimited revisions",
-      "Finished work delivered",
-      "Email support",
+      "1 verkefni í einu",
+      "Afhent á 2–5 dögum",
+      "Ótakmarkaðar endurskoðanir",
+      "Fullunnin vinna afhent",
+      "Tölvupóstsþjónusta",
     ],
-    cta: "Get Started",
+    cta: "Hefjast handa",
     highlight: false,
   },
   {
     name: "Vöxtur",
     price: "$99",
-    unit: "/ month",
-    desc: "Unlimited requests. Perfect for businesses that need a constant output stream.",
+    unit: "/ mánuður",
+    desc: "Ótakmarkaðar beiðnir. Fullkomið fyrir fyrirtæki sem þurfa stöðugt úttak.",
     features: [
-      "Unlimited project requests",
-      "Priority queue",
-      "Delivered in 24–48 hours",
-      "Your own .top domain included",
-      "Dedicated account manager",
-      "Monthly reports",
-      "Slack / email comms",
+      "Ótakmarkaðar verkefnisbeiðnir",
+      "Forgangsbið",
+      "Afhent á 24–48 klukkustundum",
+      "Eigið .top lén innifalið",
+      "Sérstakur reikningsstjóri",
+      "Mánaðarlegar skýrslur",
+      "Slack / tölvupóstsamskipti",
     ],
-    cta: "Start Monthly Plan",
+    cta: "Hefja mánaðarlega áskrift",
     highlight: true,
   },
   {
     name: "Stúdíó",
-    price: "Custom",
+    price: "Sérsniðið",
     unit: "",
-    desc: "For large organisations and special needs. We build a package that fits you.",
+    desc: "Fyrir stór fyrirtæki og sérþarfir. Við sömum pakka sem hentar þér.",
     features: [
-      "Everything in Vöxtur",
-      "Custom integrations",
-      "API access",
-      "SLA guarantee",
-      "Dedicated development team",
-      "Strategy & consulting",
+      "Allt í Vöxtur",
+      "Sérsniðnar samþættingar",
+      "API-aðgangur",
+      "SLA-trygging",
+      "Sérstakt þróunarteymi",
+      "Stefna og ráðgjöf",
     ],
-    cta: "Contact Us",
+    cta: "Hafa samband",
     highlight: false,
   },
 ];
@@ -686,7 +686,7 @@ function PricingSection() {
         <h2 className="hero-heading font-black uppercase text-center mb-3 leading-none tracking-tight"
           style={{ fontSize: "clamp(2.5rem,11vw,150px)", fontFamily: "'Kanit',sans-serif" }}>Verðlag</h2>
         <p className="text-center font-light mb-10 sm:mb-14" style={{ color: "rgba(215,226,234,0.5)", fontFamily: "'Kanit',sans-serif", fontSize: "clamp(0.85rem,1.6vw,1.2rem)" }}>
-          One project or unlimited output. You choose.
+          Eitt verkefni eða ótakmarkaðar afurðir. Þú velur.
         </p>
       </FadeIn>
       <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
@@ -703,7 +703,7 @@ function PricingSection() {
               {plan.highlight && (
                 <span className="self-start mb-3 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest"
                   style={{ background: "rgba(255,255,255,0.15)", color: "#fff", fontFamily: "'Kanit',sans-serif" }}>
-                  Most Popular
+                  Vinsælast
                 </span>
               )}
               <p className="font-black uppercase mb-1" style={{ color: "#D7E2EA", fontSize: "clamp(1.2rem,2.5vw,1.9rem)", fontFamily: "'Kanit',sans-serif" }}>{plan.name}</p>
@@ -748,12 +748,12 @@ function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", service: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const submitEnquiry = trpc.enquiries.submit.useMutation({
-    onSuccess: () => { setSubmitted(true); toast.success("Message received! We'll be in touch within 24 hours."); },
-    onError: () => toast.error("Something went wrong. Please try again."),
+    onSuccess: () => { setSubmitted(true); toast.success("Skilaboð móttekin! Við höfum samband innan 24 klukkustunda."); },
+    onError: () => toast.error("Eitthvað fór úrskeiðis. Vinsamlegast reyndu aftur."),
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) { toast.error("Please fill in all required fields."); return; }
+    if (!form.name || !form.email || !form.message) { toast.error("Vinsamlegast fylltu út öll nauðsynleg svæði."); return; }
     submitEnquiry.mutate(form);
   };
   return (
@@ -766,16 +766,16 @@ function ContactSection() {
         {submitted ? (
           <FadeIn y={20}>
             <div className="text-center py-16">
-              <p className="font-black uppercase text-[#0C0C0C]" style={{ fontSize: "clamp(1.3rem,4vw,2.8rem)", fontFamily: "'Kanit',sans-serif" }}>Message received.</p>
-              <p className="mt-4 font-light" style={{ color: "rgba(12,12,12,0.6)", fontFamily: "'Kanit',sans-serif" }}>We'll be in touch within 24 hours.</p>
+              <p className="font-black uppercase text-[#0C0C0C]" style={{ fontSize: "clamp(1.3rem,4vw,2.8rem)", fontFamily: "'Kanit',sans-serif" }}>Skilaboð móttekin.</p>
+              <p className="mt-4 font-light" style={{ color: "rgba(12,12,12,0.6)", fontFamily: "'Kanit',sans-serif" }}>Við höfum samband innan 24 klukkustunda.</p>
             </div>
           </FadeIn>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             {[
-              { key: "name", label: "Your Name", type: "text", placeholder: "Jane Smith" },
-              { key: "email", label: "Email Address", type: "email", placeholder: "jane@company.com" },
-              { key: "service", label: "Service (optional)", type: "text", placeholder: "e.g. Website Development" },
+              { key: "name", label: "Nafn þitt", type: "text", placeholder: "Jón Jónsson" },
+              { key: "email", label: "Netfang", type: "email", placeholder: "jon@fyrirtaeki.is" },
+              { key: "service", label: "Þjónusta (valkvætt)", type: "text", placeholder: "t.d. Vefsíðuþróun" },
             ].map(({ key, label, type, placeholder }) => (
               <FadeIn key={key} y={15} delay={0.1}>
                 <div className="flex flex-col gap-2">
@@ -795,9 +795,9 @@ function ContactSection() {
             ))}
             <FadeIn y={15} delay={0.2}>
               <div className="flex flex-col gap-2">
-                <label className="font-medium uppercase tracking-wider text-xs sm:text-sm" style={{ color: "#0C0C0C", fontFamily: "'Kanit',sans-serif" }}>Message</label>
+                <label className="font-medium uppercase tracking-wider text-xs sm:text-sm" style={{ color: "#0C0C0C", fontFamily: "'Kanit',sans-serif" }}>Skilaboð</label>
                 <textarea
-                  placeholder="Tell us what you need..."
+                  placeholder="Segðu okkur hvað þú þarft..."
                   rows={5}
                   value={form.message}
                   onChange={(e) => setForm(prev => ({ ...prev, message: e.target.value }))}
