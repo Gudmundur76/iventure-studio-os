@@ -14,6 +14,7 @@ import { seedDatabase } from "./seed";
 import { createEnquiry, listEnquiries } from "./db";
 import { listUpdates, getUpdateBySlug, createUpdate, updatePost, deleteUpdate } from "./db";
 import { invokeLLM, listLLMModels } from "./_core/llm";
+import { createWorkerTask, updateWorkerTask, listWorkerTasks, getWorkerTask } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
 
@@ -304,6 +305,68 @@ export const appRouter = router({
         if (!data.ok) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: data.error?.message ?? "Villa við að sækja stöðu" });
 
         return { status: data.status ?? "unknown" };
+      }),
+  }),
+
+  // Worker (NanoClaw integration)
+  worker: router({
+    tasks: protectedProcedure
+      .input(z.object({ limit: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return listWorkerTasks(input?.limit ?? 50);
+      }),
+
+    task: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return getWorkerTask(input.id);
+      }),
+
+    send: protectedProcedure
+      .input(z.object({
+        prompt: z.string().min(1).max(4000),
+        language: z.string().default("is"),
+      }))
+      .mutation(async ({ input }) => {
+        const task = await createWorkerTask({
+          workerId: "nanoclaw",
+          prompt: input.prompt,
+          language: input.language,
+          status: "thinking",
+        });
+        const startMs = Date.now();
+        try {
+          const ingestUrl = process.env.NANOCLAW_INGEST_URL ?? "https://gummi.lt/api/voice-ingest";
+          const response = await fetch(ingestUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: input.prompt, language: input.language }),
+            signal: AbortSignal.timeout(60000),
+          });
+          if (!response.ok) {
+            const errText = await response.text();
+            return await updateWorkerTask(task.id, {
+              status: "error",
+              reply: `HTTP ${response.status}: ${errText}`,
+              elapsedMs: Date.now() - startMs,
+              completedAt: new Date(),
+            });
+          }
+          const data = await response.json() as { reply?: string };
+          return await updateWorkerTask(task.id, {
+            status: "done",
+            reply: data.reply ?? "(no reply)",
+            elapsedMs: Date.now() - startMs,
+            completedAt: new Date(),
+          });
+        } catch (err: unknown) {
+          return await updateWorkerTask(task.id, {
+            status: "error",
+            reply: err instanceof Error ? err.message : String(err),
+            elapsedMs: Date.now() - startMs,
+            completedAt: new Date(),
+          });
+        }
       }),
   }),
 });

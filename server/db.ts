@@ -8,6 +8,7 @@ import {
   cortexSignals, InsertCortexSignal,
   projects, InsertProject,
   chatMessages, InsertChatMessage,
+  workerTasks, type InsertWorkerTask,
 } from "../drizzle/schema";
 import { enquiries, InsertEnquiry, updates, InsertUpdate, Update } from "../drizzle/schema";
 import { invoices, InsertInvoice, Invoice } from "../drizzle/schema";
@@ -218,3 +219,35 @@ export async function updateInvoiceStatus(id: number, status: Invoice['status'])
 }
 
 export type { Invoice };
+
+// Worker Tasks
+
+export async function createWorkerTask(data: Omit<InsertWorkerTask, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const [result] = await db.insert(workerTasks).values(data);
+  const id = (result as { insertId: number }).insertId;
+  const rows = await db.select().from(workerTasks).where(eq(workerTasks.id, id));
+  return rows[0];
+}
+
+export async function updateWorkerTask(id: number, data: Partial<Pick<InsertWorkerTask, "status" | "reply" | "elapsedMs" | "completedAt">>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(workerTasks).set(data).where(eq(workerTasks.id, id));
+  const rows = await db.select().from(workerTasks).where(eq(workerTasks.id, id));
+  return rows[0];
+}
+
+export async function listWorkerTasks(limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(workerTasks).orderBy(desc(workerTasks.createdAt)).limit(limit);
+}
+
+export async function getWorkerTask(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(workerTasks).where(eq(workerTasks.id, id));
+  return rows[0] ?? null;
+}

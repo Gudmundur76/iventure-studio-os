@@ -169,3 +169,17 @@ export const invoices = mysqlTable("invoices", {
 
 export type Invoice = typeof invoices.$inferSelect;
 export type InsertInvoice = typeof invoices.$inferInsert;
+
+export const workerTasks = mysqlTable("worker_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  workerId: varchar("workerId", { length: 64 }).notNull().default("nanoclaw"),
+  prompt: text("prompt").notNull(),
+  language: varchar("language", { length: 8 }).default("is").notNull(),
+  status: mysqlEnum("status", ["queued", "thinking", "done", "error"]).default("queued").notNull(),
+  reply: text("reply"),
+  elapsedMs: int("elapsedMs"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+export type WorkerTask = typeof workerTasks.$inferSelect;
+export type InsertWorkerTask = typeof workerTasks.$inferInsert;

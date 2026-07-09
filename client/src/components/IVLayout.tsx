@@ -10,7 +10,8 @@ import { getLoginUrl } from "@/const";
 
 const NAV_ITEMS = [
   { path: "/", icon: Terminal, label: "Command Centre", badge: null },
-  { path: "/agents", icon: Bot, label: "VMOA Agents", badge: "13" },
+  { path: "/worker", icon: Bot, label: "NanoClaw Worker", badge: "LIVE" },
+  { path: "/agents", icon: Cpu, label: "VMOA Agents", badge: "13" },
   { path: "/skills", icon: Zap, label: "Skills Library", badge: "20" },
   { path: "/memory", icon: Brain, label: "Memory Viewer", badge: null },
   { path: "/network", icon: Network, label: "Network (A2A)", badge: null },

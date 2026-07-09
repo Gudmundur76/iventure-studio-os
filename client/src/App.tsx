@@ -14,6 +14,7 @@ import WebDevService from "./pages/WebDevService";
 import ResearchService from "./pages/ResearchService";
 import MarketingService from "./pages/MarketingService";
 import GummiDemo from "./pages/GummiDemo";
+import NanoClawWorker from "./pages/NanoClawWorker";
 
 function Router() {
   return (
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/updates/:slug" component={UpdatePost} />
       <Route path="/updates" component={UpdatesFeed} />
       <Route path="/admin/updates" component={AdminUpdates} />
+      <Route path="/worker" component={NanoClawWorker} />
       <Route path="/" component={GiggoHome} />
       <Route component={NotFound} />
     </Switch>

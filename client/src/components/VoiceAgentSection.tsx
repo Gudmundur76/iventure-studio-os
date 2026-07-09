@@ -139,7 +139,9 @@ export default function VoiceAgentSection() {
       processor.connect(ctx.destination);
 
       const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const ws = new WebSocket(`${proto}//${window.location.host}/api/voice-proxy`);
+      // Use port 8443 — dedicated Traefik entrypoint without HTTP/2 for WebSocket support
+      const wsHost = window.location.hostname + ':8443';
+      const ws = new WebSocket(`${proto}//${wsHost}/api/voice-proxy`);
       wsRef.current = ws;
 
       ws.onopen = () => {
