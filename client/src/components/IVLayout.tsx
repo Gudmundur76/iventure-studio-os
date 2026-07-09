@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   Terminal, Bot, Zap, Brain, Network, Activity, BarChart3,
-  FolderKanban, ChevronLeft, ChevronRight, Settings, LogOut,
+  FolderKanban, ListTodo, ChevronLeft, ChevronRight, Settings, LogOut,
   Cpu, Shield
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
@@ -11,6 +11,7 @@ import { getLoginUrl } from "@/const";
 const NAV_ITEMS = [
   { path: "/", icon: Terminal, label: "Command Centre", badge: null },
   { path: "/worker", icon: Bot, label: "NanoClaw Worker", badge: "LIVE" },
+  { path: "/tasks", icon: ListTodo, label: "Task Queue", badge: null },
   { path: "/agents", icon: Cpu, label: "VMOA Agents", badge: "13" },
   { path: "/skills", icon: Zap, label: "Skills Library", badge: "20" },
   { path: "/memory", icon: Brain, label: "Memory Viewer", badge: null },

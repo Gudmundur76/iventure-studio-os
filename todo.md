@@ -18,13 +18,13 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Analytics
 
 ## Phase 2 — NanoClaw Worker Integration (NOW BUILDING)
-- [ ] Add "Workers" nav section to IVLayout with NanoClaw as live worker
-- [ ] Build WorkerDetail page — NanoClaw status, send task, live reply stream
-- [ ] Add /api/worker/task server route — proxies to NanoClaw ingest on VPS (gummi.lt/api/voice-ingest)
-- [ ] Add /api/worker/status route — checks NanoClaw health
-- [ ] Worker task history stored in DB (new worker_tasks table)
-- [ ] Real-time task status: QUEUED → THINKING → DONE with elapsed timer
-- [ ] Task inbox — all tasks sent to NanoClaw with replies
+- [x] Add "Workers" nav section to IVLayout with NanoClaw as live worker
+- [x] Build WorkerDetail page — NanoClaw status, send task, live reply stream
+- [x] Add /api/worker/task server route — proxies to NanoClaw ingest on VPS (gummi.lt/api/voice-ingest)
+- [x] Add /api/worker/status route — checks NanoClaw health
+- [x] Worker task history stored in DB (new worker_tasks table)
+- [x] Real-time task status: QUEUED → THINKING → DONE with elapsed timer
+- [x] Task inbox — all tasks sent to NanoClaw with replies
 
 ## Phase 3 — Task Queue & Projects
 - [ ] Task Queue page — create tasks, assign to worker, track status

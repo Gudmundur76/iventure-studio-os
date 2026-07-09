@@ -15,6 +15,7 @@ import ResearchService from "./pages/ResearchService";
 import MarketingService from "./pages/MarketingService";
 import GummiDemo from "./pages/GummiDemo";
 import NanoClawWorker from "./pages/NanoClawWorker";
+import TaskQueue from "./pages/TaskQueue";
 
 function Router() {
   return (
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/updates" component={UpdatesFeed} />
       <Route path="/admin/updates" component={AdminUpdates} />
       <Route path="/worker" component={NanoClawWorker} />
+      <Route path="/tasks" component={TaskQueue} />
       <Route path="/" component={GiggoHome} />
       <Route component={NotFound} />
     </Switch>
