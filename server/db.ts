@@ -1,4 +1,4 @@
-import { eq, desc, like, and } from "drizzle-orm";
+import { eq, desc, like, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser, users,
@@ -12,6 +12,7 @@ import {
 } from "../drizzle/schema";
 import { enquiries, InsertEnquiry, updates, InsertUpdate, Update } from "../drizzle/schema";
 import { invoices, InsertInvoice, Invoice } from "../drizzle/schema";
+import { scheduledJobs, jobRunLogs, type InsertScheduledJob, type InsertJobRunLog, type ScheduledJob, type JobRunLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -251,3 +252,64 @@ export async function getWorkerTask(id: number) {
   const rows = await db.select().from(workerTasks).where(eq(workerTasks.id, id));
   return rows[0] ?? null;
 }
+
+// ── Scheduled Jobs ───────────────────────────────────────────────────────────
+
+export async function upsertScheduledJob(data: InsertScheduledJob): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(scheduledJobs).values(data).onDuplicateKeyUpdate({
+    set: {
+      taskUid: data.taskUid,
+      cronExpression: data.cronExpression,
+      description: data.description,
+      isEnabled: data.isEnabled,
+    },
+  });
+}
+
+export async function listScheduledJobs(): Promise<ScheduledJob[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(scheduledJobs).orderBy(scheduledJobs.jobName);
+}
+
+export async function updateScheduledJobStatus(
+  jobName: string,
+  status: "success" | "error" | "running",
+  message?: string,
+): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(scheduledJobs)
+    .set({
+      lastRunAt: new Date(),
+      lastRunStatus: status,
+      lastRunMessage: message ?? null,
+    })
+    .where(eq(scheduledJobs.jobName, jobName));
+  // Increment run count via raw SQL
+  await db.update(scheduledJobs)
+    .set({ runCount: sql`runCount + 1` })
+    .where(eq(scheduledJobs.jobName, jobName));
+}
+
+export async function addJobRunLog(data: Omit<InsertJobRunLog, "id" | "createdAt">): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(jobRunLogs).values(data);
+}
+
+export async function listJobRunLogs(jobName?: string, limit = 50): Promise<JobRunLog[]> {
+  const db = await getDb();
+  if (!db) return [];
+  if (jobName) {
+    return db.select().from(jobRunLogs)
+      .where(eq(jobRunLogs.jobName, jobName))
+      .orderBy(desc(jobRunLogs.createdAt))
+      .limit(limit);
+  }
+  return db.select().from(jobRunLogs).orderBy(desc(jobRunLogs.createdAt)).limit(limit);
+}
+
+export type { ScheduledJob, JobRunLog };

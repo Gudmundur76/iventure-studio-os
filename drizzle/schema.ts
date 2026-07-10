@@ -183,3 +183,34 @@ export const workerTasks = mysqlTable("worker_tasks", {
 });
 export type WorkerTask = typeof workerTasks.$inferSelect;
 export type InsertWorkerTask = typeof workerTasks.$inferInsert;
+
+export const scheduledJobs = mysqlTable("scheduled_jobs", {
+  id: int("id").autoincrement().primaryKey(),
+  jobName: varchar("jobName", { length: 64 }).notNull(),
+  taskUid: varchar("taskUid", { length: 128 }),
+  cronExpression: varchar("cronExpression", { length: 64 }),
+  description: text("description"),
+  isEnabled: boolean("isEnabled").default(true).notNull(),
+  lastRunAt: timestamp("lastRunAt"),
+  lastRunStatus: mysqlEnum("lastRunStatus", ["success", "error", "running"]),
+  lastRunMessage: text("lastRunMessage"),
+  runCount: int("runCount").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ScheduledJob = typeof scheduledJobs.$inferSelect;
+export type InsertScheduledJob = typeof scheduledJobs.$inferInsert;
+
+export const jobRunLogs = mysqlTable("job_run_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  jobName: varchar("jobName", { length: 64 }).notNull(),
+  status: mysqlEnum("status", ["success", "error"]).notNull(),
+  message: text("message"),
+  durationMs: int("durationMs"),
+  triggeredBy: varchar("triggeredBy", { length: 32 }).default("cron").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type JobRunLog = typeof jobRunLogs.$inferSelect;
+export type InsertJobRunLog = typeof jobRunLogs.$inferInsert;

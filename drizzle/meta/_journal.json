@@ -43,6 +43,13 @@
       "when": 1783639170094,
       "tag": "0005_majestic_lady_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1783719641524,
+      "tag": "0006_known_phalanx",
+      "breakpoints": true
     }
   ]
 }

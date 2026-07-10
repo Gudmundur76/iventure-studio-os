@@ -17,6 +17,7 @@ import { invokeLLM, listLLMModels } from "./_core/llm";
 import { createWorkerTask, updateWorkerTask, listWorkerTasks, getWorkerTask } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
+import { listScheduledJobs, listJobRunLogs, upsertScheduledJob } from "./db";
 
 // Owner/admin guard — only the site owner (admin role) can manage updates
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -368,6 +369,33 @@ export const appRouter = router({
           });
         }
       }),
+  }),
+
+  // Schedule
+  schedule: router({
+    jobs: protectedProcedure.query(async () => {
+      return listScheduledJobs();
+    }),
+    logs: protectedProcedure
+      .input(z.object({ jobName: z.string().optional(), limit: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return listJobRunLogs(input?.jobName, input?.limit ?? 50);
+      }),
+    seed: protectedProcedure.mutation(async () => {
+      await upsertScheduledJob({
+        jobName: "memory-sync",
+        cronExpression: "0 * * * *",
+        description: "Sync NanoClaw conversation threads into the memory graph (runs every hour)",
+        isEnabled: true,
+      });
+      await upsertScheduledJob({
+        jobName: "cortex-digest",
+        cronExpression: "0 6 * * *",
+        description: "Generate daily cortex digest from recent agent activity (runs at 06:00 UTC)",
+        isEnabled: true,
+      });
+      return { success: true };
+    }),
   }),
 });
 

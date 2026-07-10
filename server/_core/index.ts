@@ -12,6 +12,7 @@ import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { memorySyncHandler, cortexDigestHandler, manualTriggerHandler } from "../scheduledHandlers";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -40,6 +41,12 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+
+  // ── Scheduled job handlers ────────────────────────────────────────────────
+  app.post("/api/scheduled/memory-sync", memorySyncHandler);
+  app.post("/api/scheduled/cortex-digest", cortexDigestHandler);
+  app.post("/api/scheduled/manual-trigger", manualTriggerHandler);
+
 
   // ── xAI Realtime WebSocket proxy ──────────────────────────────────────────
   // Browser cannot send Authorization headers on WebSocket connections.

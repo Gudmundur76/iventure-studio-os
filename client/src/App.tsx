@@ -25,6 +25,7 @@ import NetworkPanel from "./pages/NetworkPanel";
 import Analytics from "./pages/Analytics";
 import ClientPortal from "./pages/ClientPortal";
 import IVLayout from "./components/IVLayout";
+import SchedulesPanel from "./pages/SchedulesPanel";
 
 function Router() {
   return (
@@ -59,6 +60,9 @@ function Router() {
       </Route>
       <Route path="/os/portal">
         <IVLayout><ClientPortal /></IVLayout>
+      </Route>
+      <Route path="/os/schedules">
+        <IVLayout><SchedulesPanel /></IVLayout>
       </Route>
       {/* Public Giggo site routes */}
       <Route path="/chat" component={GiggoChat} />
