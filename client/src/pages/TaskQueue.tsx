@@ -101,7 +101,7 @@ export default function TaskQueue() {
       utils.worker.tasks.invalidate();
     },
   });
-  const sendMutation = trpc.worker.send.useMutation({
+  const sendMutation = trpc.worker.dispatch.useMutation({
     onSuccess: () => {
       setPrompt("");
       utils.worker.tasks.invalidate();
@@ -123,7 +123,7 @@ export default function TaskQueue() {
     if (showRouting) {
       dispatchMutation.mutate({ prompt: text, language, overrideAgentId });
     } else {
-      sendMutation.mutate({ prompt: text, language });
+      sendMutation.mutate({ prompt: text, agentType: "manus" });
     }
   };
 

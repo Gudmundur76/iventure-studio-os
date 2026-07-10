@@ -263,7 +263,7 @@ export async function createWorkerTask(data: Omit<InsertWorkerTask, "id" | "crea
   return rows[0];
 }
 
-export async function updateWorkerTask(id: number, data: Partial<Pick<InsertWorkerTask, "status" | "reply" | "elapsedMs" | "completedAt">>) {
+export async function updateWorkerTask(id: number, data: Partial<Pick<InsertWorkerTask, "status" | "reply" | "elapsedMs" | "completedAt" | "projectRef">>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.update(workerTasks).set(data).where(eq(workerTasks.id, id));

@@ -361,51 +361,97 @@ export const appRouter = router({
         return getWorkerTask(input.id);
       }),
 
-    send: protectedProcedure
+    // Dispatch a task to OpenManus (async — returns immediately with task record)
+    dispatch: protectedProcedure
       .input(z.object({
         prompt: z.string().min(1).max(4000),
-        language: z.string().default("is"),
+        agentType: z.enum(["manus", "browser", "swe", "data_analysis"]).default("manus"),
       }))
       .mutation(async ({ input }) => {
+        const openManusUrl = ENV.openManusUrl;
+        if (!openManusUrl) {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "OpenManus service not configured (OPENMANUS_URL missing)" });
+        }
+        // Create a DB record immediately so the UI can track it
         const task = await createWorkerTask({
-          workerId: "nanoclaw",
+          workerId: `openmanus-${input.agentType}`,
           prompt: input.prompt,
-          language: input.language,
-          status: "thinking",
+          language: "en",
+          status: "queued",
         });
-        const startMs = Date.now();
-        try {
-          const ingestUrl = process.env.NANOCLAW_INGEST_URL ?? "https://gummi.lt/api/voice-ingest";
-          const response = await fetch(ingestUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: input.prompt, language: input.language }),
-            signal: AbortSignal.timeout(60000),
-          });
-          if (!response.ok) {
-            const errText = await response.text();
-            return await updateWorkerTask(task.id, {
+        // Submit to OpenManus asynchronously (don't await — return immediately)
+        void (async () => {
+          const startMs = Date.now();
+          try {
+            await updateWorkerTask(task.id, { status: "thinking" });
+            const omRes = await fetch(`${openManusUrl}/tasks`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ prompt: input.prompt, agent: input.agentType }),
+              signal: AbortSignal.timeout(10000),
+            });
+            if (!omRes.ok) {
+              const errText = await omRes.text();
+              await updateWorkerTask(task.id, {
+                status: "error",
+                reply: `OpenManus HTTP ${omRes.status}: ${errText}`,
+                elapsedMs: Date.now() - startMs,
+                completedAt: new Date(),
+              });
+              return;
+            }
+            const omTask = await omRes.json() as { task_id: string };
+            // Store the OpenManus task_id in projectRef for polling
+            await updateWorkerTask(task.id, { projectRef: omTask.task_id });
+          } catch (err: unknown) {
+            await updateWorkerTask(task.id, {
               status: "error",
-              reply: `HTTP ${response.status}: ${errText}`,
+              reply: err instanceof Error ? err.message : String(err),
               elapsedMs: Date.now() - startMs,
               completedAt: new Date(),
             });
           }
-          const data = await response.json() as { reply?: string };
-          return await updateWorkerTask(task.id, {
-            status: "done",
-            reply: data.reply ?? "(no reply)",
-            elapsedMs: Date.now() - startMs,
-            completedAt: new Date(),
+        })();
+        return task;
+      }),
+
+    // Poll OpenManus for task completion and sync result to DB
+    syncTask: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const task = await getWorkerTask(input.id);
+        if (!task) throw new TRPCError({ code: "NOT_FOUND" });
+        if (task.status === "done" || task.status === "error") return task;
+        if (!task.projectRef) return task; // no OpenManus task_id yet
+
+        const openManusUrl = ENV.openManusUrl;
+        if (!openManusUrl) return task;
+
+        try {
+          const res = await fetch(`${openManusUrl}/tasks/${task.projectRef}`, {
+            signal: AbortSignal.timeout(5000),
           });
-        } catch (err: unknown) {
-          return await updateWorkerTask(task.id, {
-            status: "error",
-            reply: err instanceof Error ? err.message : String(err),
-            elapsedMs: Date.now() - startMs,
-            completedAt: new Date(),
-          });
+          if (!res.ok) return task;
+          const omTask = await res.json() as {
+            status: string; reply?: string; error?: string;
+            elapsed_ms?: number; completed_at?: string;
+          };
+          if (omTask.status === "done" || omTask.status === "error") {
+            return await updateWorkerTask(task.id, {
+              status: omTask.status as "done" | "error",
+              reply: omTask.reply ?? omTask.error ?? "(no reply)",
+              elapsedMs: omTask.elapsed_ms ?? undefined,
+              completedAt: omTask.completed_at ? new Date(omTask.completed_at) : new Date(),
+            });
+          }
+          // Still running — update status to "thinking" if it was "queued"
+          if (task.status === "queued" && omTask.status === "running") {
+            return await updateWorkerTask(task.id, { status: "thinking" });
+          }
+        } catch {
+          // ignore poll errors
         }
+        return task;
       }),
   }),
 

@@ -102,7 +102,7 @@ export default function NanoClawWorker() {
   const utils = trpc.useUtils();
 
   const { data: tasks = [], refetch: refetchTasks } = trpc.worker.tasks.useQuery({ limit: 50 });
-  const sendMutation = trpc.worker.send.useMutation();
+  const sendMutation = trpc.worker.dispatch.useMutation();
 
   // Poll for pending task completion
   const { data: polledTask } = trpc.worker.task.useQuery(
@@ -132,7 +132,7 @@ export default function NanoClawWorker() {
     timerRef.current = setInterval(() => setElapsed(e => e + 1), 1000);
 
     try {
-      const task = await sendMutation.mutateAsync({ prompt: text, language });
+      const task = await sendMutation.mutateAsync({ prompt: text, agentType: "manus" });
       setPendingTask(task as Task);
       clearInterval(timerRef.current!);
       refetchTasks();

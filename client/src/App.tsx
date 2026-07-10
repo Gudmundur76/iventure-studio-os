@@ -15,6 +15,7 @@ import ResearchService from "./pages/ResearchService";
 import MarketingService from "./pages/MarketingService";
 import GummiDemo from "./pages/GummiDemo";
 import NanoClawWorker from "./pages/NanoClawWorker";
+import OpenManusWorker from "./pages/OpenManusWorker";
 import TaskQueue from "./pages/TaskQueue";
 import CommandCentre from "./pages/CommandCentre";
 import AgentBoard from "./pages/AgentBoard";
@@ -39,7 +40,7 @@ function Router() {
         <IVLayout><CommandCentre /></IVLayout>
       </Route>
       <Route path="/os/worker">
-        <IVLayout><NanoClawWorker /></IVLayout>
+        <IVLayout><OpenManusWorker /></IVLayout>
       </Route>
       <Route path="/os/tasks">
         <IVLayout><TaskQueue /></IVLayout>

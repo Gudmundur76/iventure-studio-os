@@ -10,4 +10,5 @@ export const ENV = {
   xaiApiKey: process.env.XAI_API_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
   manusApiKey: process.env.MANUS_API_KEY ?? "",
+  openManusUrl: process.env.OPENMANUS_URL ?? "",
 };

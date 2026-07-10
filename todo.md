@@ -38,6 +38,16 @@ Designed to scale toward a multi-tenant client platform.
 - [ ] Browser automation worker (browser-use)
 - [ ] Scheduled tasks (cron jobs per agent)
 
+## OpenManus Integration
+- [ ] Clone OpenManus on VPS, create config.toml with API keys
+- [ ] Create Coolify service for OpenManus (second container on same VPS)
+- [ ] Add OPENMANUS_URL env var to Node app
+- [ ] Add worker.dispatch tRPC mutation (POST task to OpenManus, save to worker_tasks)
+- [ ] Add worker.taskStatus tRPC query (poll OpenManus task status)
+- [ ] Build Worker page UI: dispatch form, live polling, result display
+- [ ] Test end-to-end: submit task → OpenManus executes → result in UI
+- [ ] Push to GitHub and verify on os.gummi.lt
+
 ## Phase 5 — VPS Migration (IN PROGRESS)
 - [x] Replace Manus OAuth with local JWT auth (bcryptjs + jose)
 - [x] Add passwordHash column to users table
@@ -49,7 +59,7 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Update useAuth hook (redirect to /login instead of Manus OAuth)
 - [x] Update IVLayout logout to redirect to /login
 - [x] Update const.ts getLoginUrl() to return /login
-- [ ] Push to GitHub (Gudmundur76/iventure-studio-os)
+- [x] Push to GitHub (Gudmundur76/iventure-studio-os)
 - [x] Push to GitHub (Gudmundur76/iventure-studio-os)
 - [x] Deploy to VPS via Coolify (os.gummi.lt) — Dockerfile added, build succeeded, container healthy
 - [x] Run DB migration on production (passwordHash column added)
