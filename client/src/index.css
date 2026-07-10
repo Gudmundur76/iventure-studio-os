@@ -192,3 +192,59 @@ html { color-scheme: dark; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   iVenture Studio OS — Design Tokens & Utility Classes
+   ══════════════════════════════════════════════════════════════════ */
+:root {
+  --iv-navy:       #080E1A;
+  --iv-surface:    #0D1625;
+  --iv-surface-2:  #111E30;
+  --iv-border:     rgba(0, 180, 216, 0.12);
+  --iv-border-2:   rgba(0, 180, 216, 0.22);
+  --iv-text:       #E8F0F8;
+  --iv-text-muted: rgba(232, 240, 248, 0.45);
+  --iv-blue:       #00B4D8;
+  --iv-blue-dim:   rgba(0, 180, 216, 0.18);
+  --iv-green:      #22D3A0;
+  --iv-green-dim:  rgba(34, 211, 160, 0.18);
+  --iv-red:        #F87171;
+  --iv-amber:      #FBBF24;
+  --iv-purple:     #A78BFA;
+}
+
+/* iv-card */
+.iv-card {
+  background: var(--iv-surface-2);
+  border: 1px solid var(--iv-border);
+  border-radius: 0.625rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.iv-card:hover {
+  border-color: var(--iv-border-2);
+}
+.iv-glow:hover {
+  box-shadow: 0 0 0 1px rgba(0, 180, 216, 0.25), 0 4px 24px rgba(0, 180, 216, 0.08);
+}
+
+/* Status badges */
+.iv-badge-active  { display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:.06em;font-family:var(--font-mono);background:rgba(34,211,160,.12);color:var(--iv-green);border:1px solid rgba(34,211,160,.25); }
+.iv-badge-idle    { display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:.06em;font-family:var(--font-mono);background:rgba(0,180,216,.1);color:var(--iv-blue);border:1px solid rgba(0,180,216,.2); }
+.iv-badge-error   { display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:.06em;font-family:var(--font-mono);background:rgba(248,113,113,.12);color:var(--iv-red);border:1px solid rgba(248,113,113,.25); }
+.iv-badge-offline { display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:.06em;font-family:var(--font-mono);background:rgba(232,240,248,.06);color:var(--iv-text-muted);border:1px solid rgba(232,240,248,.1); }
+
+/* Pulse dot */
+@keyframes iv-pulse-anim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.85); }
+}
+.iv-pulse { animation: iv-pulse-anim 2s ease-in-out infinite; }
+
+/* GRPO progress bar */
+.grpo-bar {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--iv-blue) 0%, var(--iv-green) 100%);
+  box-shadow: 0 0 6px rgba(0, 180, 216, 0.4);
+  transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}

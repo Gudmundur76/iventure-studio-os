@@ -16,10 +16,51 @@ import MarketingService from "./pages/MarketingService";
 import GummiDemo from "./pages/GummiDemo";
 import NanoClawWorker from "./pages/NanoClawWorker";
 import TaskQueue from "./pages/TaskQueue";
+import CommandCentre from "./pages/CommandCentre";
+import AgentBoard from "./pages/AgentBoard";
+import SkillsLibrary from "./pages/SkillsLibrary";
+import MemoryViewer from "./pages/MemoryViewer";
+import CortexPanel from "./pages/CortexPanel";
+import NetworkPanel from "./pages/NetworkPanel";
+import Analytics from "./pages/Analytics";
+import ClientPortal from "./pages/ClientPortal";
+import IVLayout from "./components/IVLayout";
 
 function Router() {
   return (
     <Switch>
+      {/* Studio OS dashboard routes */}
+      <Route path="/os">
+        <IVLayout><CommandCentre /></IVLayout>
+      </Route>
+      <Route path="/os/worker">
+        <IVLayout><NanoClawWorker /></IVLayout>
+      </Route>
+      <Route path="/os/tasks">
+        <IVLayout><TaskQueue /></IVLayout>
+      </Route>
+      <Route path="/os/agents">
+        <IVLayout><AgentBoard /></IVLayout>
+      </Route>
+      <Route path="/os/skills">
+        <IVLayout><SkillsLibrary /></IVLayout>
+      </Route>
+      <Route path="/os/memory">
+        <IVLayout><MemoryViewer /></IVLayout>
+      </Route>
+      <Route path="/os/network">
+        <IVLayout><NetworkPanel /></IVLayout>
+      </Route>
+      <Route path="/os/cortex">
+        <IVLayout><CortexPanel /></IVLayout>
+      </Route>
+      <Route path="/os/analytics">
+        <IVLayout><Analytics /></IVLayout>
+      </Route>
+      <Route path="/os/portal">
+        <IVLayout><ClientPortal /></IVLayout>
+      </Route>
+      {/* Public Giggo site routes */}
       <Route path="/chat" component={GiggoChat} />
       <Route path="/demo" component={GummiDemo} />
       <Route path="/voice-clone" component={VoiceClone} />

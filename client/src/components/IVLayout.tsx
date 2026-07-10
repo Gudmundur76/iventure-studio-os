@@ -9,16 +9,16 @@ import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
 
 const NAV_ITEMS = [
-  { path: "/", icon: Terminal, label: "Command Centre", badge: null },
-  { path: "/worker", icon: Bot, label: "NanoClaw Worker", badge: "LIVE" },
-  { path: "/tasks", icon: ListTodo, label: "Task Queue", badge: null },
-  { path: "/agents", icon: Cpu, label: "VMOA Agents", badge: "13" },
-  { path: "/skills", icon: Zap, label: "Skills Library", badge: "20" },
-  { path: "/memory", icon: Brain, label: "Memory Viewer", badge: null },
-  { path: "/network", icon: Network, label: "Network (A2A)", badge: null },
-  { path: "/cortex", icon: Activity, label: "Cortex Panel", badge: null },
-  { path: "/analytics", icon: BarChart3, label: "Analytics", badge: null },
-  { path: "/portal", icon: FolderKanban, label: "Client Portal", badge: null },
+  { path: "/os", icon: Terminal, label: "Command Centre", badge: null },
+  { path: "/os/worker", icon: Bot, label: "NanoClaw Worker", badge: "LIVE" },
+  { path: "/os/tasks", icon: ListTodo, label: "Task Queue", badge: null },
+  { path: "/os/agents", icon: Cpu, label: "VMOA Agents", badge: null },
+  { path: "/os/skills", icon: Zap, label: "Skills Library", badge: null },
+  { path: "/os/memory", icon: Brain, label: "Memory Viewer", badge: null },
+  { path: "/os/network", icon: Network, label: "Network (A2A)", badge: null },
+  { path: "/os/cortex", icon: Activity, label: "Cortex Panel", badge: null },
+  { path: "/os/analytics", icon: BarChart3, label: "Analytics", badge: null },
+  { path: "/os/portal", icon: FolderKanban, label: "Client Portal", badge: null },
 ];
 
 interface IVLayoutProps {
@@ -67,7 +67,7 @@ export default function IVLayout({ children }: IVLayoutProps) {
         <nav className="flex-1 py-3 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
-            const isActive = location === item.path || (item.path !== "/" && location.startsWith(item.path));
+            const isActive = location === item.path || (item.path !== "/os" && location.startsWith(item.path));
             return (
               <Link key={item.path} href={item.path}>
                 <div
