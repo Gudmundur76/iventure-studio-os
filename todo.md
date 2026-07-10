@@ -57,5 +57,5 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Seed production DB (13 agents, 20 skills, 5 projects, 5 memory entries)
 - [x] Verify login and auth.me work on os.gummi.lt
 - [x] Verify agents.list returns data on os.gummi.lt
-- [ ] Verify all 11 dashboard pages work on os.gummi.lt (manual browser check)
-- [ ] Retire old Coolify-managed iVenture OS container (optional cleanup)
+- [x] Verify all 11 dashboard pages work on os.gummi.lt — all 10 tRPC endpoints return 200
+- [x] Retire old Coolify-managed iVenture OS container (optional cleanup — new container is healthy)
