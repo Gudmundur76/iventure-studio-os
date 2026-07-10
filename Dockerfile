@@ -1,4 +1,6 @@
 FROM node:22-slim
+# Install curl for Coolify healthcheck
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 # Copy everything first (patches dir must exist before pnpm install)
 COPY . .
