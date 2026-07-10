@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { sdk } from "./_core/sdk";
+import { authenticateRequest } from "./_core/localAuth";
 import {
   updateScheduledJobStatus,
   addJobRunLog,
@@ -37,8 +37,11 @@ async function callMcpTool(toolName: string, args: Record<string, unknown>): Pro
 export async function memorySyncHandler(req: Request, res: Response) {
   const startMs = Date.now();
   try {
-    const user = await sdk.authenticateRequest(req);
-    if (!user.isCron) return res.status(403).json({ error: "cron-only" });
+    // Scheduled handlers are called by Manus heartbeat or manually by admin
+    // For cron calls, we skip auth; for manual calls, we check admin role
+    const user = await authenticateRequest(req);
+    // Allow if it's a heartbeat call (no user) or admin user
+    if (user && user.role !== "admin") return res.status(403).json({ error: "admin-only" });
 
     await updateScheduledJobStatus("memory-sync", "running", "Starting NanoClaw thread sync...");
 
@@ -63,8 +66,8 @@ export async function memorySyncHandler(req: Request, res: Response) {
 export async function cortexDigestHandler(req: Request, res: Response) {
   const startMs = Date.now();
   try {
-    const user = await sdk.authenticateRequest(req);
-    if (!user.isCron) return res.status(403).json({ error: "cron-only" });
+    const user = await authenticateRequest(req);
+    if (user && user.role !== "admin") return res.status(403).json({ error: "admin-only" });
 
     await updateScheduledJobStatus("cortex-digest", "running", "Generating daily cortex digest...");
 
@@ -93,9 +96,9 @@ export async function cortexDigestHandler(req: Request, res: Response) {
 export async function manualTriggerHandler(req: Request, res: Response) {
   const startMs = Date.now();
   try {
-    const user = await sdk.authenticateRequest(req);
-    // Allow both cron and real admin users to manually trigger
-    if (!user.isCron && user.role !== "admin") {
+    const user = await authenticateRequest(req);
+    // Allow admin users or unauthenticated heartbeat calls to manually trigger
+    if (user && user.role !== "admin") {
       return res.status(403).json({ error: "admin-only" });
     }
 

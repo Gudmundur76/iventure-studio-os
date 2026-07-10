@@ -7,7 +7,7 @@ const _require = createRequire(import.meta.url);
 const Busboy = _require('busboy') as (opts: import('busboy').BusboyConfig) => import('busboy').Busboy;
 import { WebSocket as WsClient, WebSocketServer } from 'ws';
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
+import { registerLocalAuthRoutes } from "./localAuth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
@@ -40,7 +40,7 @@ async function startServer() {
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
-  registerOAuthRoutes(app);
+  registerLocalAuthRoutes(app);
 
   // ── Scheduled job handlers ────────────────────────────────────────────────
   app.post("/api/scheduled/memory-sync", memorySyncHandler);

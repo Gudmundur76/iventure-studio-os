@@ -64,6 +64,13 @@
       "when": 1783720633568,
       "tag": "0008_green_mordo",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1783721841657,
+      "tag": "0009_lowly_enchantress",
+      "breakpoints": true
     }
   ]
 }

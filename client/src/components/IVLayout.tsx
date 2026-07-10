@@ -34,7 +34,7 @@ export default function IVLayout({ children }: IVLayoutProps) {
   const logout = trpc.auth.logout.useMutation();
 
   const handleLogout = () => {
-    logout.mutate(undefined, { onSuccess: () => { window.location.href = "/"; } });
+    logout.mutate(undefined, { onSuccess: () => { window.location.href = "/login"; } });
   };
 
   return (
@@ -134,7 +134,7 @@ export default function IVLayout({ children }: IVLayoutProps) {
               )}
             </div>
           ) : (
-            <a href={getLoginUrl()} className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors" style={{ backgroundColor: "var(--iv-blue)", color: "var(--iv-navy)" }}>
+            <a href="/login" className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors" style={{ backgroundColor: "var(--iv-blue)", color: "var(--iv-navy)" }}>
               <Shield size={13} />
               {!collapsed && "Sign In"}
             </a>

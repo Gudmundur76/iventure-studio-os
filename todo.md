@@ -7,7 +7,7 @@ Designed to scale toward a multi-tenant client platform.
 ## Phase 1 — Core Dashboard ✓ (existing)
 - [x] IVLayout sidebar with navigation
 - [x] Design system (--iv-* CSS variables, Syne/JetBrains Mono fonts)
-- [x] Auth (Manus OAuth)
+- [x] Auth (local JWT — bcryptjs + jose, no Manus OAuth dependency)
 - [x] Database schema (agents, projects, memory, cortex, chat, enquiries, invoices)
 - [x] Command Centre (AI chat with model selector)
 - [x] Agent Board (VMOA agents list)
@@ -37,3 +37,19 @@ Designed to scale toward a multi-tenant client platform.
 - [ ] Email identity per agent (Nylas Agent Accounts)
 - [ ] Browser automation worker (browser-use)
 - [ ] Scheduled tasks (cron jobs per agent)
+
+## Phase 5 — VPS Migration (IN PROGRESS)
+- [x] Replace Manus OAuth with local JWT auth (bcryptjs + jose)
+- [x] Add passwordHash column to users table
+- [x] Create localAuth.ts with login/logout/setup endpoints
+- [x] Update context.ts to use authenticateRequest from localAuth
+- [x] Update index.ts to call registerLocalAuthRoutes
+- [x] Update scheduledHandlers.ts to use local auth
+- [x] Build Login page (/login route)
+- [x] Update useAuth hook (redirect to /login instead of Manus OAuth)
+- [x] Update IVLayout logout to redirect to /login
+- [x] Update const.ts getLoginUrl() to return /login
+- [ ] Push to GitHub (Gudmundur76/iventure-studio-os)
+- [ ] Deploy to VPS via Coolify (os.gummi.lt)
+- [ ] Verify all 11 dashboard pages work on os.gummi.lt
+- [ ] Retire old Coolify-managed iVenture OS container

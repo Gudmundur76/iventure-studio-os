@@ -27,10 +27,13 @@ import ClientPortal from "./pages/ClientPortal";
 import IVLayout from "./components/IVLayout";
 import SchedulesPanel from "./pages/SchedulesPanel";
 import Projects from "./pages/Projects";
+import Login from "./pages/Login";
 
 function Router() {
   return (
     <Switch>
+      {/* Auth */}
+      <Route path="/login" component={Login} />
       {/* Studio OS dashboard routes */}
       <Route path="/os">
         <IVLayout><CommandCentre /></IVLayout>
