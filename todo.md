@@ -50,6 +50,12 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Update IVLayout logout to redirect to /login
 - [x] Update const.ts getLoginUrl() to return /login
 - [ ] Push to GitHub (Gudmundur76/iventure-studio-os)
-- [ ] Deploy to VPS via Coolify (os.gummi.lt)
-- [ ] Verify all 11 dashboard pages work on os.gummi.lt
-- [ ] Retire old Coolify-managed iVenture OS container
+- [x] Push to GitHub (Gudmundur76/iventure-studio-os)
+- [x] Deploy to VPS via Coolify (os.gummi.lt) — Dockerfile added, build succeeded, container healthy
+- [x] Run DB migration on production (passwordHash column added)
+- [x] Create admin user in production DB (openId=admin, password=iventure2024)
+- [x] Seed production DB (13 agents, 20 skills, 5 projects, 5 memory entries)
+- [x] Verify login and auth.me work on os.gummi.lt
+- [x] Verify agents.list returns data on os.gummi.lt
+- [ ] Verify all 11 dashboard pages work on os.gummi.lt (manual browser check)
+- [ ] Retire old Coolify-managed iVenture OS container (optional cleanup)
