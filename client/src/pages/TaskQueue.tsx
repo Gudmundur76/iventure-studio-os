@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import IVLayout from "@/components/IVLayout";
 import {
   Plus, Bot, CheckCircle2, AlertCircle, Clock, Loader2,
   ChevronDown, ChevronUp, Trash2, RefreshCw, ListTodo
@@ -109,8 +108,7 @@ export default function TaskQueue() {
   };
 
   return (
-    <IVLayout>
-      <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full">
         {/* Header */}
         <div className="shrink-0 px-6 py-4 flex items-center gap-4" style={{ borderBottom: "1px solid var(--iv-border)" }}>
           <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ backgroundColor: "rgba(0,255,135,0.1)", border: "1px solid rgba(0,255,135,0.2)" }}>
@@ -216,6 +214,5 @@ export default function TaskQueue() {
           </div>
         )}
       </div>
-    </IVLayout>
   );
 }

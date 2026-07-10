@@ -174,6 +174,8 @@ export const workerTasks = mysqlTable("worker_tasks", {
   id: int("id").autoincrement().primaryKey(),
   workerId: varchar("workerId", { length: 64 }).notNull().default("nanoclaw"),
   prompt: text("prompt").notNull(),
+  projectId: int("projectId"),
+  projectRef: varchar("projectRef", { length: 32 }),
   language: varchar("language", { length: 8 }).default("is").notNull(),
   status: mysqlEnum("status", ["queued", "thinking", "done", "error"]).default("queued").notNull(),
   reply: text("reply"),

@@ -14,7 +14,7 @@ import { seedDatabase } from "./seed";
 import { createEnquiry, listEnquiries } from "./db";
 import { listUpdates, getUpdateBySlug, createUpdate, updatePost, deleteUpdate } from "./db";
 import { invokeLLM, listLLMModels } from "./_core/llm";
-import { createWorkerTask, updateWorkerTask, listWorkerTasks, getWorkerTask } from "./db";
+import { createWorkerTask, updateWorkerTask, listWorkerTasks, getWorkerTask, getProjectById, updateProject, getProjectTasks } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
 import { listScheduledJobs, listJobRunLogs, upsertScheduledJob } from "./db";
@@ -104,6 +104,40 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         await updateProjectStatus(input.id, input.status);
         return { success: true };
+      }),
+    get: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return getProjectById(input.id);
+      }),
+    update: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        description: z.string().optional(),
+        status: z.enum(["intake", "scoping", "active", "review", "delivered", "archived"]).optional(),
+        priority: z.enum(["low", "medium", "high", "urgent"]).optional(),
+        assignedAgent: z.string().optional(),
+        budget: z.string().optional(),
+        deadline: z.string().optional(),
+        deliverables: z.array(z.object({
+          id: z.string(),
+          title: z.string(),
+          done: z.boolean(),
+        })).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, deadline, ...rest } = input;
+        await updateProject(id, {
+          ...rest,
+          ...(deadline ? { deadline: new Date(deadline) } : {}),
+        });
+        return { success: true };
+      }),
+    tasks: publicProcedure
+      .input(z.object({ projectId: z.number() }))
+      .query(async ({ input }) => {
+        return getProjectTasks(input.projectId);
       }),
   }),
 

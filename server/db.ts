@@ -121,6 +121,37 @@ export async function updateProjectStatus(id: number, status: "intake" | "scopin
   await db.update(projects).set({ status }).where(eq(projects.id, id));
 }
 
+export async function getProjectById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function updateProject(id: number, data: Partial<{
+  title: string;
+  description: string;
+  status: "intake" | "scoping" | "active" | "review" | "delivered" | "archived";
+  priority: "low" | "medium" | "high" | "urgent";
+  assignedAgent: string;
+  budget: string;
+  deadline: Date;
+  deliverables: unknown;
+}>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(projects).set(data).where(eq(projects.id, id));
+}
+
+export async function getProjectTasks(projectId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(workerTasks)
+    .where(eq(workerTasks.projectId, projectId))
+    .orderBy(desc(workerTasks.createdAt))
+    .limit(50);
+}
+
 // Chat Messages
 export async function getChatHistory(sessionId: string, limit = 50) {
   const db = await getDb();

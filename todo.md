@@ -27,10 +27,10 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Task inbox — all tasks sent to NanoClaw with replies
 
 ## Phase 3 — Task Queue & Projects
-- [ ] Task Queue page — create tasks, assign to worker, track status
-- [ ] Projects page — organize tasks into projects
-- [ ] Project detail with task list and agent assignment
-- [ ] Deliverables tracking per project
+- [x] Task Queue page — create tasks, assign to worker, track status
+- [x] Projects page — organize tasks into projects
+- [x] Project detail with task list and agent assignment
+- [x] Deliverables tracking per project
 
 ## Phase 4 — Future (Path B prep)
 - [ ] Multi-tenant: tenant table, isolated worker contexts
