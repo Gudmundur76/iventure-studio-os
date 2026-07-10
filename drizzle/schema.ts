@@ -186,6 +186,22 @@ export const workerTasks = mysqlTable("worker_tasks", {
 export type WorkerTask = typeof workerTasks.$inferSelect;
 export type InsertWorkerTask = typeof workerTasks.$inferInsert;
 
+export const routingLogs = mysqlTable("routing_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  taskId: int("taskId"),
+  prompt: text("prompt").notNull(),
+  selectedAgentId: varchar("selectedAgentId", { length: 64 }).notNull(),
+  selectedAgentName: varchar("selectedAgentName", { length: 128 }).notNull(),
+  score: float("score").notNull(),
+  reason: text("reason"),
+  candidates: json("candidates").$type<Array<{ agentId: string; name: string; score: number; reason: string }>>(),
+  overridden: boolean("overridden").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type RoutingLog = typeof routingLogs.$inferSelect;
+export type InsertRoutingLog = typeof routingLogs.$inferInsert;
+
 export const scheduledJobs = mysqlTable("scheduled_jobs", {
   id: int("id").autoincrement().primaryKey(),
   jobName: varchar("jobName", { length: 64 }).notNull(),

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import { useEffect } from "react";
 import {
   Plus, Bot, CheckCircle2, AlertCircle, Clock, Loader2,
-  ChevronDown, ChevronUp, Trash2, RefreshCw, ListTodo
+  ChevronDown, ChevronUp, Trash2, RefreshCw, ListTodo, Zap, RotateCcw
 } from "lucide-react";
 
 type Task = {
@@ -82,9 +83,24 @@ export default function TaskQueue() {
   const [prompt, setPrompt] = useState("");
   const [language, setLanguage] = useState("is");
   const [filter, setFilter] = useState<"all" | "done" | "error" | "thinking">("all");
+  const [overrideAgentId, setOverrideAgentId] = useState<string | undefined>();
+  const [showRouting, setShowRouting] = useState(false);
   const utils = trpc.useUtils();
 
   const { data: tasks = [], refetch } = trpc.worker.tasks.useQuery({ limit: 100 });
+  const { data: agents = [] } = trpc.agents.list.useQuery();
+  const { data: routingRec, isFetching: routingLoading } = trpc.routing.recommend.useQuery(
+    { prompt },
+    { enabled: showRouting && prompt.trim().length > 10 }
+  );
+  const dispatchMutation = trpc.routing.dispatch.useMutation({
+    onSuccess: () => {
+      setPrompt("");
+      setOverrideAgentId(undefined);
+      setShowRouting(false);
+      utils.worker.tasks.invalidate();
+    },
+  });
   const sendMutation = trpc.worker.send.useMutation({
     onSuccess: () => {
       setPrompt("");
@@ -103,8 +119,12 @@ export default function TaskQueue() {
 
   const handleSend = () => {
     const text = prompt.trim();
-    if (!text || sendMutation.isPending) return;
-    sendMutation.mutate({ prompt: text, language });
+    if (!text || sendMutation.isPending || dispatchMutation.isPending) return;
+    if (showRouting) {
+      dispatchMutation.mutate({ prompt: text, language, overrideAgentId });
+    } else {
+      sendMutation.mutate({ prompt: text, language });
+    }
   };
 
   return (
@@ -136,10 +156,10 @@ export default function TaskQueue() {
                 value={prompt}
                 onChange={e => setPrompt(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && handleSend()}
-                placeholder="Quick dispatch to NanoClaw..."
+                placeholder="Describe the task — smart routing will select best agent..."
                 className="flex-1 bg-transparent outline-none text-sm"
                 style={{ color: "var(--iv-text)", fontFamily: "'DM Sans', sans-serif" }}
-                disabled={sendMutation.isPending}
+                disabled={sendMutation.isPending || dispatchMutation.isPending}
               />
               <select
                 value={language}
@@ -150,17 +170,69 @@ export default function TaskQueue() {
                 <option value="is">🇮🇸</option>
                 <option value="en">🇬🇧</option>
               </select>
+              <button
+                onClick={() => setShowRouting(!showRouting)}
+                className="p-1 rounded-lg transition-colors"
+                title="Toggle smart routing"
+                style={{ color: showRouting ? "var(--iv-blue)" : "var(--iv-text-muted)", backgroundColor: showRouting ? "rgba(0,180,216,0.1)" : "transparent" }}
+              >
+                <Zap size={13} />
+              </button>
             </div>
             <button
               onClick={handleSend}
-              disabled={!prompt.trim() || sendMutation.isPending}
+              disabled={!prompt.trim() || sendMutation.isPending || dispatchMutation.isPending}
               className="px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all active:scale-95 disabled:opacity-40"
               style={{ backgroundColor: "var(--iv-blue)", color: "var(--iv-navy)", fontFamily: "'Syne', sans-serif" }}
             >
-              {sendMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+              {(sendMutation.isPending || dispatchMutation.isPending) ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
               Dispatch
             </button>
           </div>
+          {/* Smart routing recommendation panel */}
+          {showRouting && prompt.trim().length > 10 && (
+            <div className="mt-3 p-3 rounded-xl" style={{ backgroundColor: "var(--iv-surface-2)", border: "1px solid var(--iv-border)" }}>
+              <div className="flex items-center gap-2 mb-2">
+                <Zap size={12} style={{ color: "var(--iv-blue)" }} />
+                <span className="text-xs font-mono font-bold" style={{ color: "var(--iv-blue)" }}>SMART ROUTING</span>
+                {routingLoading && <Loader2 size={11} className="animate-spin ml-auto" style={{ color: "var(--iv-text-muted)" }} />}
+              </div>
+              {routingRec && (
+                <>
+                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                    <span className="text-xs" style={{ color: "var(--iv-text-muted)" }}>Recommended:</span>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md" style={{ backgroundColor: "rgba(0,255,135,0.1)", color: "#00FF87", border: "1px solid rgba(0,255,135,0.2)" }}>
+                      {overrideAgentId ? (agents as any[]).find((a: any) => a.agentId === overrideAgentId)?.name ?? overrideAgentId : routingRec.selectedAgentName}
+                    </span>
+                    <span className="text-xs font-mono" style={{ color: "var(--iv-text-muted)" }}>
+                      score {routingRec.score.toFixed(1)} · [{(routingRec.taskCategories as string[]).join(", ")}]
+                    </span>
+                    {overrideAgentId && (
+                      <button onClick={() => setOverrideAgentId(undefined)} className="ml-auto flex items-center gap-1 text-xs" style={{ color: "var(--iv-text-muted)" }}>
+                        <RotateCcw size={10} /> Reset
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {(routingRec.candidates as any[]).map((c: any) => (
+                      <button
+                        key={c.agentId}
+                        onClick={() => setOverrideAgentId(c.agentId === routingRec.selectedAgentId && !overrideAgentId ? undefined : c.agentId)}
+                        className="text-xs px-2 py-0.5 rounded-md transition-colors"
+                        style={{
+                          backgroundColor: (overrideAgentId ?? routingRec.selectedAgentId) === c.agentId ? "rgba(0,180,216,0.15)" : "rgba(255,255,255,0.04)",
+                          color: (overrideAgentId ?? routingRec.selectedAgentId) === c.agentId ? "var(--iv-blue)" : "var(--iv-text-muted)",
+                          border: `1px solid ${(overrideAgentId ?? routingRec.selectedAgentId) === c.agentId ? "rgba(0,180,216,0.3)" : "var(--iv-border)"}`,
+                        }}
+                      >
+                        {c.name} <span className="opacity-60">{c.score.toFixed(0)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Filter tabs */}

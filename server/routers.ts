@@ -18,6 +18,10 @@ import { createWorkerTask, updateWorkerTask, listWorkerTasks, getWorkerTask, get
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
 import { listScheduledJobs, listJobRunLogs, upsertScheduledJob } from "./db";
+import { routeTask, logRoutingDecision } from "./routingEngine";
+import { routingLogs } from "../drizzle/schema";
+import { desc } from "drizzle-orm";
+import { getDb } from "./db";
 
 // Owner/admin guard — only the site owner (admin role) can manage updates
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -431,6 +435,49 @@ export const appRouter = router({
       return { success: true };
     }),
   }),
+
+  // Routing engine
+  routing: router({
+    recommend: publicProcedure
+      .input(z.object({ prompt: z.string() }))
+      .query(async ({ input }) => {
+        const result = await routeTask(input.prompt);
+        return result;
+      }),
+    dispatch: publicProcedure
+      .input(z.object({
+        prompt: z.string(),
+        overrideAgentId: z.string().optional(),
+        projectId: z.number().optional(),
+        language: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const routing = await routeTask(input.prompt);
+        const finalAgentId = input.overrideAgentId ?? routing.selectedAgentId;
+        const overridden = !!input.overrideAgentId && input.overrideAgentId !== routing.selectedAgentId;
+        // Create the worker task
+        const task = await createWorkerTask({
+          workerId: finalAgentId,
+          prompt: input.prompt,
+          projectId: input.projectId,
+          language: input.language ?? "en",
+        });
+        // Log the routing decision
+        await logRoutingDecision(input.prompt, routing, task.id, overridden);
+        return { task, routing, overridden };
+      }),
+    logs: publicProcedure
+      .input(z.object({ limit: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return [];
+        return db.select().from(routingLogs)
+          .orderBy(desc(routingLogs.createdAt))
+          .limit(input?.limit ?? 20);
+      }),
+  }),
 });
+
+// Routing engine procedures are added inline to appRouter above
 
 export type AppRouter = typeof appRouter;
