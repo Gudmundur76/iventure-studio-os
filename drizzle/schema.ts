@@ -317,3 +317,43 @@ export const agentSchedules = mysqlTable("agent_schedules", {
 });
 export type AgentSchedule = typeof agentSchedules.$inferSelect;
 export type InsertAgentSchedule = typeof agentSchedules.$inferInsert;
+
+// ── Multi-Tenant Clients ───────────────────────────────────────────────────
+// Each client gets an isolated context: dedicated agent, Gmail label, portal token
+export const clients = mysqlTable("clients", {
+  id: int("id").autoincrement().primaryKey(),
+  clientRef: varchar("clientRef", { length: 32 }).notNull().unique(), // e.g. "client-abc123"
+  name: varchar("name", { length: 128 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  company: varchar("company", { length: 128 }),
+  phone: varchar("phone", { length: 32 }),
+  assignedAgentId: varchar("assignedAgentId", { length: 64 }).notNull().default("nanoclaw"),
+  gmailLabel: varchar("gmailLabel", { length: 128 }), // Gmail label for this client's inbox
+  emailAddress: varchar("emailAddress", { length: 320 }), // Display email for this client
+  portalToken: varchar("portalToken", { length: 64 }).notNull().unique(), // public portal access token
+  subdomain: varchar("subdomain", { length: 64 }), // e.g. "acme" → acme.gummi.lt
+  status: mysqlEnum("status", ["active", "onboarding", "paused", "churned"]).default("onboarding").notNull(),
+  plan: varchar("plan", { length: 32 }).default("starter").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Client = typeof clients.$inferSelect;
+export type InsertClient = typeof clients.$inferInsert;
+
+// Client task submissions (from public portal — no login required)
+export const clientTasks = mysqlTable("client_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  clientRef: varchar("clientRef", { length: 32 }).notNull(),
+  title: varchar("title", { length: 256 }).notNull(),
+  description: text("description").notNull(),
+  priority: mysqlEnum("priority", ["low", "normal", "high", "urgent"]).default("normal").notNull(),
+  status: mysqlEnum("status", ["submitted", "in_progress", "done", "cancelled"]).default("submitted").notNull(),
+  agentReply: text("agentReply"),
+  agentTaskId: int("agentTaskId"), // links to browser_tasks or worker_tasks
+  submittedAt: timestamp("submittedAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+export type ClientTask = typeof clientTasks.$inferSelect;
+export type InsertClientTask = typeof clientTasks.$inferInsert;

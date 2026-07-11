@@ -88,6 +88,10 @@ function Router() {
       <Route path="/os/agent-schedules">
         <IVLayout><AgentSchedules /></IVLayout>
       </Route>
+      <Route path="/os/clients">
+        <IVLayout><ClientManagement /></IVLayout>
+      </Route>
+      <Route path="/portal/:token" component={PublicPortal} />
       {/* Public Giggo site routes */}
       <Route path="/chat" component={GiggoChat} />
       <Route path="/demo" component={GummiDemo} />
@@ -125,3 +129,5 @@ import SandboxNodes from "./pages/SandboxNodes";
 import AgentInbox from "./pages/AgentInbox";
 import BrowserWorker from "./pages/BrowserWorker";
 import AgentSchedules from "./pages/AgentSchedules";
+import ClientManagement from "./pages/ClientManagement";
+import PublicPortal from "./pages/PublicPortal";

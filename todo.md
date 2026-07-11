@@ -34,6 +34,10 @@ Designed to scale toward a multi-tenant client platform.
 
 ## Phase 4 — Future (Path B prep)
 - [ ] Multi-tenant: tenant table, isolated worker contexts
+- [ ] Multi-tenant: clients table with agentId, gmailLabel, subdomain, status; ClientManagement page (/os/clients)
+- [ ] Per-client email routing: each client gets a gmailLabel, agent auto-syncs and replies; wire to AgentInbox
+- [ ] Client-facing task portal: public page at /portal/:clientToken — submit tasks, view status (no login required)
+- [ ] Auto-deploy webhook: GitHub webhook endpoint on VPS → triggers Coolify redeploy on push to main
 - [x] Email identity per agent — agent_emails table, Gmail sync/reply via tRPC, AgentInbox page (/os/email)
 - [x] Browser automation worker — browser-use Docker on VPS port 8767, tRPC proxy, BrowserWorker page (/os/browser)
 - [x] Scheduled tasks per agent — agent_schedules table, cron UI with presets, run-now/toggle/delete, AgentSchedules page (/os/agent-schedules)

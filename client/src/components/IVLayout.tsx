@@ -5,6 +5,7 @@ import {
   FolderKanban, ListTodo, ChevronLeft, ChevronRight, Settings, LogOut, Layers,
   Cpu, Shield, Clock, Server, Package, Mail, Globe, CalendarClock
 } from "lucide-react";
+import { Users } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
 
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { path: "/os/cortex", icon: Activity, label: "Cortex Panel", badge: null },
   { path: "/os/analytics", icon: BarChart3, label: "Analytics", badge: null },
   { path: "/os/portal", icon: FolderKanban, label: "Client Portal", badge: null },
+  { path: "/os/clients", icon: Users, label: "Clients", badge: "NEW" },
   { path: "/os/email", icon: Mail, label: "Agent Inbox", badge: "NEW" },
   { path: "/os/browser", icon: Globe, label: "Browser Worker", badge: "NEW" },
   { path: "/os/agent-schedules", icon: CalendarClock, label: "Agent Schedules", badge: "NEW" },

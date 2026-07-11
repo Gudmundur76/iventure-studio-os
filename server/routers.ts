@@ -23,6 +23,11 @@ import {
   createBrowserTask, updateBrowserTask, listBrowserTasks, getBrowserTask,
   listAgentSchedules, createAgentSchedule, updateAgentSchedule, deleteAgentSchedule,
 } from "./db";
+import {
+  listClients, getClientByRef, getClientByToken,
+  createClient, updateClient, deleteClient,
+  listClientTasks, createClientTask, updateClientTask,
+} from "./db";
 import { routeTask, logRoutingDecision } from "./routingEngine";
 import { routingLogs } from "../drizzle/schema";
 import { desc } from "drizzle-orm";
@@ -33,6 +38,132 @@ import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 
 // Owner/admin guard — only the site owner (admin role) can manage updates
+// ── Clients Router ─────────────────────────────────────────────────────────
+const clientsRouter = router({
+  list: protectedProcedure.query(async () => listClients()),
+
+  get: protectedProcedure
+    .input(z.object({ clientRef: z.string() }))
+    .query(async ({ input }) => getClientByRef(input.clientRef)),
+
+  create: protectedProcedure
+    .input(z.object({
+      name: z.string().min(1),
+      email: z.string().email(),
+      company: z.string().optional(),
+      phone: z.string().optional(),
+      assignedAgentId: z.string().optional(),
+      gmailLabel: z.string().optional(),
+      emailAddress: z.string().optional(),
+      subdomain: z.string().optional(),
+      plan: z.string().optional(),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => createClient({
+      name: input.name,
+      email: input.email,
+      company: input.company,
+      phone: input.phone,
+      assignedAgentId: input.assignedAgentId ?? "nanoclaw",
+      gmailLabel: input.gmailLabel,
+      emailAddress: input.emailAddress,
+      subdomain: input.subdomain,
+      plan: input.plan ?? "starter",
+      notes: input.notes,
+      status: "onboarding",
+    })),
+
+  update: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string().optional(),
+      email: z.string().email().optional(),
+      company: z.string().optional(),
+      phone: z.string().optional(),
+      assignedAgentId: z.string().optional(),
+      gmailLabel: z.string().optional(),
+      emailAddress: z.string().optional(),
+      subdomain: z.string().optional(),
+      status: z.enum(["active", "onboarding", "paused", "churned"]).optional(),
+      plan: z.string().optional(),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await updateClient(id, data);
+      return { ok: true };
+    }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => { await deleteClient(input.id); return { ok: true }; }),
+
+  tasks: protectedProcedure
+    .input(z.object({ clientRef: z.string().optional() }))
+    .query(async ({ input }) => listClientTasks(input.clientRef)),
+
+  updateTask: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.enum(["submitted", "in_progress", "done", "cancelled"]).optional(),
+      agentReply: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await updateClientTask(id, {
+        ...data,
+        ...(data.status === "done" ? { completedAt: new Date() } : {}),
+      });
+      return { ok: true };
+    }),
+});
+
+// ── Client Portal Router (public — token-gated) ────────────────────────────
+const clientPortalRouter = router({
+  verify: publicProcedure
+    .input(z.object({ token: z.string() }))
+    .query(async ({ input }) => {
+      const client = await getClientByToken(input.token);
+      if (!client) throw new TRPCError({ code: "NOT_FOUND", message: "Portal not found" });
+      return { clientRef: client.clientRef, name: client.name, company: client.company, status: client.status, plan: client.plan };
+    }),
+
+  submitTask: publicProcedure
+    .input(z.object({
+      token: z.string(),
+      title: z.string().min(1).max(256),
+      description: z.string().min(1),
+      priority: z.enum(["low", "normal", "high", "urgent"]).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const client = await getClientByToken(input.token);
+      if (!client) throw new TRPCError({ code: "NOT_FOUND", message: "Portal not found" });
+      if (client.status === "churned" || client.status === "paused")
+        throw new TRPCError({ code: "FORBIDDEN", message: "Account is not active" });
+      const task = await createClientTask({
+        clientRef: client.clientRef,
+        title: input.title,
+        description: input.description,
+        priority: input.priority ?? "normal",
+        status: "submitted",
+      });
+      return { taskId: task.id, status: task.status };
+    }),
+
+  tasks: publicProcedure
+    .input(z.object({ token: z.string() }))
+    .query(async ({ input }) => {
+      const client = await getClientByToken(input.token);
+      if (!client) throw new TRPCError({ code: "NOT_FOUND", message: "Portal not found" });
+      const tasks = await listClientTasks(client.clientRef);
+      return tasks.map(t => ({
+        id: t.id, title: t.title, description: t.description,
+        priority: t.priority, status: t.status, agentReply: t.agentReply,
+        submittedAt: t.submittedAt, completedAt: t.completedAt,
+      }));
+    }),
+});
+
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user?.role !== "admin") {
     throw new TRPCError({ code: "FORBIDDEN", message: "Aðeins stjórnendur hafa aðgang" });
@@ -990,6 +1121,8 @@ export const appRouter = router({
   email: emailRouter,
   browser: browserRouter,
   schedules: schedulesRouter,
+  clients: clientsRouter,
+  portal: clientPortalRouter,
 });
 
 export type AppRouter = typeof appRouter;

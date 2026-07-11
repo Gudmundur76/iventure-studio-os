@@ -349,6 +349,11 @@ import {
   browserTasks, type BrowserTask, type InsertBrowserTask,
   agentSchedules, type AgentSchedule, type InsertAgentSchedule,
 } from "../drizzle/schema";
+import {
+  clients, type Client, type InsertClient,
+  clientTasks, type ClientTask, type InsertClientTask,
+} from "../drizzle/schema";
+import crypto from "crypto";
 
 // ── Agent Emails ──────────────────────────────────────────────────────────
 export async function listAgentEmails(agentId?: string, limit = 50): Promise<AgentEmail[]> {
@@ -456,3 +461,86 @@ export async function deleteAgentSchedule(id: number): Promise<void> {
 }
 
 export type { AgentSchedule };
+
+// ── Clients ───────────────────────────────────────────────────────────────
+export async function listClients(): Promise<Client[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(clients).orderBy(desc(clients.createdAt));
+}
+
+export async function getClientByRef(clientRef: string): Promise<Client | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(clients).where(eq(clients.clientRef, clientRef)).limit(1);
+  return rows[0];
+}
+
+export async function getClientByToken(portalToken: string): Promise<Client | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(clients).where(eq(clients.portalToken, portalToken)).limit(1);
+  return rows[0];
+}
+
+export async function createClient(data: Omit<InsertClient, "id" | "createdAt" | "updatedAt" | "clientRef" | "portalToken">): Promise<Client> {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  const clientRef = `client-${crypto.randomBytes(4).toString("hex")}`;
+  const portalToken = crypto.randomBytes(16).toString("hex");
+  const result = await db.insert(clients).values({ ...data, clientRef, portalToken });
+  const id = (result as unknown as { insertId: number }).insertId;
+  const rows = await db.select().from(clients).where(eq(clients.id, id)).limit(1);
+  return rows[0];
+}
+
+export async function updateClient(id: number, data: Partial<Client>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(clients).set(data).where(eq(clients.id, id));
+}
+
+export async function deleteClient(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(clients).where(eq(clients.id, id));
+}
+
+export type { Client };
+
+// ── Client Tasks ──────────────────────────────────────────────────────────
+export async function listClientTasks(clientRef?: string, limit = 50): Promise<ClientTask[]> {
+  const db = await getDb();
+  if (!db) return [];
+  if (clientRef) {
+    return db.select().from(clientTasks)
+      .where(eq(clientTasks.clientRef, clientRef))
+      .orderBy(desc(clientTasks.submittedAt))
+      .limit(limit);
+  }
+  return db.select().from(clientTasks).orderBy(desc(clientTasks.submittedAt)).limit(limit);
+}
+
+export async function createClientTask(data: Omit<InsertClientTask, "id" | "submittedAt" | "updatedAt">): Promise<ClientTask> {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  const result = await db.insert(clientTasks).values(data);
+  const id = (result as unknown as { insertId: number }).insertId;
+  const rows = await db.select().from(clientTasks).where(eq(clientTasks.id, id)).limit(1);
+  return rows[0];
+}
+
+export async function updateClientTask(id: number, data: Partial<ClientTask>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(clientTasks).set(data).where(eq(clientTasks.id, id));
+}
+
+export async function getClientTask(id: number): Promise<ClientTask | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(clientTasks).where(eq(clientTasks.id, id)).limit(1);
+  return rows[0];
+}
+
+export type { ClientTask };
