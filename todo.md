@@ -84,3 +84,8 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Verify agents.list returns data on os.gummi.lt
 - [x] Verify all 11 dashboard pages work on os.gummi.lt — all 10 tRPC endpoints return 200
 - [x] Retire old Coolify-managed iVenture OS container (optional cleanup — new container is healthy)
+
+- [x] Auto-deploy webhook: GitHub push → webhook receiver (port 8768) → git pull + docker rebuild
+- [x] Multi-tenant clients table and ClientManagement page (/os/clients)
+- [x] Public portal page (/portal/:token) — token-gated task submission
+- [x] Per-client email routing via gmailLabel on agents table
