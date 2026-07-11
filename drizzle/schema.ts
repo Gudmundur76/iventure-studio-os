@@ -40,6 +40,8 @@ export const agents = mysqlTable("agents", {
   capabilities: json("capabilities").$type<string[]>(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+  gmailLabel: varchar("gmailLabel", { length: 128 }), // Gmail label used as this agent's inbox
+  emailAddress: varchar("emailAddress", { length: 320 }), // Display email address for this agent
 });
 
 export type Agent = typeof agents.$inferSelect;
@@ -251,3 +253,67 @@ export const sandboxNodes = mysqlTable("sandbox_nodes", {
 
 export type SandboxNode = typeof sandboxNodes.$inferSelect;
 export type InsertSandboxNode = typeof sandboxNodes.$inferInsert;
+
+// ── Agent Email Identities ─────────────────────────────────────────────────
+// Each agent can have a Gmail label acting as its "inbox" — emails tagged
+// with that label are surfaced in the Agent Inbox page.
+export const agentEmails = mysqlTable("agent_emails", {
+  id: int("id").autoincrement().primaryKey(),
+  agentId: varchar("agentId", { length: 64 }).notNull(),
+  emailAddress: varchar("emailAddress", { length: 320 }).notNull(),
+  gmailLabel: varchar("gmailLabel", { length: 128 }), // Gmail label name to filter by
+  direction: mysqlEnum("direction", ["inbound", "outbound"]).notNull(),
+  subject: varchar("subject", { length: 512 }),
+  snippet: text("snippet"),
+  body: text("body"),
+  fromAddress: varchar("fromAddress", { length: 320 }),
+  toAddress: varchar("toAddress", { length: 320 }),
+  threadId: varchar("threadId", { length: 128 }),
+  messageId: varchar("messageId", { length: 128 }).unique(),
+  isRead: boolean("isRead").default(false).notNull(),
+  isReplied: boolean("isReplied").default(false).notNull(),
+  agentReply: text("agentReply"),
+  sentAt: timestamp("sentAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type AgentEmail = typeof agentEmails.$inferSelect;
+export type InsertAgentEmail = typeof agentEmails.$inferInsert;
+
+// ── Browser Automation Tasks ───────────────────────────────────────────────
+export const browserTasks = mysqlTable("browser_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  agentId: varchar("agentId", { length: 64 }).notNull().default("nanoclaw"),
+  prompt: text("prompt").notNull(),
+  startUrl: varchar("startUrl", { length: 2048 }),
+  status: mysqlEnum("status", ["queued", "running", "done", "error"]).default("queued").notNull(),
+  result: text("result"),
+  screenshotUrl: varchar("screenshotUrl", { length: 2048 }),
+  steps: json("steps").$type<Array<{ action: string; url?: string; timestamp: number }>>(),
+  elapsedMs: int("elapsedMs"),
+  errorMessage: text("errorMessage"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+export type BrowserTask = typeof browserTasks.$inferSelect;
+export type InsertBrowserTask = typeof browserTasks.$inferInsert;
+
+// ── Agent Schedules (cron per agent) ──────────────────────────────────────
+export const agentSchedules = mysqlTable("agent_schedules", {
+  id: int("id").autoincrement().primaryKey(),
+  agentId: varchar("agentId", { length: 64 }).notNull(),
+  name: varchar("name", { length: 128 }).notNull(),
+  description: text("description"),
+  cronExpression: varchar("cronExpression", { length: 64 }).notNull(),
+  taskPrompt: text("taskPrompt").notNull(),
+  isEnabled: boolean("isEnabled").default(true).notNull(),
+  heartbeatTaskUid: varchar("heartbeatTaskUid", { length: 128 }),
+  lastRunAt: timestamp("lastRunAt"),
+  lastRunStatus: mysqlEnum("lastRunStatus", ["success", "error", "running"]),
+  lastRunMessage: text("lastRunMessage"),
+  runCount: int("runCount").default(0).notNull(),
+  nextRunAt: timestamp("nextRunAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type AgentSchedule = typeof agentSchedules.$inferSelect;
+export type InsertAgentSchedule = typeof agentSchedules.$inferInsert;

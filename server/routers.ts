@@ -18,11 +18,17 @@ import { createWorkerTask, updateWorkerTask, listWorkerTasks, getWorkerTask, get
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
 import { listScheduledJobs, listJobRunLogs, upsertScheduledJob } from "./db";
+import {
+  listAgentEmails, saveAgentEmail, markEmailRead, saveEmailReply,
+  createBrowserTask, updateBrowserTask, listBrowserTasks, getBrowserTask,
+  listAgentSchedules, createAgentSchedule, updateAgentSchedule, deleteAgentSchedule,
+} from "./db";
 import { routeTask, logRoutingDecision } from "./routingEngine";
 import { routingLogs } from "../drizzle/schema";
 import { desc } from "drizzle-orm";
 import { getDb } from "./db";
 import { sandboxNodes } from "../drizzle/schema";
+import { agents as agentsTable } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 
@@ -32,6 +38,275 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
     throw new TRPCError({ code: "FORBIDDEN", message: "Aðeins stjórnendur hafa aðgang" });
   }
   return next({ ctx });
+});
+
+// ── Email Identity router ─────────────────────────────────────────────────
+const emailRouter = router({
+  // List emails for an agent (from DB cache)
+  list: protectedProcedure
+    .input(z.object({ agentId: z.string().optional(), limit: z.number().optional() }))
+    .query(async ({ input }) => {
+      return listAgentEmails(input.agentId, input.limit ?? 50);
+    }),
+
+  // Sync Gmail inbox for an agent — searches Gmail and saves to DB
+  sync: protectedProcedure
+    .input(z.object({ agentId: z.string(), gmailLabel: z.string().optional(), query: z.string().optional() }))
+    .mutation(async ({ input }) => {
+      // Call Gmail MCP via server-side manus-mcp-cli
+      const { execSync } = await import("child_process");
+      // Look up agent's configured Gmail label and email address from DB
+      const db = await getDb();
+      const agentRow = db ? (await db.select().from(agentsTable).where(eq(agentsTable.agentId, input.agentId)).limit(1))[0] : null;
+      const resolvedLabel = input.gmailLabel ?? agentRow?.gmailLabel ?? null;
+      const resolvedEmail = agentRow?.emailAddress ?? null;
+      const searchQuery = input.query ?? (resolvedLabel ? `label:${resolvedLabel}` : "in:inbox");
+      const mcpInput = JSON.stringify({ query: searchQuery, max_results: 20 });
+      let messages: Array<{ id: string; threadId: string; snippet?: string; subject?: string; from?: string; date?: string }> = [];
+      try {
+        const raw = execSync(
+          `manus-mcp-cli tool call gmail_search_messages --server gmail --input '${mcpInput.replace(/'/g, "'\\''")}' 2>/dev/null`,
+          { timeout: 30000, encoding: "utf8" }
+        );
+        const parsed = JSON.parse(raw);
+        messages = parsed?.content?.[0]?.text ? JSON.parse(parsed.content[0].text)?.messages ?? [] : [];
+      } catch {
+        messages = [];
+      }
+      let saved = 0;
+      for (const msg of messages) {
+        try {
+          await saveAgentEmail({
+            agentId: input.agentId,
+            emailAddress: resolvedEmail ?? `${input.agentId}@agent.local`,
+            gmailLabel: resolvedLabel,
+            direction: "inbound",
+            subject: msg.subject ?? "(no subject)",
+            snippet: msg.snippet ?? null,
+            fromAddress: msg.from ?? null,
+            toAddress: null,
+            threadId: msg.threadId ?? null,
+            messageId: msg.id,
+            isRead: false,
+            isReplied: false,
+            sentAt: msg.date ? new Date(msg.date) : null,
+          });
+          saved++;
+        } catch { /* duplicate — skip */ }
+      }
+      return { synced: messages.length, saved };
+    }),
+
+  // Mark email as read
+  markRead: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      await markEmailRead(input.id);
+      return { ok: true };
+    }),
+
+  // Send a reply via Gmail MCP and save to DB
+  reply: protectedProcedure
+    .input(z.object({ id: z.number(), to: z.string(), subject: z.string(), body: z.string() }))
+    .mutation(async ({ input }) => {
+      const { execSync } = await import("child_process");
+      const mcpInput = JSON.stringify({
+        messages: [{ to: input.to, subject: input.subject, body: input.body }],
+      });
+      try {
+        execSync(
+          `manus-mcp-cli tool call gmail_send_messages --server gmail --input '${mcpInput.replace(/'/g, "'\\''")}' 2>/dev/null`,
+          { timeout: 30000, encoding: "utf8" }
+        );
+      } catch (err) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: String(err) });
+      }
+      await saveEmailReply(input.id, input.body);
+      return { ok: true };
+    }),
+});
+
+// ── Browser Automation router ─────────────────────────────────────────────
+const browserRouter = router({
+  // List browser tasks
+  list: protectedProcedure
+    .input(z.object({ agentId: z.string().optional(), limit: z.number().optional() }))
+    .query(async ({ input }) => {
+      return listBrowserTasks(input.agentId, input.limit ?? 20);
+    }),
+
+  // Get a single browser task
+  get: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      return getBrowserTask(input.id);
+    }),
+
+  // Dispatch a browser task to the browser-use worker on VPS
+  dispatch: protectedProcedure
+    .input(z.object({
+      agentId: z.string().optional(),
+      prompt: z.string(),
+      startUrl: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const task = await createBrowserTask({
+        agentId: input.agentId ?? "nanoclaw",
+        prompt: input.prompt,
+        startUrl: input.startUrl ?? null,
+        status: "queued",
+        result: null,
+        screenshotUrl: null,
+        steps: null,
+        elapsedMs: null,
+        errorMessage: null,
+        completedAt: null,
+      });
+      // Try to dispatch to browser-use worker on VPS
+      const workerUrl = process.env.BROWSER_WORKER_URL ?? "http://187.124.213.194:8767";
+      try {
+        const res = await fetch(`${workerUrl}/task`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ task_id: task.id, prompt: input.prompt, start_url: input.startUrl }),
+          signal: AbortSignal.timeout(10000),
+        });
+        if (res.ok) {
+          await updateBrowserTask(task.id, { status: "running" });
+          return { ...task, status: "running" as const };
+        }
+      } catch {
+        // Worker not available — keep as queued for manual processing
+      }
+      return task;
+    }),
+
+  // Poll task status (called by UI polling loop)
+  sync: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const task = await getBrowserTask(input.id);
+      if (!task) throw new TRPCError({ code: "NOT_FOUND" });
+      if (task.status === "done" || task.status === "error") return task;
+      // Poll VPS worker for result
+      const workerUrl = process.env.BROWSER_WORKER_URL ?? "http://187.124.213.194:8767";
+      try {
+        const res = await fetch(`${workerUrl}/task/${input.id}`, { signal: AbortSignal.timeout(5000) });
+        if (res.ok) {
+          const data = await res.json() as { status?: string; result?: string; screenshot_url?: string; steps?: unknown[]; elapsed_ms?: number; error?: string };
+          if (data.status && data.status !== task.status) {
+            const update: Partial<typeof task> = { status: data.status as typeof task.status };
+            if (data.result) update.result = data.result;
+            if (data.screenshot_url) update.screenshotUrl = data.screenshot_url;
+            if (data.steps) update.steps = data.steps as typeof task.steps;
+            if (data.elapsed_ms) update.elapsedMs = data.elapsed_ms;
+            if (data.error) update.errorMessage = data.error;
+            if (data.status === "done" || data.status === "error") update.completedAt = new Date();
+            await updateBrowserTask(input.id, update);
+            return { ...task, ...update };
+          }
+        }
+      } catch { /* worker offline */ }
+      return task;
+    }),
+});
+
+// ── Agent Schedules router ────────────────────────────────────────────────
+const schedulesRouter = router({
+  // List schedules (optionally filtered by agent)
+  list: protectedProcedure
+    .input(z.object({ agentId: z.string().optional() }))
+    .query(async ({ input }) => {
+      return listAgentSchedules(input.agentId);
+    }),
+
+  // Create a new schedule
+  create: protectedProcedure
+    .input(z.object({
+      agentId: z.string(),
+      name: z.string(),
+      description: z.string().optional(),
+      cronExpression: z.string(),
+      taskPrompt: z.string(),
+      isEnabled: z.boolean().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const schedule = await createAgentSchedule({
+        agentId: input.agentId,
+        name: input.name,
+        description: input.description ?? null,
+        cronExpression: input.cronExpression,
+        taskPrompt: input.taskPrompt,
+        isEnabled: input.isEnabled ?? true,
+        heartbeatTaskUid: null,
+        lastRunAt: null,
+        lastRunStatus: null,
+        lastRunMessage: null,
+        runCount: 0,
+        nextRunAt: null,
+      });
+      return schedule;
+    }),
+
+  // Toggle enable/disable
+  toggle: protectedProcedure
+    .input(z.object({ id: z.number(), isEnabled: z.boolean() }))
+    .mutation(async ({ input }) => {
+      await updateAgentSchedule(input.id, { isEnabled: input.isEnabled });
+      return { ok: true };
+    }),
+
+  // Update schedule
+  update: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      name: z.string().optional(),
+      description: z.string().optional(),
+      cronExpression: z.string().optional(),
+      taskPrompt: z.string().optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id, ...data } = input;
+      await updateAgentSchedule(id, data);
+      return { ok: true };
+    }),
+
+  // Delete a schedule
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      await deleteAgentSchedule(input.id);
+      return { ok: true };
+    }),
+
+  // Run a schedule now (dispatches the prompt to the worker)
+  runNow: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const schedules = await listAgentSchedules();
+      const schedule = schedules.find(s => s.id === input.id);
+      if (!schedule) throw new TRPCError({ code: "NOT_FOUND" });
+      // Dispatch as a worker task
+      const task = await createBrowserTask({
+        agentId: schedule.agentId,
+        prompt: schedule.taskPrompt,
+        startUrl: null,
+        status: "queued",
+        result: null,
+        screenshotUrl: null,
+        steps: null,
+        elapsedMs: null,
+        errorMessage: null,
+        completedAt: null,
+      });
+      await updateAgentSchedule(input.id, {
+        lastRunAt: new Date(),
+        lastRunStatus: "running",
+        lastRunMessage: `Dispatched as browser task #${task.id}`,
+        runCount: (schedule.runCount ?? 0) + 1,
+      });
+      return { ok: true, taskId: task.id };
+    }),
 });
 
 // ── Coolify MCP proxy router ────────────────────────────────────────────────
@@ -712,6 +987,9 @@ export const appRouter = router({
       }),
   }),
   coolify: coolifyRouter,
+  email: emailRouter,
+  browser: browserRouter,
+  schedules: schedulesRouter,
 });
 
 export type AppRouter = typeof appRouter;

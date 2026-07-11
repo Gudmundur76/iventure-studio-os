@@ -344,3 +344,115 @@ export async function listJobRunLogs(jobName?: string, limit = 50): Promise<JobR
 }
 
 export type { ScheduledJob, JobRunLog };
+import {
+  agentEmails, type AgentEmail, type InsertAgentEmail,
+  browserTasks, type BrowserTask, type InsertBrowserTask,
+  agentSchedules, type AgentSchedule, type InsertAgentSchedule,
+} from "../drizzle/schema";
+
+// ── Agent Emails ──────────────────────────────────────────────────────────
+export async function listAgentEmails(agentId?: string, limit = 50): Promise<AgentEmail[]> {
+  const db = await getDb();
+  if (!db) return [];
+  if (agentId) {
+    return db.select().from(agentEmails)
+      .where(eq(agentEmails.agentId, agentId))
+      .orderBy(desc(agentEmails.createdAt))
+      .limit(limit);
+  }
+  return db.select().from(agentEmails).orderBy(desc(agentEmails.createdAt)).limit(limit);
+}
+
+export async function saveAgentEmail(data: Omit<InsertAgentEmail, "id" | "createdAt">): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(agentEmails).values(data).onDuplicateKeyUpdate({
+    set: { isRead: data.isRead, isReplied: data.isReplied, agentReply: data.agentReply ?? null },
+  });
+}
+
+export async function markEmailRead(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(agentEmails).set({ isRead: true }).where(eq(agentEmails.id, id));
+}
+
+export async function saveEmailReply(id: number, reply: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(agentEmails).set({ isReplied: true, agentReply: reply }).where(eq(agentEmails.id, id));
+}
+
+export type { AgentEmail };
+
+// ── Browser Tasks ─────────────────────────────────────────────────────────
+export async function createBrowserTask(data: Omit<InsertBrowserTask, "id" | "createdAt">): Promise<BrowserTask> {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  const result = await db.insert(browserTasks).values({ ...data, status: "queued" });
+  const id = (result as unknown as { insertId: number }).insertId;
+  const rows = await db.select().from(browserTasks).where(eq(browserTasks.id, id)).limit(1);
+  return rows[0];
+}
+
+export async function updateBrowserTask(id: number, data: Partial<BrowserTask>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(browserTasks).set(data).where(eq(browserTasks.id, id));
+}
+
+export async function listBrowserTasks(agentId?: string, limit = 20): Promise<BrowserTask[]> {
+  const db = await getDb();
+  if (!db) return [];
+  if (agentId) {
+    return db.select().from(browserTasks)
+      .where(eq(browserTasks.agentId, agentId))
+      .orderBy(desc(browserTasks.createdAt))
+      .limit(limit);
+  }
+  return db.select().from(browserTasks).orderBy(desc(browserTasks.createdAt)).limit(limit);
+}
+
+export async function getBrowserTask(id: number): Promise<BrowserTask | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(browserTasks).where(eq(browserTasks.id, id)).limit(1);
+  return rows[0];
+}
+
+export type { BrowserTask };
+
+// ── Agent Schedules ───────────────────────────────────────────────────────
+export async function listAgentSchedules(agentId?: string): Promise<AgentSchedule[]> {
+  const db = await getDb();
+  if (!db) return [];
+  if (agentId) {
+    return db.select().from(agentSchedules)
+      .where(eq(agentSchedules.agentId, agentId))
+      .orderBy(agentSchedules.name);
+  }
+  return db.select().from(agentSchedules).orderBy(agentSchedules.agentId);
+}
+
+export async function createAgentSchedule(data: Omit<InsertAgentSchedule, "id" | "createdAt" | "updatedAt">): Promise<AgentSchedule> {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  const result = await db.insert(agentSchedules).values(data);
+  const id = (result as unknown as { insertId: number }).insertId;
+  const rows = await db.select().from(agentSchedules).where(eq(agentSchedules.id, id)).limit(1);
+  return rows[0];
+}
+
+export async function updateAgentSchedule(id: number, data: Partial<AgentSchedule>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(agentSchedules).set(data).where(eq(agentSchedules.id, id));
+}
+
+export async function deleteAgentSchedule(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(agentSchedules).where(eq(agentSchedules.id, id));
+}
+
+export type { AgentSchedule };

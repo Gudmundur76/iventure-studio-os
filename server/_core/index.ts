@@ -47,6 +47,9 @@ async function startServer() {
   app.post("/api/scheduled/cortex-digest", cortexDigestHandler);
   app.post("/api/scheduled/manual-trigger", manualTriggerHandler);
 
+  // Start in-process agent schedule runner (node-cron, VPS-compatible)
+  startAgentScheduleRunner();
+
 
   // ── xAI Realtime WebSocket proxy ──────────────────────────────────────────
   // Browser cannot send Authorization headers on WebSocket connections.
@@ -224,3 +227,4 @@ async function startServer() {
 }
 
 startServer().catch(console.error);
+import { startAgentScheduleRunner } from "../agentScheduleRunner";

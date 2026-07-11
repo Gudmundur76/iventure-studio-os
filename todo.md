@@ -34,9 +34,9 @@ Designed to scale toward a multi-tenant client platform.
 
 ## Phase 4 — Future (Path B prep)
 - [ ] Multi-tenant: tenant table, isolated worker contexts
-- [ ] Email identity per agent (Nylas Agent Accounts)
-- [ ] Browser automation worker (browser-use)
-- [ ] Scheduled tasks (cron jobs per agent)
+- [x] Email identity per agent — agent_emails table, Gmail sync/reply via tRPC, AgentInbox page (/os/email)
+- [x] Browser automation worker — browser-use Docker on VPS port 8767, tRPC proxy, BrowserWorker page (/os/browser)
+- [x] Scheduled tasks per agent — agent_schedules table, cron UI with presets, run-now/toggle/delete, AgentSchedules page (/os/agent-schedules)
 
 ## Coolify MCP Server (COMPLETED)
 - [x] Audit Coolify API — token works at http://187.124.213.194:8000/api/v1
@@ -46,7 +46,7 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Add coolify tRPC router to iVenture OS (coolify.health, coolify.callTool)
 - [x] Add Coolify MCP page to iVenture OS dashboard (/os/coolify)
 - [x] Add Coolify MCP nav item to IVLayout sidebar with MCP badge
-- [ ] Push to GitHub and rebuild production container
+- [x] Push to GitHub (ef7ed99) — Coolify will auto-redeploy from GitHub
 
 ## OpenManus Integration
 - [x] Clone OpenManus on VPS, create config.toml with API keys

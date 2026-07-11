@@ -79,6 +79,15 @@ function Router() {
       <Route path="/os/coolify">
         <IVLayout><CoolifyMCP /></IVLayout>
       </Route>
+      <Route path="/os/email">
+        <IVLayout><AgentInbox /></IVLayout>
+      </Route>
+      <Route path="/os/browser">
+        <IVLayout><BrowserWorker /></IVLayout>
+      </Route>
+      <Route path="/os/agent-schedules">
+        <IVLayout><AgentSchedules /></IVLayout>
+      </Route>
       {/* Public Giggo site routes */}
       <Route path="/chat" component={GiggoChat} />
       <Route path="/demo" component={GummiDemo} />
@@ -112,3 +121,7 @@ function App() {
 
 export default App;
 import SandboxNodes from "./pages/SandboxNodes";
+
+import AgentInbox from "./pages/AgentInbox";
+import BrowserWorker from "./pages/BrowserWorker";
+import AgentSchedules from "./pages/AgentSchedules";

@@ -85,6 +85,20 @@
       "when": 1783735092320,
       "tag": "0011_far_sunspot",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1783773014309,
+      "tag": "0012_third_scarlet_spider",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1783774137143,
+      "tag": "0013_tranquil_toro",
+      "breakpoints": true
     }
   ]
 }
