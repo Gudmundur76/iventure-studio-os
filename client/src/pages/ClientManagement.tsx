@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Users, Plus, ExternalLink, Copy, Mail, Globe, Trash2, Edit2, CheckCircle, Clock, PauseCircle, XCircle } from "lucide-react";
+import { Users, Plus, ExternalLink, Copy, Mail, Globe, Trash2, Edit2, CheckCircle, Clock, PauseCircle, XCircle, Inbox } from "lucide-react";
 
 const STATUS_CONFIG = {
   active:     { label: "Active",     color: "bg-green-500/10 text-green-400 border-green-500/20",  icon: CheckCircle },
@@ -54,6 +55,7 @@ const EMPTY_FORM: ClientFormData = {
 
 export default function ClientManagement() {
   const { user } = useAuth();
+  const [, navigate] = useLocation();
   const [showCreate, setShowCreate] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState<ClientFormData>(EMPTY_FORM);
@@ -167,6 +169,16 @@ export default function ClientManagement() {
                 <Button size="sm" variant="outline" onClick={() => openEdit(selectedClientData)}>
                   <Edit2 className="w-3 h-3 mr-1" /> Edit
                 </Button>
+                {selectedClientData.assignedAgentId && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-[var(--iv-cyan)] border-[var(--iv-cyan)]/30 hover:bg-[var(--iv-cyan)]/10"
+                    onClick={() => navigate(`/os/email?agent=${encodeURIComponent(selectedClientData.assignedAgentId)}`)}
+                  >
+                    <Inbox className="w-3 h-3 mr-1" /> View Inbox
+                  </Button>
+                )}
                 <Button size="sm" variant="outline" className="text-red-400 hover:text-red-300" onClick={() => deleteMut.mutate({ id: selectedClientData.id })}>
                   <Trash2 className="w-3 h-3 mr-1" /> Delete
                 </Button>

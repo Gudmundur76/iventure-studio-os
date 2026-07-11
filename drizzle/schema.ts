@@ -319,10 +319,26 @@ export type AgentSchedule = typeof agentSchedules.$inferSelect;
 export type InsertAgentSchedule = typeof agentSchedules.$inferInsert;
 
 // ── Multi-Tenant Clients ───────────────────────────────────────────────────
-// Each client gets an isolated context: dedicated agent, Gmail label, portal token
+// Tenants — top-level isolation boundary (one per paying account / company)
+export const tenants = mysqlTable("tenants", {
+  id: int("id").autoincrement().primaryKey(),
+  tenantRef: varchar("tenantRef", { length: 32 }).notNull().unique(), // e.g. "tenant-abc123"
+  name: varchar("name", { length: 128 }).notNull(),
+  plan: varchar("plan", { length: 32 }).default("starter").notNull(),
+  status: mysqlEnum("status", ["active", "suspended", "trial"]).default("trial").notNull(),
+  workerQuota: int("workerQuota").default(10).notNull(), // max concurrent worker tasks
+  defaultAgentId: varchar("defaultAgentId", { length: 64 }).default("nanoclaw").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Tenant = typeof tenants.$inferSelect;
+export type InsertTenant = typeof tenants.$inferInsert;
+
+// Each client belongs to a tenant and gets an isolated context: dedicated agent, Gmail label, portal token
 export const clients = mysqlTable("clients", {
   id: int("id").autoincrement().primaryKey(),
   clientRef: varchar("clientRef", { length: 32 }).notNull().unique(), // e.g. "client-abc123"
+  tenantRef: varchar("tenantRef", { length: 32 }), // which tenant this client belongs to
   name: varchar("name", { length: 128 }).notNull(),
   email: varchar("email", { length: 320 }).notNull(),
   company: varchar("company", { length: 128 }),

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import IVLayout from "@/components/IVLayout";
 import { trpc } from "@/lib/trpc";
 import { Mail, RefreshCw, Reply, Eye, Inbox, Send, ChevronRight, Bot } from "lucide-react";
@@ -15,7 +15,22 @@ const AGENTS = [
 ];
 
 export default function AgentInbox() {
-  const [selectedAgent, setSelectedAgent] = useState("nanoclaw");
+  // Pre-select agent from ?agent= query param (set by ClientManagement "View Inbox" button)
+  const [selectedAgent, setSelectedAgent] = useState(() => {
+    if (typeof window !== "undefined") {
+      const agentParam = new URLSearchParams(window.location.search).get("agent");
+      if (agentParam) return agentParam;
+    }
+    return "nanoclaw";
+  });
+
+  // Also react if the URL changes while the component is mounted (e.g. back-navigation)
+  useEffect(() => {
+    const agentParam = new URLSearchParams(window.location.search).get("agent");
+    if (agentParam && agentParam !== selectedAgent) setSelectedAgent(agentParam);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [window.location.search]);
+
   const [selectedEmail, setSelectedEmail] = useState<number | null>(null);
   const [replyBody, setReplyBody] = useState("");
   const [showReply, setShowReply] = useState(false);

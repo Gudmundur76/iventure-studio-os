@@ -28,6 +28,10 @@ import {
   createClient, updateClient, deleteClient,
   listClientTasks, createClientTask, updateClientTask,
 } from "./db";
+import {
+  listTenants, getTenantByRef, createTenant, updateTenant, deleteTenant,
+  listClientsByTenant,
+} from "./db";
 import { routeTask, logRoutingDecision } from "./routingEngine";
 import { routingLogs } from "../drizzle/schema";
 import { desc } from "drizzle-orm";
@@ -36,6 +40,56 @@ import { sandboxNodes } from "../drizzle/schema";
 import { agents as agentsTable } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
+
+// ── Tenants Router ─────────────────────────────────────────────────────────
+const tenantsRouter = router({
+  list: protectedProcedure.query(() => listTenants()),
+
+  get: protectedProcedure
+    .input(z.object({ tenantRef: z.string() }))
+    .query(({ input }) => getTenantByRef(input.tenantRef)),
+
+  clients: protectedProcedure
+    .input(z.object({ tenantRef: z.string() }))
+    .query(({ input }) => listClientsByTenant(input.tenantRef)),
+
+  create: protectedProcedure
+    .input(z.object({
+      name: z.string().min(1).max(128),
+      plan: z.string().optional(),
+      defaultAgentId: z.string().optional(),
+      workerQuota: z.number().int().min(1).max(100).optional(),
+    }))
+    .mutation(({ input }) => createTenant({
+      name: input.name,
+      plan: input.plan ?? "starter",
+      defaultAgentId: input.defaultAgentId ?? "nanoclaw",
+      workerQuota: input.workerQuota ?? 10,
+      status: "trial",
+    })),
+
+  update: protectedProcedure
+    .input(z.object({
+      id: z.number().int(),
+      name: z.string().min(1).max(128).optional(),
+      plan: z.string().optional(),
+      status: z.enum(["active", "suspended", "trial"]).optional(),
+      defaultAgentId: z.string().optional(),
+      workerQuota: z.number().int().min(1).max(100).optional(),
+    }))
+    .mutation(({ input }) => {
+      const { id, ...rest } = input;
+      return updateTenant(id, rest);
+    }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.number().int() }))
+    .mutation(({ input }) => deleteTenant(input.id)),
+
+  assignClient: protectedProcedure
+    .input(z.object({ clientId: z.number().int(), tenantRef: z.string() }))
+    .mutation(({ input }) => updateClient(input.clientId, { tenantRef: input.tenantRef })),
+});
 
 // Owner/admin guard — only the site owner (admin role) can manage updates
 // ── Clients Router ─────────────────────────────────────────────────────────
@@ -1122,6 +1176,7 @@ export const appRouter = router({
   browser: browserRouter,
   schedules: schedulesRouter,
   clients: clientsRouter,
+  tenants: tenantsRouter,
   portal: clientPortalRouter,
 });
 

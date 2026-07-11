@@ -353,6 +353,9 @@ import {
   clients, type Client, type InsertClient,
   clientTasks, type ClientTask, type InsertClientTask,
 } from "../drizzle/schema";
+import {
+  tenants, type Tenant, type InsertTenant,
+} from "../drizzle/schema";
 import crypto from "crypto";
 
 // ── Agent Emails ──────────────────────────────────────────────────────────
@@ -544,3 +547,47 @@ export async function getClientTask(id: number): Promise<ClientTask | undefined>
 }
 
 export type { ClientTask };
+
+// ── Tenants ───────────────────────────────────────────────────────────────
+export async function listTenants(): Promise<Tenant[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(tenants).orderBy(desc(tenants.createdAt));
+}
+
+export async function getTenantByRef(tenantRef: string): Promise<Tenant | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  const rows = await db.select().from(tenants).where(eq(tenants.tenantRef, tenantRef)).limit(1);
+  return rows[0];
+}
+
+export async function createTenant(data: Omit<InsertTenant, "id" | "createdAt" | "updatedAt" | "tenantRef">): Promise<Tenant> {
+  const db = await getDb();
+  if (!db) throw new Error("DB not available");
+  const tenantRef = `tenant-${crypto.randomBytes(4).toString("hex")}`;
+  const result = await db.insert(tenants).values({ ...data, tenantRef });
+  const id = (result as unknown as { insertId: number }).insertId;
+  const rows = await db.select().from(tenants).where(eq(tenants.id, id)).limit(1);
+  return rows[0];
+}
+
+export async function updateTenant(id: number, data: Partial<Tenant>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(tenants).set(data).where(eq(tenants.id, id));
+}
+
+export async function deleteTenant(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(tenants).where(eq(tenants.id, id));
+}
+
+export async function listClientsByTenant(tenantRef: string): Promise<Client[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(clients).where(eq(clients.tenantRef, tenantRef)).orderBy(desc(clients.createdAt));
+}
+
+export type { Tenant };
