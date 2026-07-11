@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import {
   Terminal, Bot, Zap, Brain, Network, Activity, BarChart3,
   FolderKanban, ListTodo, ChevronLeft, ChevronRight, Settings, LogOut, Layers,
-  Cpu, Shield, Clock, Server
+  Cpu, Shield, Clock, Server, Package
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { path: "/os/portal", icon: FolderKanban, label: "Client Portal", badge: null },
   { path: "/os/schedules", icon: Clock, label: "Schedules", badge: null },
   { path: "/os/sandbox", icon: Server, label: "Sandbox Nodes", badge: "NEW" },
+  { path: "/os/coolify", icon: Package, label: "Coolify MCP", badge: "MCP" },
 ];
 
 interface IVLayoutProps {

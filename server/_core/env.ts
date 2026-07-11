@@ -11,4 +11,6 @@ export const ENV = {
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
   manusApiKey: process.env.MANUS_API_KEY ?? "",
   openManusUrl: process.env.OPENMANUS_URL ?? "",
+  coolifyMcpUrl: process.env.COOLIFY_MCP_URL ?? "http://187.124.213.194:8766",
+  coolifyApiToken: process.env.COOLIFY_API_TOKEN ?? "",
 };

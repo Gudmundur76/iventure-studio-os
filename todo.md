@@ -38,6 +38,16 @@ Designed to scale toward a multi-tenant client platform.
 - [ ] Browser automation worker (browser-use)
 - [ ] Scheduled tasks (cron jobs per agent)
 
+## Coolify MCP Server (COMPLETED)
+- [x] Audit Coolify API — token works at http://187.124.213.194:8000/api/v1
+- [x] Build FastMCP Python server with 15 tools (coolify_list_applications, coolify_get_application, coolify_deploy_application, coolify_restart_application, coolify_stop_application, coolify_start_application, coolify_list_deployments, coolify_get_deployment_logs, coolify_list_servers, coolify_get_server_resources, coolify_list_projects, coolify_list_env_vars, coolify_set_env_var, coolify_delete_env_var, coolify_list_services)
+- [x] Deploy on VPS as Docker container (port 8766, SSE at /sse)
+- [x] Verify all 15 tools against live Coolify API
+- [x] Add coolify tRPC router to iVenture OS (coolify.health, coolify.callTool)
+- [x] Add Coolify MCP page to iVenture OS dashboard (/os/coolify)
+- [x] Add Coolify MCP nav item to IVLayout sidebar with MCP badge
+- [ ] Push to GitHub and rebuild production container
+
 ## OpenManus Integration
 - [x] Clone OpenManus on VPS, create config.toml with API keys
 - [x] Deploy OpenManus as Docker container on VPS (openmanus-api on port 8088, direct Docker not Coolify-managed)

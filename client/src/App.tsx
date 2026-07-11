@@ -29,6 +29,7 @@ import IVLayout from "./components/IVLayout";
 import SchedulesPanel from "./pages/SchedulesPanel";
 import Projects from "./pages/Projects";
 import Login from "./pages/Login";
+import CoolifyMCP from "./pages/CoolifyMCP";
 
 function Router() {
   return (
@@ -74,6 +75,9 @@ function Router() {
       </Route>
       <Route path="/os/sandbox">
         <IVLayout><SandboxNodes /></IVLayout>
+      </Route>
+      <Route path="/os/coolify">
+        <IVLayout><CoolifyMCP /></IVLayout>
       </Route>
       {/* Public Giggo site routes */}
       <Route path="/chat" component={GiggoChat} />

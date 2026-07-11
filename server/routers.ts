@@ -34,6 +34,91 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   return next({ ctx });
 });
 
+// ── Coolify MCP proxy router ────────────────────────────────────────────────
+// Exposes Coolify infrastructure management via tRPC so the UI can call it
+// without exposing the Coolify API token to the browser.
+const coolifyRouter = router({
+  // Proxy a call to the Coolify MCP server tool
+  callTool: protectedProcedure
+    .input(z.object({
+      tool: z.string(),
+      args: z.record(z.string(), z.unknown()).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const mcpBase = ENV.coolifyMcpUrl;
+      const sseRes = await fetch(`${mcpBase}/sse`, {
+        headers: { Accept: "text/event-stream" },
+        signal: AbortSignal.timeout(10000),
+      });
+      let sessionId = "";
+      const reader = sseRes.body!.getReader();
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        const match = chunk.match(/session_id=([a-f0-9]+)/);
+        if (match) { sessionId = match[1]; break; }
+      }
+      reader.cancel();
+      if (!sessionId) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Could not connect to Coolify MCP" });
+      await fetch(`${mcpBase}/messages/?session_id=${sessionId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "iventure-os", version: "1.0" } } }),
+        signal: AbortSignal.timeout(10000),
+      });
+      const toolRes = await fetch(`${mcpBase}/messages/?session_id=${sessionId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: input.tool, arguments: input.args ?? {} } }),
+        signal: AbortSignal.timeout(30000),
+      });
+      if (!toolRes.ok) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `MCP tool call failed: ${toolRes.status}` });
+      const data = await toolRes.json();
+      return data;
+    }),
+
+  health: protectedProcedure.query(async () => {
+    try {
+      const mcpBase = ENV.coolifyMcpUrl;
+      const sseRes = await fetch(`${mcpBase}/sse`, {
+        headers: { Accept: "text/event-stream" },
+        signal: AbortSignal.timeout(8000),
+      });
+      const reader = sseRes.body!.getReader();
+      const decoder = new TextDecoder();
+      let sessionId = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        const match = chunk.match(/session_id=([a-f0-9]+)/);
+        if (match) { sessionId = match[1]; break; }
+      }
+      reader.cancel();
+      if (!sessionId) return { ok: false, tools: 0, error: "No session" };
+      await fetch(`${mcpBase}/messages/?session_id=${sessionId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "iventure-os", version: "1.0" } } }),
+        signal: AbortSignal.timeout(8000),
+      });
+      const listRes = await fetch(`${mcpBase}/messages/?session_id=${sessionId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/list", params: {} }),
+        signal: AbortSignal.timeout(8000),
+      });
+      const listData = await listRes.json() as { result?: { tools?: unknown[] } };
+      const toolCount = listData?.result?.tools?.length ?? 0;
+      return { ok: true, tools: toolCount, url: mcpBase };
+    } catch (e: unknown) {
+      return { ok: false, tools: 0, error: String(e) };
+    }
+  }),
+});
+
 export const appRouter = router({
   system: systemRouter,
   sandbox: router({
@@ -626,8 +711,7 @@ export const appRouter = router({
           .limit(input?.limit ?? 20);
       }),
   }),
+  coolify: coolifyRouter,
 });
-
-// Routing engine procedures are added inline to appRouter above
 
 export type AppRouter = typeof appRouter;
