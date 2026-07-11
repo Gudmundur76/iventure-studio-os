@@ -39,14 +39,15 @@ Designed to scale toward a multi-tenant client platform.
 - [ ] Scheduled tasks (cron jobs per agent)
 
 ## OpenManus Integration
-- [ ] Clone OpenManus on VPS, create config.toml with API keys
-- [ ] Create Coolify service for OpenManus (second container on same VPS)
-- [ ] Add OPENMANUS_URL env var to Node app
-- [ ] Add worker.dispatch tRPC mutation (POST task to OpenManus, save to worker_tasks)
-- [ ] Add worker.taskStatus tRPC query (poll OpenManus task status)
-- [ ] Build Worker page UI: dispatch form, live polling, result display
-- [ ] Test end-to-end: submit task → OpenManus executes → result in UI
-- [ ] Push to GitHub and verify on os.gummi.lt
+- [x] Clone OpenManus on VPS, create config.toml with API keys
+- [x] Deploy OpenManus as Docker container on VPS (openmanus-api on port 8088, direct Docker not Coolify-managed)
+- [x] Add OPENMANUS_URL env var to Node app
+- [x] Add worker.dispatch tRPC mutation (POST task to OpenManus, save to worker_tasks)
+- [x] Add worker.syncTask tRPC mutation (polls OpenManus and updates DB — used by UI polling loop)
+- [x] Build Worker page UI: dispatch form, live polling, result display
+- [x] Test end-to-end: submit task → OpenManus executes → result in UI
+- [x] Push to GitHub and verify on os.gummi.lt
+- [x] Verify Worker page UI end-to-end in browser: submit task, auto-poll, render result
 
 ## Phase 5 — VPS Migration (IN PROGRESS)
 - [x] Replace Manus OAuth with local JWT auth (bcryptjs + jose)
