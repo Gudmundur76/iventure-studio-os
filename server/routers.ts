@@ -84,7 +84,7 @@ export const appRouter = router({
               region: input.region,
               secret: input.secret,
               status: "online",
-              lastHealthAt: Date.now(),
+              lastHealthAt: Math.floor(Date.now() / 1000),
               healthData: health,
               isActive: true,
             },
