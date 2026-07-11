@@ -233,3 +233,21 @@ export const jobRunLogs = mysqlTable("job_run_logs", {
 
 export type JobRunLog = typeof jobRunLogs.$inferSelect;
 export type InsertJobRunLog = typeof jobRunLogs.$inferInsert;
+
+// ── Sandbox Nodes ─────────────────────────────────────────────────────────────
+export const sandboxNodes = mysqlTable("sandbox_nodes", {
+  id: int("id").autoincrement().primaryKey(),
+  nodeId: varchar("nodeId", { length: 64 }).notNull().unique(),
+  label: varchar("label", { length: 128 }).notNull(),
+  url: varchar("url", { length: 256 }).notNull(),
+  region: varchar("region", { length: 64 }).notNull(),
+  secret: varchar("secret", { length: 256 }),
+  status: varchar("status", { length: 32 }).notNull().default("unknown"),
+  lastHealthAt: int("lastHealthAt"),
+  healthData: json("healthData"),
+  isActive: boolean("isActive").notNull().default(true),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SandboxNode = typeof sandboxNodes.$inferSelect;
+export type InsertSandboxNode = typeof sandboxNodes.$inferInsert;

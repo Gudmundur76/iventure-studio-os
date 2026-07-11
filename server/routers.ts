@@ -22,6 +22,8 @@ import { routeTask, logRoutingDecision } from "./routingEngine";
 import { routingLogs } from "../drizzle/schema";
 import { desc } from "drizzle-orm";
 import { getDb } from "./db";
+import { sandboxNodes } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 // Owner/admin guard — only the site owner (admin role) can manage updates
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -33,6 +35,116 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
 
 export const appRouter = router({
   system: systemRouter,
+  sandbox: router({
+    // List all registered nodes
+    nodes: protectedProcedure.query(async () => {
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(sandboxNodes).orderBy(sandboxNodes.createdAt);
+    }),
+
+    // Register a new node
+    registerNode: protectedProcedure
+      .input(z.object({
+        nodeId: z.string().min(1),
+        label: z.string().min(1),
+        url: z.string().url(),
+        region: z.string().min(1),
+        secret: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+
+        // Verify the node is reachable
+        const agentSecret = input.secret || "iventure-sandbox-secret-2026";
+        try {
+          const resp = await fetch(`${input.url}/health`, {
+            headers: { "x-agent-secret": agentSecret },
+            signal: AbortSignal.timeout(8000),
+          });
+          if (!resp.ok) throw new Error(`Health check returned ${resp.status}`);
+          const health = await resp.json();
+
+          await db.insert(sandboxNodes).values({
+            nodeId: input.nodeId,
+            label: input.label,
+            url: input.url,
+            region: input.region,
+            secret: input.secret,
+            status: "online",
+            lastHealthAt: Math.floor(Date.now() / 1000),
+            healthData: health,
+            isActive: true,
+            createdAt: new Date(),
+          }).onDuplicateKeyUpdate({
+            set: {
+              label: input.label,
+              url: input.url,
+              region: input.region,
+              secret: input.secret,
+              status: "online",
+              lastHealthAt: Date.now(),
+              healthData: health,
+              isActive: true,
+            },
+          });
+          return { success: true, health };
+        } catch (e: any) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: `Cannot reach node: ${e.message}` });
+        }
+      }),
+
+    // Remove a node
+    removeNode: protectedProcedure
+      .input(z.object({ nodeId: z.string() }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        await db.delete(sandboxNodes).where(eq(sandboxNodes.nodeId, input.nodeId));
+        return { success: true };
+      }),
+
+    // Poll health of all nodes
+    pollHealth: protectedProcedure.mutation(async () => {
+      const db = await getDb();
+      if (!db) return { updated: 0 };
+      const nodes = await db.select().from(sandboxNodes).where(eq(sandboxNodes.isActive, true));
+      let updated = 0;
+      for (const node of nodes) {
+        const secret = node.secret || "iventure-sandbox-secret-2026";
+        try {
+          const resp = await fetch(`${node.url}/health`, {
+            headers: { "x-agent-secret": secret },
+            signal: AbortSignal.timeout(5000),
+          });
+          const health = await resp.json();
+          await db.update(sandboxNodes)
+            .set({ status: "online", lastHealthAt: Math.floor(Date.now() / 1000), healthData: health })
+            .where(eq(sandboxNodes.nodeId, node.nodeId));
+          updated++;
+        } catch {
+          await db.update(sandboxNodes)
+            .set({ status: "offline" })
+            .where(eq(sandboxNodes.nodeId, node.nodeId));
+        }
+      }
+      return { updated };
+    }),
+
+    // Coordinator health (if coordinator is configured)
+    coordinatorHealth: protectedProcedure.query(async () => {
+      const coordinatorUrl = (ENV.openManusUrl || "http://187.124.213.194:8088").replace(":8088", ":8901");
+      try {
+        const resp = await fetch(`${coordinatorUrl}/health`, {
+          signal: AbortSignal.timeout(5000),
+        });
+        return await resp.json();
+      } catch {
+        return { status: "unreachable" };
+      }
+    }),
+  }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

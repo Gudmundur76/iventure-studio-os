@@ -72,6 +72,9 @@ function Router() {
       <Route path="/os/projects">
         <IVLayout><Projects /></IVLayout>
       </Route>
+      <Route path="/os/sandbox">
+        <IVLayout><SandboxNodes /></IVLayout>
+      </Route>
       {/* Public Giggo site routes */}
       <Route path="/chat" component={GiggoChat} />
       <Route path="/demo" component={GummiDemo} />
@@ -104,3 +107,4 @@ function App() {
 }
 
 export default App;
+import SandboxNodes from "./pages/SandboxNodes";

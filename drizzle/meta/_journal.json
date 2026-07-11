@@ -71,6 +71,13 @@
       "when": 1783721841657,
       "tag": "0009_lowly_enchantress",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1783733723664,
+      "tag": "0010_colossal_molecule_man",
+      "breakpoints": true
     }
   ]
 }
