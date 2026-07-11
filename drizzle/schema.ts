@@ -244,7 +244,7 @@ export const sandboxNodes = mysqlTable("sandbox_nodes", {
   secret: varchar("secret", { length: 256 }),
   status: varchar("status", { length: 32 }).notNull().default("unknown"),
   lastHealthAt: int("lastHealthAt"),
-  healthData: json("healthData"),
+  healthData: text("healthData"),
   isActive: boolean("isActive").notNull().default(true),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
