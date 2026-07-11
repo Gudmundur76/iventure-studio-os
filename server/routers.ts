@@ -24,6 +24,7 @@ import { desc } from "drizzle-orm";
 import { getDb } from "./db";
 import { sandboxNodes } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 // Owner/admin guard — only the site owner (admin role) can manage updates
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -57,7 +58,7 @@ export const appRouter = router({
         if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
         // Verify the node is reachable
-        const agentSecret = input.secret || "iventure-sandbox-secret-2026";
+          const agentSecret = input.secret || "iventure-sandbox-secret-2026";
         try {
           const resp = await fetch(`${input.url}/health`, {
             headers: { "x-agent-secret": agentSecret },
@@ -65,30 +66,21 @@ export const appRouter = router({
           });
           if (!resp.ok) throw new Error(`Health check returned ${resp.status}`);
           const health = await resp.json();
-
-          await db.insert(sandboxNodes).values({
-            nodeId: input.nodeId,
-            label: input.label,
-            url: input.url,
-            region: input.region,
-            secret: input.secret,
-            status: "online",
-            lastHealthAt: Math.floor(Date.now() / 1000),
-            healthData: health,
-            isActive: true,
-            createdAt: new Date(),
-          }).onDuplicateKeyUpdate({
-            set: {
-              label: input.label,
-              url: input.url,
-              region: input.region,
-              secret: input.secret,
-              status: "online",
-              lastHealthAt: Math.floor(Date.now() / 1000),
-              healthData: health,
-              isActive: true,
-            },
-          });
+          const healthJson = JSON.stringify(health);
+          const nowSec = Math.floor(Date.now() / 1000);
+          await db.execute(sql`
+            INSERT INTO sandbox_nodes (nodeId, label, url, region, secret, status, lastHealthAt, healthData, isActive, createdAt)
+            VALUES (${input.nodeId}, ${input.label}, ${input.url}, ${input.region}, ${input.secret ?? null}, 'online', ${nowSec}, ${healthJson}, 1, NOW())
+            ON DUPLICATE KEY UPDATE
+              label = ${input.label},
+              url = ${input.url},
+              region = ${input.region},
+              secret = ${input.secret ?? null},
+              status = 'online',
+              lastHealthAt = ${nowSec},
+              healthData = ${healthJson},
+              isActive = 1
+          `);
           return { success: true, health };
         } catch (e: any) {
           throw new TRPCError({ code: "BAD_REQUEST", message: `Cannot reach node: ${e.message}` });
