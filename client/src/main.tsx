@@ -7,6 +7,8 @@ import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
 import "./index.css";
+import "@astryxdesign/core/reset.css";
+import "@astryxdesign/core/astryx.css";
 
 const queryClient = new QueryClient();
 
