@@ -32,6 +32,7 @@ import {
   listTenants, getTenantByRef, createTenant, updateTenant, deleteTenant,
   listClientsByTenant,
 } from "./db";
+import { setTenantClients } from "./db";
 import { routeTask, logRoutingDecision } from "./routingEngine";
 import { routingLogs } from "../drizzle/schema";
 import { desc } from "drizzle-orm";
@@ -89,6 +90,10 @@ const tenantsRouter = router({
   assignClient: protectedProcedure
     .input(z.object({ clientId: z.number().int(), tenantRef: z.string() }))
     .mutation(({ input }) => updateClient(input.clientId, { tenantRef: input.tenantRef })),
+
+  setClients: protectedProcedure
+    .input(z.object({ tenantRef: z.string(), clientIds: z.array(z.number().int()) }))
+    .mutation(({ input }) => setTenantClients(input.tenantRef, input.clientIds)),
 });
 
 // Owner/admin guard — only the site owner (admin role) can manage updates

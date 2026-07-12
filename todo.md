@@ -92,3 +92,4 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Tenant isolation: tenants table, CRUD helpers, tenantsRouter (list/get/create/update/delete/assignClient/clients)
 - [x] ClientManagement → AgentInbox direct link: View Inbox button navigates to /os/email?agent=<assignedAgentId>; AgentInbox reads ?agent= param on mount
 - [x] TenantManagement page (/os/tenants) — Astryx components (Table, Card, Dialog, Badge, Button, Grid, HStack, VStack, Selector, NumberInput); KPI cards; create/edit/delete dialogs with optimistic updates; nav item added to IVLayout
+- [x] Assign Clients dialog on TenantManagement — UserPlus button per row opens MultiSelector dialog; setTenantClients bulk helper in db.ts; tenants.setClients tRPC procedure; pre-populates current assignments; clears old + sets new in one operation

@@ -1,4 +1,4 @@
-import { eq, desc, like, and, sql } from "drizzle-orm";
+import { eq, desc, like, and, sql, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertUser, users,
@@ -588,6 +588,17 @@ export async function listClientsByTenant(tenantRef: string): Promise<Client[]> 
   const db = await getDb();
   if (!db) return [];
   return db.select().from(clients).where(eq(clients.tenantRef, tenantRef)).orderBy(desc(clients.createdAt));
+}
+
+export async function setTenantClients(tenantRef: string, clientIds: number[]): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  // Clear all clients currently assigned to this tenant
+  await db.update(clients).set({ tenantRef: null }).where(eq(clients.tenantRef, tenantRef));
+  // Assign the new set (if any)
+  if (clientIds.length > 0) {
+    await db.update(clients).set({ tenantRef }).where(inArray(clients.id, clientIds));
+  }
 }
 
 export type { Tenant };

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Building2, Plus, Pencil, Trash2, Users } from "lucide-react";
+import { Building2, Plus, Pencil, Trash2, Users, UserPlus } from "lucide-react";
 
 // Astryx components
 import { Table, proportional, pixel, type TableColumn } from "@astryxdesign/core/Table";
@@ -18,6 +18,7 @@ import { Text } from "@astryxdesign/core/Text";
 import { TextInput } from "@astryxdesign/core/TextInput";
 import { Selector } from "@astryxdesign/core/Selector";
 import { NumberInput } from "@astryxdesign/core/NumberInput";
+import { MultiSelector } from "@astryxdesign/core/MultiSelector";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface TenantRow extends Record<string, unknown> {
@@ -30,6 +31,16 @@ interface TenantRow extends Record<string, unknown> {
   defaultAgentId: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+interface ClientRow extends Record<string, unknown> {
+  id: number;
+  clientRef: string;
+  tenantRef: string | null;
+  name: string;
+  email: string;
+  company: string | null;
+  status: string;
 }
 
 // ── Badge colour helpers ────────────────────────────────────────────────────
@@ -86,6 +97,8 @@ export default function TenantManagement() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editTenant, setEditTenant] = useState<TenantRow | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<TenantRow | null>(null);
+  const [assignTarget, setAssignTarget] = useState<TenantRow | null>(null);
+  const [assignSelected, setAssignSelected] = useState<string[]>([]);
 
   // ── Form state ────────────────────────────────────────────────────────────
   const [form, setForm] = useState<TenantForm>(DEFAULT_FORM);
@@ -153,6 +166,38 @@ export default function TenantManagement() {
       toast.success("Tenant updated");
     },
   });
+
+  // ── Assign Clients ────────────────────────────────────────────────────────
+  const { data: rawClients = [] } = trpc.clients.list.useQuery();
+  const allClients = rawClients as ClientRow[];
+  const clientOptions = allClients.map((c) => ({
+    value: String(c.id),
+    label: c.company ? `${c.name} (${c.company})` : c.name,
+  }));
+  const setClientsMut = trpc.tenants.setClients.useMutation({
+    onSuccess: () => {
+      utils.tenants.list.invalidate();
+      utils.clients.list.invalidate();
+      setAssignTarget(null);
+      setAssignSelected([]);
+      toast.success("Clients updated");
+    },
+    onError: () => toast.error("Failed to update clients"),
+  });
+  function openAssignDialog(tenant: TenantRow) {
+    const preSelected = allClients
+      .filter((c) => c.tenantRef === tenant.tenantRef)
+      .map((c) => String(c.id));
+    setAssignSelected(preSelected);
+    setAssignTarget(tenant);
+  }
+  function handleAssign() {
+    if (!assignTarget) return;
+    setClientsMut.mutate({
+      tenantRef: assignTarget.tenantRef,
+      clientIds: assignSelected.map(Number),
+    });
+  }
 
   const deleteMut = trpc.tenants.delete.useMutation({
     onMutate: async (input) => {
@@ -235,7 +280,7 @@ export default function TenantManagement() {
     {
       key: "id",
       header: "",
-      width: pixel(110),
+      width: pixel(145),
       align: "end",
       renderCell: (t) => (
         <HStack gap={1} vAlign="center">
@@ -254,6 +299,14 @@ export default function TenantManagement() {
                 workerQuota: t.workerQuota,
               });
             }}
+          />
+          <Button
+            label="Assign clients"
+            variant="ghost"
+            size="sm"
+            icon={<UserPlus size={14} />}
+            isIconOnly
+            onClick={() => openAssignDialog(t)}
           />
           <Button
             label="Delete tenant"
@@ -440,6 +493,69 @@ export default function TenantManagement() {
       </Dialog>
 
       {/* ── Delete confirm dialog ── */}
+      {/* ── Assign Clients dialog ── */}
+      <Dialog
+        isOpen={!!assignTarget}
+        onOpenChange={(open) => { if (!open) { setAssignTarget(null); setAssignSelected([]); } }}
+        purpose="form"
+        width={520}
+      >
+        <Layout
+          header={
+            <DialogHeader
+              title={`Assign Clients — ${assignTarget?.name ?? ""}`}
+              onOpenChange={(open) => { if (!open) { setAssignTarget(null); setAssignSelected([]); } }}
+            />
+          }
+          content={
+            <LayoutContent>
+              <VStack gap={3}>
+                <Text type="supporting" color="secondary">
+                  Select which clients belong to this tenant. Clients not in this selection will be
+                  unlinked from the tenant.
+                </Text>
+                <MultiSelector
+                  label="Clients"
+                  options={clientOptions}
+                  value={assignSelected}
+                  onChange={setAssignSelected}
+                  placeholder="Search clients…"
+                  hasSearch
+                  hasSelectAll
+                  hasClear
+                  triggerDisplay="badges"
+                  width="100%"
+                />
+                {assignSelected.length > 0 && (
+                  <Text type="supporting" color="secondary">
+                    {assignSelected.length} client{assignSelected.length !== 1 ? "s" : ""} selected
+                  </Text>
+                )}
+              </VStack>
+            </LayoutContent>
+          }
+          footer={
+            <LayoutFooter hasDivider>
+              <HStack hAlign="end" gap={2}>
+                <Button
+                  label="Cancel"
+                  variant="secondary"
+                  size="md"
+                  onClick={() => { setAssignTarget(null); setAssignSelected([]); }}
+                />
+                <Button
+                  label={setClientsMut.isPending ? "Saving…" : "Save Assignments"}
+                  variant="primary"
+                  size="md"
+                  isLoading={setClientsMut.isPending}
+                  isDisabled={setClientsMut.isPending}
+                  onClick={handleAssign}
+                />
+              </HStack>
+            </LayoutFooter>
+          }
+        />
+      </Dialog>
       <Dialog
         isOpen={!!deleteTarget}
         onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}
