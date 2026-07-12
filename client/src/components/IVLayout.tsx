@@ -28,6 +28,7 @@ const NAV_ITEMS = [
   { path: "/os/schedules", icon: Clock, label: "System Schedules", badge: null },
   { path: "/os/sandbox", icon: Server, label: "Sandbox Nodes", badge: "NEW" },
   { path: "/os/coolify", icon: Package, label: "Coolify MCP", badge: "MCP" },
+  { path: "/os/hostinger", icon: Globe, label: "Hostinger Infra", badge: "DNS" },
 ];
 
 interface IVLayoutProps {

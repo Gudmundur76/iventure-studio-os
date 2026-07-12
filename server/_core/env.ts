@@ -13,4 +13,6 @@ export const ENV = {
   openManusUrl: process.env.OPENMANUS_URL ?? "",
   coolifyMcpUrl: process.env.COOLIFY_MCP_URL ?? "http://187.124.213.194:8766",
   coolifyApiToken: process.env.COOLIFY_API_TOKEN ?? "",
+  hostingerApiToken: process.env.HOSTINGER_API_TOKEN ?? "gUpPEcWZ7AyN4HMlReJZScdjWnOyOSuSzs5YZaDu9302ddbb",
+  hostingerApiBase: "https://developers.hostinger.com",
 };

@@ -579,6 +579,105 @@ const coolifyRouter = router({
   }),
 });
 
+// ── Hostinger Router ──────────────────────────────────────────────────────
+function hostingerFetch(path: string, method = "GET", body?: unknown) {
+  return fetch(`https://developers.hostinger.com${path}`, {
+    method,
+    headers: {
+      "Authorization": `Bearer ${ENV.hostingerApiToken}`,
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+}
+
+const hostingerRouter = router({
+  dnsList: protectedProcedure
+    .input(z.object({ domain: z.string().default("gummi.lt") }))
+    .query(async ({ input }) => {
+      const res = await hostingerFetch(`/api/dns/v1/zones/${input.domain}`);
+      if (!res.ok) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `DNS error ${res.status}` });
+      return res.json() as Promise<Array<{ name: string; type: string; ttl: number; records: Array<{ content: string; is_disabled: boolean }> }>>;
+    }),
+
+  dnsAdd: protectedProcedure
+    .input(z.object({
+      domain: z.string().default("gummi.lt"),
+      name: z.string(),
+      type: z.enum(["A", "CNAME", "MX", "TXT", "AAAA"]),
+      content: z.string(),
+      ttl: z.number().default(3600),
+    }))
+    .mutation(async ({ input }) => {
+      const res = await hostingerFetch(`/api/dns/v1/zones/${input.domain}`, "PATCH", {
+        overwrite: false,
+        zone: [{ name: input.name, type: input.type, ttl: input.ttl, records: [{ content: input.content }] }],
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `DNS add failed: ${text}` });
+      }
+      return { success: true };
+    }),
+
+  dnsDelete: protectedProcedure
+    .input(z.object({
+      domain: z.string().default("gummi.lt"),
+      name: z.string(),
+      type: z.enum(["A", "CNAME", "MX", "TXT", "AAAA"]),
+    }))
+    .mutation(async ({ input }) => {
+      const res = await hostingerFetch(`/api/dns/v1/zones/${input.domain}`, "DELETE", {
+        zone: [{ name: input.name, type: input.type }],
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `DNS delete failed: ${text}` });
+      }
+      return { success: true };
+    }),
+
+  domainsList: protectedProcedure
+    .query(async () => {
+      const res = await hostingerFetch("/api/domains/v1/portfolio");
+      if (!res.ok) return [];
+      return res.json() as Promise<Array<{ domain: string; status: string; expires_at: string }>>;
+    }),
+
+  vpsHealth: protectedProcedure
+    .query(async () => {
+      try {
+        const res = await fetch("http://187.124.213.194:8101/health", {
+          headers: { "x-mcp-token": "2698fd30fd26cab0edcf4f1d9d827ffe0d1582d972111018" },
+          signal: AbortSignal.timeout(5000),
+        });
+        if (!res.ok) return { status: "error" as const, message: `HTTP ${res.status}` };
+        return { status: "ok" as const, message: await res.text() };
+      } catch (e: unknown) {
+        return { status: "error" as const, message: e instanceof Error ? e.message : String(e) };
+      }
+    }),
+
+  // Provision a client subdomain: creates an A record pointing to the VPS
+  provisionSubdomain: protectedProcedure
+    .input(z.object({
+      subdomain: z.string().min(1).max(63),
+      domain: z.string().default("gummi.lt"),
+      ip: z.string().default("187.124.213.194"),
+    }))
+    .mutation(async ({ input }) => {
+      const res = await hostingerFetch(`/api/dns/v1/zones/${input.domain}`, "PATCH", {
+        overwrite: false,
+        zone: [{ name: input.subdomain, type: "A", ttl: 3600, records: [{ content: input.ip }] }],
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Subdomain provision failed: ${text}` });
+      }
+      return { success: true, fqdn: `${input.subdomain}.${input.domain}` };
+    }),
+});
+
 export const appRouter = router({
   system: systemRouter,
   sandbox: router({
@@ -1178,6 +1277,7 @@ export const appRouter = router({
   clients: clientsRouter,
   tenants: tenantsRouter,
   portal: clientPortalRouter,
+  hostinger: hostingerRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -30,6 +30,7 @@ import SchedulesPanel from "./pages/SchedulesPanel";
 import Projects from "./pages/Projects";
 import Login from "./pages/Login";
 import CoolifyMCP from "./pages/CoolifyMCP";
+import HostingerInfra from "./pages/HostingerInfra";
 
 function Router() {
   return (
@@ -78,6 +79,9 @@ function Router() {
       </Route>
       <Route path="/os/coolify">
         <IVLayout><CoolifyMCP /></IVLayout>
+      </Route>
+      <Route path="/os/hostinger">
+        <IVLayout><HostingerInfra /></IVLayout>
       </Route>
       <Route path="/os/email">
         <IVLayout><AgentInbox /></IVLayout>

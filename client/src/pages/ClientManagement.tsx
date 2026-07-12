@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Users, Plus, ExternalLink, Copy, Mail, Globe, Trash2, Edit2, CheckCircle, Clock, PauseCircle, XCircle, Inbox } from "lucide-react";
+import { Users, Plus, ExternalLink, Copy, Mail, Globe, Trash2, Edit2, CheckCircle, Clock, PauseCircle, XCircle, Inbox, Zap } from "lucide-react";
 
 const STATUS_CONFIG = {
   active:     { label: "Active",     color: "bg-green-500/10 text-green-400 border-green-500/20",  icon: CheckCircle },
@@ -23,6 +23,33 @@ const PLAN_COLORS: Record<string, string> = {
   professional: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   enterprise:   "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
+
+function ProvisionSubdomainButton({ subdomain }: { subdomain: string }) {
+  const provisionMut = trpc.hostinger.provisionSubdomain.useMutation({
+    onSuccess: (data) => toast.success(`Subdomain provisioned: ${data.fqdn}`),
+    onError: (e) => toast.error(`Provision failed: ${e.message}`),
+  });
+  return (
+    <div className="bg-[var(--iv-surface)] rounded-lg p-4 border border-[var(--iv-border)] col-span-2">
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="text-xs text-[var(--iv-text-dim)] mb-1">DNS Provisioning</div>
+          <div className="text-sm font-mono">{subdomain}.gummi.lt → 187.124.213.194</div>
+        </div>
+        <Button
+          size="sm"
+          variant="outline"
+          className="text-purple-400 border-purple-500/30 hover:bg-purple-500/10"
+          disabled={provisionMut.isPending}
+          onClick={() => provisionMut.mutate({ subdomain })}
+        >
+          <Zap className="w-3 h-3 mr-1" />
+          {provisionMut.isPending ? "Provisioning…" : provisionMut.isSuccess ? "Provisioned ✓" : "Provision DNS"}
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 function StatusBadge({ status }: { status: keyof typeof STATUS_CONFIG }) {
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.onboarding;
@@ -205,14 +232,17 @@ export default function ClientManagement() {
                 </div>
               )}
               {selectedClientData.subdomain && (
-                <div className="bg-[var(--iv-surface)] rounded-lg p-4 border border-[var(--iv-border)]">
-                  <div className="text-xs text-[var(--iv-text-dim)] mb-1">Subdomain</div>
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-3 h-3 text-[var(--iv-cyan)]" />
-                    <span className="text-sm">{selectedClientData.subdomain}.gummi.lt</span>
-                  </div>
+              <div className="bg-[var(--iv-surface)] rounded-lg p-4 border border-[var(--iv-border)]">
+                <div className="text-xs text-[var(--iv-text-dim)] mb-1">Subdomain</div>
+                <div className="flex items-center gap-2">
+                  <Globe className="w-3 h-3 text-[var(--iv-cyan)]" />
+                  <span className="text-sm">{selectedClientData.subdomain}.gummi.lt</span>
                 </div>
-              )}
+              </div>
+            )}
+            {selectedClientData.subdomain && (
+              <ProvisionSubdomainButton subdomain={selectedClientData.subdomain} />
+            )}
             </div>
 
             {/* Portal Link */}
