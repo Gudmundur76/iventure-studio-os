@@ -307,7 +307,7 @@ async function sendHealingNotification(ctx: HealingNotificationContext): Promise
   const { proposalId, issueTitle, patchSummary, repoName, filePath, anomalyType, affectedFiles, severity } = ctx;
   try {
     const appUrl = ENV.isProduction
-      ? "https://iventureos-7fncoxhd.manus.space"
+      ? "https://os.gummi.lt"
       : "http://localhost:3000";
 
     const severityEmoji = severity === "critical" ? "🚨" : severity === "high" ? "⚠️" : severity === "medium" ? "🔶" : "ℹ️";
