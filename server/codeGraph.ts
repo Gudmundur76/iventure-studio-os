@@ -45,8 +45,9 @@ export interface AnomalyReport {
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const COMPLEXITY_THRESHOLD = 15;   // cyclomatic complexity above this = anomaly
-const LOC_THRESHOLD = 300;         // lines of code above this = large file anomaly
+const COMPLEXITY_THRESHOLD = 8;    // cyclomatic complexity above this = anomaly (Mr. Agent profile default)
+const LOC_THRESHOLD = 200;         // lines of code above this = large file anomaly (Mr. Agent profile default)
+const FUNC_COUNT_THRESHOLD = 25;   // functions per file above this = anomaly (Mr. Agent profile default)
 const DEAD_CODE_MIN_LOC = 5;       // only flag dead code if node has >= 5 lines
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -175,6 +176,16 @@ export async function scanLocalRepo(repo: CodeRepo): Promise<ScanResult> {
         ...sourceFile.getFunctions(),
         ...sourceFile.getClasses().flatMap(c => c.getMethods()),
       ];
+
+      // Flag files with too many functions
+      if (functions.length > FUNC_COUNT_THRESHOLD) {
+        const fileNodeIdx = nodesToInsert.length - 1;
+        if (fileNodeIdx >= 0 && nodesToInsert[fileNodeIdx].nodeType === "file" && !nodesToInsert[fileNodeIdx].anomalyType) {
+          nodesToInsert[fileNodeIdx].anomalyType = "too_many_functions";
+          nodesToInsert[fileNodeIdx].anomalyDetail = `File has ${functions.length} functions (threshold: ${FUNC_COUNT_THRESHOLD})`;
+          anomaliesFound++;
+        }
+      }
 
       for (const fn of functions) {
         const fnName = fn.getName() ?? "<anonymous>";
