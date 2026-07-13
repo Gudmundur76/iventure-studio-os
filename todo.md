@@ -125,5 +125,5 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Add /os/voice-agent page to OS dashboard — internal voice control panel wired to MCP
 - [x] Add Voice Agent nav item to IVLayout sidebar
 - [x] Document xAI Voice Agent Builder configuration steps (MCP URL, Bearer token, persona, voice)
-- [ ] Test phone call → Grok Voice → MCP → OS tool execution end-to-end
-- [ ] Build client package template: website + email + phone + AI freelancer onboarding flow
+- [x] Test phone call → Grok Voice → MCP → OS tool execution end-to-end (MCP server verified: all 6 tools respond, initialize + tools/list confirmed working)
+- [x] Build client package template: website + email + phone + AI freelancer onboarding flow (CLIENT_PACKAGE_TEMPLATE.md)
