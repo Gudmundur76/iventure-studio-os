@@ -104,18 +104,18 @@ const NAV_LINKS = [
 ];
 
 const SERVICES = [
-  { icon: "🤖", title: "AI Frjálsráðinn", desc: "Sérstakur AI-aðstoðarmaður með símanúmer, varanlegt minni og samhengi fyrirtækisins þíns — tiltækur allan sólarhringinn." },
-  { icon: "🌐", title: "Vefsíður og tölvupóstur", desc: "Hreyfimyndaríkar, merktar vefsíður og faglegur tölvupóstur — byggðar og reknar af Giggo." },
-  { icon: "🔁", title: "Sjálfvirkar verkflæðar", desc: "Rannsóknir, útbreiðsla, efni og gagnaverkefni sem keyra samkvæmt áætlun án mannlegrar innslagnar." },
-  { icon: "📞", title: "Raddumboðsmaður", desc: "Hringdu í númer. Segðu hvað þú þarft. Umboðsmaðurinn framkvæmir það og skilar niðurstöðu." },
-  { icon: "📊", title: "Rannsóknir og greining", desc: "Ítarlegar rannsóknarskýrslur, samkeppnisgreining og markaðsgreind — skipulögð og tilvísaðar." },
-  { icon: "✍️", title: "Efni og markaðssetning", desc: "Bloggfærslur, tölvupóstrunur, auglýsingatextar og efni í samfélagsmiðla — skrifað og tilbúið til birtingar." },
+  { icon: "🤖", title: "AI-umboðsmaður", desc: "Þinn eigin AI-fulltrúi með símanúmer og varanlegt minni. Hann þekkir fyrirtækið þitt og er alltaf tiltækur." },
+  { icon: "🌐", title: "Vefsíður og netfang", desc: "Hreyfimyndaríkar, merktar vefsíður og sérsniðið netfang — hönnuð, rekið og uppfært af Giggo." },
+  { icon: "🔁", title: "Sjálfvirk verkflæði", desc: "Rannsóknir, útbreiðsla, efnisgerð og gagnaverkefni sem keyra á áætlun — án þess að þú þurfir að gera neitt." },
+  { icon: "📞", title: "Raddaðstoð", desc: "Hringdu í númerið þitt. Segðu hvað þú þarft. Umboðsmaðurinn framkvæmir og skilar niðurstöðu." },
+  { icon: "📊", title: "Rannsóknir og greining", desc: "Ítarlegar skýrslur, samkeppnisgreining og markaðsgreind — skipulögð, tilvísaðar og tilbúnar til notkunar." },
+  { icon: "✍️", title: "Efni og markaðssetning", desc: "Bloggfærslur, tölvupóstar, auglýsingatextar og efni í samfélagsmiðla — skrifað og tilbúið til birtingar." },
 ];
 
 const HOW_ITEMS = [
-  { step: "01", label: "Þú lýsir því sem þú þarft", sub: "Skrifaðu einfalda lýsingu. Engar eyðublöð, engar fundarboðanir." },
-  { step: "02", label: "AI framkvæmir", sub: "Verkefnið er sent til AI-kerfisins okkar sem vinnur það frá upphafi til enda." },
-  { step: "03", label: "Þú færð fullunna vinnu", sub: "Ekki drög. Raunverulega niðurstöðuna — tilbúna til notkunar eða birtingar." },
+  { step: "01", label: "Þú lýsir verkefninu", sub: "Einföld skilaboð eða símtal. Engin eyðublöð, engar fundarboðanir." },
+  { step: "02", label: "AI-kerfið tekur við", sub: "Umboðsmaðurinn vinnur verkefnið frá upphafi til enda — sjálfstætt og skilvirkt." },
+  { step: "03", label: "Þú færð fullunna niðurstöðu", sub: "Ekki drög. Raunveruleg afhending — tilbúin til notkunar eða birtingar." },
 ];
 
 const PLANS = [
@@ -123,8 +123,8 @@ const PLANS = [
     name: "Grunnur",
     price: "$29",
     unit: "/ verkefni",
-    desc: "Ein fullunnin afurð. Fullkomið fyrir fyrsta verkefnið þitt.",
-    features: ["1 verkefni í einu", "Afhent á 2–5 dögum", "Ótakmarkaðar endurskoðanir", "Tölvupóstsþjónusta"],
+    desc: "Ein fullunnin afhending. Fullkomið til að prófa þjónustuna.",
+    features: ["1 verkefni í einu", "Afhent á 2–5 virkum dögum", "Ótakmarkaðar leiðréttingar", "Þjónusta í tölvupósti"],
     cta: "Hefjast handa",
     featured: false,
   },
@@ -132,8 +132,8 @@ const PLANS = [
     name: "Vöxtur",
     price: "$99",
     unit: "/ mánuður",
-    desc: "Ótakmarkaðar beiðnir. Fullkomið fyrir fyrirtæki sem þurfa stöðugt úttak.",
-    features: ["Ótakmarkaðar verkefnisbeiðnir", "Forgangsbið", "Afhent á 24–48 klukkustundum", "Eigið .top lén innifalið", "Sérstakur reikningsstjóri", "Mánaðarlegar skýrslur"],
+    desc: "Ótakmarkaðar beiðnir á mánuði. Fullkomið fyrir fyrirtæki sem þurfa stöðugt úttak.",
+    features: ["Ótakmarkaðar verkefnisbeiðnir", "Forgangspöntun", "Afhent á 24–48 klukkustundum", "Eigið lén innifalið", "Sérstakur umboðsmaður", "Mánaðarlegar skýrslur"],
     cta: "Hefja mánaðarlega áskrift",
     featured: true,
   },
@@ -141,8 +141,8 @@ const PLANS = [
     name: "Stúdíó",
     price: "Sérsniðið",
     unit: "",
-    desc: "Fyrir stór fyrirtæki og sérþarfir. Við sömum pakka sem hentar þér.",
-    features: ["Allt í Vöxtur", "Sérsniðnar samþættingar", "API-aðgangur", "SLA-trygging", "Sérstakt þróunarteymi"],
+    desc: "Fyrir stór fyrirtæki og sérþarfir. Við setjum saman pakka sem hentar þér nákvæmlega.",
+    features: ["Allt sem fylgir Vöxtri", "Sérsniðnar samþættingar", "API-aðgangur", "Þjónustusamningur (SLA)", "Sérstakt þróunarteymi"],
     cta: "Hafa samband",
     featured: false,
   },
@@ -270,7 +270,7 @@ function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col" style={{ background: "hsl(201,100%,13%)" }}>
+    <section className="relative min-h-[100svh] flex flex-col" style={{ background: "hsl(201,100%,13%)" }}>
       {/* Video */}
       <video ref={videoRef} autoPlay loop muted playsInline
         className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
@@ -280,35 +280,35 @@ function Hero() {
         style={{ background: "linear-gradient(to bottom, rgba(0,30,50,0.55) 0%, rgba(0,30,50,0.35) 60%, rgba(0,30,50,0.75) 100%)" }} />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 flex-1 pt-24 pb-20 giggo-body">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-5 sm:px-8 flex-1 pt-28 pb-16 giggo-body">
         <h1 className="animate-fade-rise font-normal text-white max-w-5xl"
           style={{
             fontFamily: "'Instrument Serif', serif",
-            fontSize: "clamp(2.8rem, 9vw, 8rem)",
-            lineHeight: 0.95,
-            letterSpacing: "-2.46px",
+            fontSize: "clamp(2.4rem, 8vw, 8rem)",
+            lineHeight: 1.0,
+            letterSpacing: "-1.5px",
           }}>
           Fyrirtækið þitt,{" "}
           <em className="not-italic" style={{ color: "rgba(255,255,255,0.45)" }}>
-            rekið af umboðsmönnum
+            rekið af AI-umboðsmönnum
           </em>{" "}
           sem sofa aldrei.
         </h1>
 
-        <p className="animate-fade-rise-delay text-base sm:text-lg max-w-2xl mt-8 leading-relaxed"
+        <p className="animate-fade-rise-delay text-sm sm:text-lg max-w-xl mt-6 sm:mt-8 leading-relaxed"
           style={{ color: "rgba(255,255,255,0.5)", fontFamily: "'Inter', sans-serif" }}>
           Giggo gefur hverju fyrirtæki AI-frjálsráðinn — nafngreindan umboðsmann með símanúmer,
-          vefsíðu og minni. Hann sér um rannsóknir, efni, útbreiðslu og þjónustu við viðskiptavini.
+          vefsíðu og minni. Hann sér um rannsóknir, efni, útbreiðslu og þjónustu.
           Þú einbeitir þér að því sem skiptir máli.
         </p>
 
-        <div className="animate-fade-rise-delay-2 flex flex-col sm:flex-row gap-4 mt-12">
+        <div className="animate-fade-rise-delay-2 flex flex-col sm:flex-row gap-3 mt-8 sm:mt-12 w-full max-w-xs sm:max-w-none sm:w-auto">
           <button onClick={scrollToContact}
-            className="liquid-glass rounded-full px-12 py-4 text-base text-white hover:scale-[1.03] transition-transform btn-active cursor-pointer giggo-body">
+            className="liquid-glass rounded-full px-8 py-4 text-base text-white hover:scale-[1.03] transition-transform btn-active cursor-pointer giggo-body w-full sm:w-auto">
             Hefjast handa
           </button>
           <button onClick={() => document.querySelector("#how")?.scrollIntoView({ behavior: "smooth" })}
-            className="rounded-full px-8 py-4 text-base cursor-pointer giggo-body transition-colors"
+            className="rounded-full px-8 py-4 text-base cursor-pointer giggo-body transition-colors w-full sm:w-auto"
             style={{ color: "rgba(255,255,255,0.5)", background: "transparent", border: "none" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "white")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.5)")}>
@@ -317,11 +317,11 @@ function Hero() {
         </div>
 
         {/* Stats */}
-        <div className="animate-fade-rise-delay-3 flex flex-wrap justify-center gap-8 mt-16">
-          {[["24–48h", "Afhendingartími"], ["100%", "Gagnsæi"], ["∞", "Endurskoðanir"]].map(([val, lbl]) => (
+        <div className="animate-fade-rise-delay-3 flex flex-wrap justify-center gap-6 sm:gap-12 mt-10 sm:mt-16">
+          {[["24–48h", "Afhendingartími"], ["100%", "Gagnsæi"], ["∞", "Leiðréttingar"]].map(([val, lbl]) => (
             <div key={lbl} className="flex flex-col items-center gap-1">
-              <span className="text-2xl sm:text-3xl font-semibold text-white giggo-body">{val}</span>
-              <span className="text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "'Inter', sans-serif" }}>{lbl}</span>
+              <span className="text-xl sm:text-3xl font-semibold text-white giggo-body">{val}</span>
+              <span className="text-[10px] sm:text-xs uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "'Inter', sans-serif" }}>{lbl}</span>
             </div>
           ))}
         </div>
@@ -346,18 +346,18 @@ function Services() {
       style={{ background: "hsl(201,100%,10%)" }}>
       <div className="max-w-6xl mx-auto">
         <FadeIn className="text-center mb-16">
-          <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'Inter', sans-serif" }}>Hvað Giggo afhendir</p>
+          <p className="text-xs tracking-[0.2em] uppercase mb-4" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'Inter', sans-serif" }}>Þjónusta Giggo</p>
           <h2 className="font-normal text-white"
             style={{ fontFamily: "'Instrument Serif', serif", fontSize: "clamp(2.2rem,6vw,5rem)", lineHeight: 1.05 }}>
             Þjónusta
           </h2>
         </FadeIn>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {SERVICES.map((s, i) => (
             <FadeIn key={s.title} delay={i * 0.07} y={20}>
-              <div className="service-card rounded-2xl p-7 h-full">
-                <span className="text-3xl mb-4 block">{s.icon}</span>
-                <h3 className="text-lg text-white mb-2" style={{ fontFamily: "'Instrument Serif', serif" }}>{s.title}</h3>
+              <div className="service-card rounded-2xl p-5 sm:p-7 h-full">
+                <span className="text-2xl sm:text-3xl mb-3 sm:mb-4 block">{s.icon}</span>
+                <h3 className="text-base sm:text-lg text-white mb-2" style={{ fontFamily: "'Instrument Serif', serif" }}>{s.title}</h3>
                 <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif" }}>{s.desc}</p>
               </div>
             </FadeIn>
@@ -381,12 +381,12 @@ function HowWeWork() {
             Hvernig við vinnum
           </h2>
         </FadeIn>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16">
           {HOW_ITEMS.map((item, i) => (
             <FadeIn key={item.step} delay={i * 0.1} y={20}>
-              <div className="service-card rounded-2xl p-7 h-full">
-                <span className="text-xs tracking-widest uppercase mb-4 block" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'Inter', sans-serif" }}>{item.step}</span>
-                <h3 className="text-base text-white mb-2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: "1.15rem" }}>{item.label}</h3>
+              <div className="service-card rounded-2xl p-5 sm:p-7 h-full">
+                <span className="text-xs tracking-widest uppercase mb-3 block" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'Inter', sans-serif" }}>{item.step}</span>
+                <h3 className="text-base text-white mb-2" style={{ fontFamily: "'Instrument Serif', serif", fontSize: "1.1rem" }}>{item.label}</h3>
                 <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif" }}>{item.sub}</p>
               </div>
             </FadeIn>
@@ -394,7 +394,7 @@ function HowWeWork() {
         </div>
         <FadeIn>
           <AnimatedText
-            text="AI framkvæmir. Maðurinn stýrir. Við erum opin um það."
+            text="AI framkvæmir. Þú stjórnar. Við erum gegnsæ um það."
             className="text-center font-normal text-white/80"
             style={{ fontFamily: "'Instrument Serif', serif", fontSize: "clamp(1.3rem, 3vw, 2.2rem)", lineHeight: 1.3 } as React.CSSProperties}
           />
@@ -418,16 +418,16 @@ function Pricing() {
             Veldu pakka
           </h2>
         </FadeIn>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
           {PLANS.map((plan, i) => (
             <FadeIn key={plan.name} delay={i * 0.1} y={20}>
-              <div className={`plan-card rounded-2xl p-8 h-full flex flex-col ${plan.featured ? "featured" : ""}`}>
+              <div className={`plan-card rounded-2xl p-6 sm:p-8 h-full flex flex-col ${plan.featured ? "featured" : ""}`}>
                 {plan.featured && (
                   <span className="text-xs tracking-widest uppercase mb-4 block" style={{ color: "rgba(255,255,255,0.5)", fontFamily: "'Inter', sans-serif" }}>Vinsælast</span>
                 )}
-                <h3 className="text-xl text-white mb-1" style={{ fontFamily: "'Instrument Serif', serif" }}>{plan.name}</h3>
+                <h3 className="text-lg sm:text-xl text-white mb-1" style={{ fontFamily: "'Instrument Serif', serif" }}>{plan.name}</h3>
                 <div className="flex items-baseline gap-1 mb-3">
-                  <span className="text-3xl font-semibold text-white giggo-body">{plan.price}</span>
+                  <span className="text-2xl sm:text-3xl font-semibold text-white giggo-body">{plan.price}</span>
                   {plan.unit && <span className="text-sm" style={{ color: "rgba(255,255,255,0.35)", fontFamily: "'Inter', sans-serif" }}>{plan.unit}</span>}
                 </div>
                 <p className="text-sm mb-6 leading-relaxed" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif" }}>{plan.desc}</p>
@@ -439,7 +439,7 @@ function Pricing() {
                   ))}
                 </ul>
                 <button onClick={scrollToContact}
-                  className="liquid-glass rounded-full px-6 py-3 text-sm text-white hover:scale-[1.02] transition-transform btn-active cursor-pointer giggo-body w-full">
+                  className="liquid-glass rounded-full px-6 py-3.5 text-sm text-white hover:scale-[1.02] transition-transform btn-active cursor-pointer giggo-body w-full">
                   {plan.cta}
                 </button>
               </div>
@@ -478,7 +478,7 @@ function Contact() {
             Við hlustum
           </h2>
           <p className="mt-4 text-base" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif" }}>
-            Segðu okkur hvað þú þarft. Við svörum innan 24 klukkustunda.
+            Segðu okkur hvað þú þarft. Við svörum innan 24 stunda.
           </p>
         </FadeIn>
 
@@ -487,7 +487,7 @@ function Contact() {
             <div className="service-card rounded-2xl p-10 text-center">
               <span className="text-4xl mb-4 block">✓</span>
               <h3 className="text-xl text-white mb-2" style={{ fontFamily: "'Instrument Serif', serif" }}>Skilaboð móttekin</h3>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif" }}>Við munum hafa samband við þig fljótlega.</p>
+              <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif" }}>Við höfum samband við þig fljótlega.</p>
             </div>
           </FadeIn>
         ) : (
@@ -496,20 +496,20 @@ function Contact() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>Nafn *</label>
-                  <input className="giggo-input" placeholder="Nafn þitt" value={form.name} onChange={(e) => setForm(p => ({ ...p, name: e.target.value }))} />
+                  <input className="giggo-input" placeholder="Fullt nafn" value={form.name} onChange={(e) => setForm(p => ({ ...p, name: e.target.value }))} />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>Netfang *</label>
-                  <input className="giggo-input" type="email" placeholder="netfang@þitt.is" value={form.email} onChange={(e) => setForm(p => ({ ...p, email: e.target.value }))} />
+                  <input className="giggo-input" type="email" placeholder="netfang@fyrirtaeki.is" value={form.email} onChange={(e) => setForm(p => ({ ...p, email: e.target.value }))} />
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>Þjónusta</label>
-                <input className="giggo-input" placeholder="t.d. Vefsíðuþróun" value={form.service} onChange={(e) => setForm(p => ({ ...p, service: e.target.value }))} />
+                <label className="text-xs uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>Þjónusta sem þig vantar</label>
+                <input className="giggo-input" placeholder="t.d. AI-umboðsmaður, vefsíða, rannsóknir..." value={form.service} onChange={(e) => setForm(p => ({ ...p, service: e.target.value }))} />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>Skilaboð *</label>
-                <textarea className="giggo-input resize-none" rows={5} placeholder="Segðu okkur hvað þú þarft..." value={form.message} onChange={(e) => setForm(p => ({ ...p, message: e.target.value }))} />
+                <textarea className="giggo-input resize-none" rows={4} placeholder="Lýstu verkefninu eða spurðu spurningu..." value={form.message} onChange={(e) => setForm(p => ({ ...p, message: e.target.value }))} />
               </div>
               <button type="submit" disabled={submitEnquiry.isPending}
                 className="liquid-glass rounded-full px-8 py-4 text-base text-white hover:scale-[1.02] transition-transform btn-active cursor-pointer giggo-body disabled:opacity-50 mt-2">
@@ -528,13 +528,13 @@ function Footer() {
   return (
     <footer className="relative z-10 section-divider px-6 sm:px-8 py-10 giggo-body"
       style={{ background: "hsl(201,100%,10%)" }}>
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-center sm:text-left">
         <span className="text-xl tracking-tight text-white giggo-display"
           style={{ fontFamily: "'Instrument Serif', serif" }}>
           Giggo<sup className="text-xs">®</sup>
         </span>
         <p className="text-sm text-center" style={{ color: "rgba(255,255,255,0.25)", fontFamily: "'Inter', sans-serif" }}>
-          © {new Date().getFullYear()} Giggo · Reykjavík &amp; víðar
+          © {new Date().getFullYear()} Giggo · Reykjavík
         </p>
         <div className="flex gap-6 text-sm" style={{ color: "rgba(255,255,255,0.3)", fontFamily: "'Inter', sans-serif" }}>
           <a href="mailto:hello@giggo.io" className="hover:text-white transition-colors">hello@giggo.io</a>
@@ -548,7 +548,7 @@ function Footer() {
 // ─── PAGE ─────────────────────────────────────────────────────────────────────
 export default function GiggoHome() {
   return (
-    <div style={{ background: "hsl(201,100%,10%)", overflowX: "clip" }}>
+    <div style={{ background: "hsl(201,100%,10%)", overflowX: "hidden" }}>
       <style>{GLOBAL_CSS}</style>
       <Nav />
       <Hero />
