@@ -4,7 +4,7 @@ import {
   Terminal, Bot, Zap, Brain, Network, Activity, BarChart3,
   FolderKanban, ListTodo, ChevronLeft, ChevronRight, Settings, LogOut, Layers,
   Cpu, Shield, Clock, Server, Package, Mail, Globe, CalendarClock,
-  GitBranch, Wrench
+  GitBranch, Wrench, Phone
 } from "lucide-react";
 import { Users, Building2, Settings2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
@@ -28,6 +28,7 @@ const NAV_ITEMS = [
   { path: "/os/mr-agent-profile", icon: Settings2, label: "Agent Profile", badge: null },
   { path: "/os/code-graph", icon: GitBranch, label: "Code Graph", badge: null },
   { path: "/os/healing", icon: Wrench, label: "Healing", badge: null },
+  { path: "/os/voice-agent", icon: Phone, label: "Voice Agent", badge: "NEW" },
   { path: "/os/email", icon: Mail, label: "Agent Inbox", badge: "NEW" },
   { path: "/os/browser", icon: Globe, label: "Browser Worker", badge: "NEW" },
   { path: "/os/agent-schedules", icon: CalendarClock, label: "Agent Schedules", badge: "NEW" },

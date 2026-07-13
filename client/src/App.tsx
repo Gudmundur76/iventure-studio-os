@@ -108,6 +108,9 @@ function Router() {
         <IVLayout><CodeGraph /></IVLayout>
       </Route>
       <Route path="/os/healing">
+      </Route>
+      <Route path="/os/voice-agent">
+        <IVLayout><VoiceAgent /></IVLayout>
         <IVLayout><HealingProposals /></IVLayout>
       </Route>
       <Route path="/portal/:token" component={PublicPortal} />
@@ -155,3 +158,4 @@ import MetaAgent from "./pages/MetaAgent";
 import MrAgentProfile from "./pages/MrAgentProfile";
 import CodeGraph from "./pages/CodeGraph";
 import HealingProposals from "./pages/HealingProposals";
+import VoiceAgent from "./pages/VoiceAgent";

@@ -14,6 +14,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { memorySyncHandler, cortexDigestHandler, manualTriggerHandler, awarenessLoopHandler } from "../scheduledHandlers";
 import { applyProposal, dismissProposal } from "../selfHealing";
+import { registerMcpServer } from "../mcpServer";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -42,6 +43,8 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerLocalAuthRoutes(app);
+
+  registerMcpServer(app);
 
   // ── Scheduled job handlers ────────────────────────────────────────────────
   app.post("/api/scheduled/memory-sync", memorySyncHandler);
@@ -220,6 +223,38 @@ async function startServer() {
     });
 
     req.pipe(bb);
+  });
+
+
+  // ── xAI Voice Agent ephemeral token endpoint ──────────────────────────────
+  // Used by browser-based voice widgets to connect directly to xAI Voice API
+  app.get('/api/xai-voice-token', async (_req, res) => {
+    const apiKey = process.env.XAI_API_KEY;
+    if (!apiKey) { res.status(500).json({ error: 'XAI_API_KEY not configured' }); return; }
+    try {
+      const response = await fetch('https://api.x.ai/v1/realtime/sessions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'grok-voice-latest',
+          voice: 'ara',
+          instructions: 'You are Gummi — a personal AI assistant for iVenture Studio. You can check agent status, dispatch tasks, review healing proposals, and manage tenants. Be concise and professional.',
+          turn_detection: { type: 'server_vad', threshold: 0.5, prefix_padding_ms: 300, silence_duration_ms: 700 },
+        }),
+      });
+      if (!response.ok) {
+        const err = await response.text();
+        res.status(500).json({ error: 'Failed to create xAI voice session: ' + err });
+        return;
+      }
+      const session = await response.json() as Record<string, unknown>;
+      res.json({ token: (session.client_secret as Record<string, unknown>)?.value, sessionId: session.id });
+    } catch (err) {
+      res.status(500).json({ error: String(err) });
+    }
   });
 
   // tRPC API

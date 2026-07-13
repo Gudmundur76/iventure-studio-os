@@ -115,3 +115,15 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Add quick-approve/dismiss GET endpoints (/api/healing/approve/:id, /api/healing/dismiss/:id) for one-click Yes/No from notifications
 - [x] Awareness-loop heartbeat schedule created (every 6 hours, task_uid: a8cbFB7DD68ETuXVRothZT)
 - [x] VPS_HOST secret set to 187.124.213.194
+
+## Phase 6 — iVenture OS MCP Server + AI Freelancer (NOW BUILDING)
+- [ ] Build server/mcpServer.ts — SSE/HTTP MCP server exposing 6 tools: get_agent_status, dispatch_task, get_healing_proposals, run_awareness_scan, get_code_graph_summary, get_tenant_list
+- [ ] Add GET /api/mcp (SSE stream) and POST /api/mcp (tool call) routes to Express server with Bearer token auth
+- [ ] Deploy MCP server at https://os.gummi.lt/api/mcp (no new container needed — runs inside existing app)
+- [ ] Add POST /api/voice/token tRPC procedure — generates xAI ephemeral tokens for browser voice widgets
+- [ ] Build VoiceWidget.tsx React component — floating mic button, WebSocket to xAI, audio streaming, VAD
+- [ ] Add /os/voice page to OS dashboard — internal voice control panel wired to MCP
+- [ ] Add voice nav item to IVLayout sidebar
+- [ ] Document xAI Voice Agent Builder configuration steps (MCP URL, Bearer token, persona, voice)
+- [ ] Test phone call → Grok Voice → MCP → OS tool execution end-to-end
+- [ ] Build client package template: website + email + phone + AI freelancer onboarding flow
