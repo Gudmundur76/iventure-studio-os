@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import {
   Wrench, CheckCircle, XCircle, Clock, AlertTriangle, RefreshCw, Eye,
 } from "lucide-react";
+import { Play } from "lucide-react";
 
 // ── Types (aligned with healingProposals schema) ───────────────────────────
 
@@ -85,6 +86,26 @@ export default function HealingProposals() {
   const utils = trpc.useUtils();
   const [statusFilter, setStatusFilter] = useState<string>("pending");
   const [selectedProposal, setSelectedProposal] = useState<Proposal | null>(null);
+  const [scanning, setScanning] = useState(false);
+
+  async function handleScanNow() {
+    setScanning(true);
+    try {
+      const res = await fetch("/api/scheduled/awareness-loop", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        toast.success(`Scan complete — ${data.proposalsCreated ?? 0} proposal(s) created`);
+        utils.healing.list.invalidate();
+        utils.healing.stats.invalidate();
+      } else {
+        toast.error("Scan failed — check server logs");
+      }
+    } catch {
+      toast.error("Could not reach the awareness-loop endpoint");
+    } finally {
+      setScanning(false);
+    }
+  }
 
   const { data: rawProposals = [], isLoading } = trpc.healing.list.useQuery(
     { status: statusFilter === "all" ? undefined : statusFilter }
@@ -138,12 +159,28 @@ export default function HealingProposals() {
             <p className="text-sm text-muted-foreground">Mr. Agent's self-healing suggestions — approve or dismiss each fix</p>
           </div>
         </div>
-        {pendingCount > 0 && (
-          <Badge variant="secondary" className="text-sm px-3 py-1">
-            <Clock className="h-3.5 w-3.5 mr-1.5" />
-            {pendingCount} pending
-          </Badge>
-        )}
+        <div className="flex items-center gap-3">
+          {pendingCount > 0 && (
+            <Badge variant="secondary" className="text-sm px-3 py-1">
+              <Clock className="h-3.5 w-3.5 mr-1.5" />
+              {pendingCount} pending
+            </Badge>
+          )}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleScanNow}
+            disabled={scanning}
+            className="gap-2"
+          >
+            {scanning ? (
+              <RefreshCw className="h-4 w-4 animate-spin" />
+            ) : (
+              <Play className="h-4 w-4" />
+            )}
+            {scanning ? "Scanning…" : "Scan Now"}
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}

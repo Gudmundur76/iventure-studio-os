@@ -6,6 +6,7 @@ import {
   listScheduledJobs,
 } from "./db";
 import { runAwarenessLoop } from "./selfHealing";
+import { notifyOwner } from "./_core/notification";
 
 const MCP_URL = process.env.GUMMI_MCP_URL ?? "http://187.124.213.194:8101";
 const MCP_TOKEN = process.env.GUMMI_MCP_TOKEN ?? "";
@@ -100,9 +101,27 @@ export async function awarenessLoopHandler(_req: Request, res: Response) {
   try {
     const result = await runAwarenessLoop();
     const elapsed = Date.now() - startMs;
+
+    // Send push notification summary to owner
+    const proposalCount = result.proposalsCreated ?? 0;
+    const summaryTitle = proposalCount > 0
+      ? `🔧 Mr. Agent: ${proposalCount} healing proposal${proposalCount > 1 ? "s" : ""} ready`
+      : `✅ Mr. Agent: Codebase scan complete — no issues found`;
+    const summaryContent = [
+      `Scan completed in ${(elapsed / 1000).toFixed(1)}s.`,
+      proposalCount > 0
+        ? `${proposalCount} anomaly fix${proposalCount > 1 ? "es" : ""} need your review at os.gummi.lt/os/healing`
+        : "All thresholds within acceptable range.",
+    ].join(" ");
+    await notifyOwner({ title: summaryTitle, content: summaryContent }).catch(() => {});
+
     res.json({ ok: true, elapsed, ...result });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
+    await notifyOwner({
+      title: "⚠️ Mr. Agent: Awareness loop failed",
+      content: `Scan error: ${msg.slice(0, 200)}`,
+    }).catch(() => {});
     res.status(500).json({ error: msg, timestamp: new Date().toISOString() });
   }
 }
