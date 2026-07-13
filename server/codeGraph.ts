@@ -414,9 +414,12 @@ export async function scanAllActiveRepos(): Promise<ScanResult[]> {
   const db = await getDb();
   if (!db) return [];
   const repos = await db.select().from(codeRepos).where(eq(codeRepos.isActive, true));
+  console.log(`[CodeGraph] Scanning ${repos.length} active repos: ${repos.map(r => r.name).join(", ")}`);
   const results: ScanResult[] = [];
   for (const repo of repos) {
-    results.push(await scanRepo(repo));
+    const result = await scanRepo(repo);
+    console.log(`[CodeGraph] ${repo.name} (${repo.source}): ${result.nodesWritten} nodes, ${result.anomaliesFound} anomalies${result.error ? ` | ERROR: ${result.error}` : ""}`);
+    results.push(result);
   }
   return results;
 }
