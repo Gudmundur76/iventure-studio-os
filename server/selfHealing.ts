@@ -53,13 +53,17 @@ export async function runAwarenessLoop(): Promise<{ proposalsCreated: number; er
 
   // 1. Scan all active repos
   try {
+    console.log("[AwarenessLoop] Starting repo scan...");
     await scanAllActiveRepos();
+    console.log("[AwarenessLoop] Repo scan complete.");
   } catch (err: any) {
     errors.push(`Scan failed: ${err?.message ?? err}`);
+    console.error("[AwarenessLoop] Scan error:", err?.message ?? err);
   }
 
   // 2. Get anomalies that don't yet have a pending/approved proposal
   const anomalies = await getAnomalies();
+  console.log(`[AwarenessLoop] Found ${anomalies.length} anomalies.`);
   const pendingProposals = await db.select({ triggerRef: healingProposals.triggerRef })
     .from(healingProposals)
     .where(and(
