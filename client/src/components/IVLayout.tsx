@@ -3,7 +3,8 @@ import { Link, useLocation } from "wouter";
 import {
   Terminal, Bot, Zap, Brain, Network, Activity, BarChart3,
   FolderKanban, ListTodo, ChevronLeft, ChevronRight, Settings, LogOut, Layers,
-  Cpu, Shield, Clock, Server, Package, Mail, Globe, CalendarClock
+  Cpu, Shield, Clock, Server, Package, Mail, Globe, CalendarClock,
+  GitBranch, Wrench
 } from "lucide-react";
 import { Users, Building2, Settings2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
@@ -25,6 +26,8 @@ const NAV_ITEMS = [
   { path: "/os/tenants", icon: Building2, label: "Tenants", badge: "NEW" },
   { path: "/os/meta-agent", icon: Bot, label: "Mr. Agent", badge: "NEW" },
   { path: "/os/mr-agent-profile", icon: Settings2, label: "Agent Profile", badge: null },
+  { path: "/os/code-graph", icon: GitBranch, label: "Code Graph", badge: null },
+  { path: "/os/healing", icon: Wrench, label: "Healing", badge: null },
   { path: "/os/email", icon: Mail, label: "Agent Inbox", badge: "NEW" },
   { path: "/os/browser", icon: Globe, label: "Browser Worker", badge: "NEW" },
   { path: "/os/agent-schedules", icon: CalendarClock, label: "Agent Schedules", badge: "NEW" },

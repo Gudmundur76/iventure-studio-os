@@ -49,6 +49,9 @@ import { sandboxNodes } from "../drizzle/schema";
 import { agents as agentsTable } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
+import { codeRepos, codeNodes, codeEdges, healingProposals } from "../drizzle/schema";
+import { scanRepo, scanAllActiveRepos, getAnomalies, seedDefaultRepos } from "./codeGraph";
+import { runAwarenessLoop, applyProposal, dismissProposal, listProposals } from "./selfHealing";
 
 // ── Tenants Router ─────────────────────────────────────────────────────────
 // ── Meta Agent Router ──────────────────────────────────────────────────────
@@ -144,6 +147,136 @@ const metaAgentRouter = router({
       );
       return withCounts;
     }),
+});
+
+
+// ── Code Graph Router ──────────────────────────────────────────────────────
+const codeGraphRouter = router({
+  listRepos: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    await seedDefaultRepos();
+    return db.select().from(codeRepos).orderBy(codeRepos.name);
+  }),
+
+  addRepo: protectedProcedure
+    .input(z.object({
+      name: z.string().min(1).max(128),
+      source: z.enum(["local", "ssh", "github"]),
+      path: z.string().min(1).max(512),
+      language: z.string().default("typescript"),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      await db.insert(codeRepos).values({ ...input, isActive: true });
+      return { success: true };
+    }),
+
+  toggleRepo: protectedProcedure
+    .input(z.object({ id: z.number(), isActive: z.boolean() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      await db.update(codeRepos).set({ isActive: input.isActive }).where(eq(codeRepos.id, input.id));
+      return { success: true };
+    }),
+
+  scanRepo: protectedProcedure
+    .input(z.object({ repoId: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      const [repo] = await db.select().from(codeRepos).where(eq(codeRepos.id, input.repoId));
+      if (!repo) throw new TRPCError({ code: "NOT_FOUND", message: "Repo not found" });
+      const result = await scanRepo(repo);
+      return result;
+    }),
+
+  scanAll: protectedProcedure.mutation(async () => {
+    return scanAllActiveRepos();
+  }),
+
+  listNodes: protectedProcedure
+    .input(z.object({
+      repoId: z.number().optional(),
+      anomalyOnly: z.boolean().default(false),
+      limit: z.number().default(100),
+      offset: z.number().default(0),
+    }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      const { isNotNull, and: andOp } = await import("drizzle-orm");
+      const conditions: any[] = [];
+      if (input.repoId != null) conditions.push(eq(codeNodes.repoId, input.repoId));
+      if (input.anomalyOnly) conditions.push(isNotNull(codeNodes.anomalyType));
+      const base = db.select().from(codeNodes);
+      const q = conditions.length > 0
+        ? base.where(conditions.length === 1 ? conditions[0] : andOp(...conditions))
+        : base;
+      return q.limit(input.limit).offset(input.offset);
+    }),
+
+  listEdges: protectedProcedure
+    .input(z.object({ repoId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(codeEdges).where(eq(codeEdges.repoId, input.repoId)).limit(500);
+    }),
+
+  getAnomalies: protectedProcedure
+    .input(z.object({ repoId: z.number().optional() }))
+    .query(async ({ input }) => {
+      return getAnomalies(input.repoId);
+    }),
+
+  runAwareness: protectedProcedure.mutation(async () => {
+    return runAwarenessLoop();
+  }),
+});
+
+// ── Healing Router ─────────────────────────────────────────────────────────
+const healingRouter = router({
+  list: protectedProcedure
+    .input(z.object({ status: z.string().optional() }))
+    .query(async ({ input }) => {
+      return listProposals(input.status);
+    }),
+
+  get: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      const [proposal] = await db.select().from(healingProposals).where(eq(healingProposals.id, input.id));
+      if (!proposal) throw new TRPCError({ code: "NOT_FOUND" });
+      return proposal;
+    }),
+
+  approve: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      return applyProposal(input.id);
+    }),
+
+  dismiss: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      return dismissProposal(input.id);
+    }),
+
+  stats: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) return { pending: 0, applied: 0, dismissed: 0, failed: 0 };
+    const rows = await db.select({ status: healingProposals.status, count: sql<number>`count(*)` })
+      .from(healingProposals)
+      .groupBy(healingProposals.status);
+    const stats: Record<string, number> = {};
+    for (const row of rows) stats[row.status] = Number(row.count);
+    return { pending: stats.pending ?? 0, applied: stats.applied ?? 0, dismissed: stats.dismissed ?? 0, failed: stats.failed ?? 0 };
+  }),
 });
 
 const tenantsRouter = router({
@@ -1387,6 +1520,8 @@ export const appRouter = router({
   portal: clientPortalRouter,
   hostinger: hostingerRouter,
   metaAgent: metaAgentRouter,
+  codeGraph: codeGraphRouter,
+  healing: healingRouter,
 });
 
 export type AppRouter = typeof appRouter;

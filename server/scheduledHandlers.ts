@@ -5,6 +5,7 @@ import {
   addJobRunLog,
   listScheduledJobs,
 } from "./db";
+import { runAwarenessLoop } from "./selfHealing";
 
 const MCP_URL = process.env.GUMMI_MCP_URL ?? "http://187.124.213.194:8101";
 const MCP_TOKEN = process.env.GUMMI_MCP_TOKEN ?? "";
@@ -93,6 +94,19 @@ export async function cortexDigestHandler(req: Request, res: Response) {
 }
 
 // ── Handler: manual trigger (from dashboard) ──────────────────────────────────
+// ── Handler: Mr. Agent awareness loop ────────────────────────────────────────
+export async function awarenessLoopHandler(_req: Request, res: Response) {
+  const startMs = Date.now();
+  try {
+    const result = await runAwarenessLoop();
+    const elapsed = Date.now() - startMs;
+    res.json({ ok: true, elapsed, ...result });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: msg, timestamp: new Date().toISOString() });
+  }
+}
+
 export async function manualTriggerHandler(req: Request, res: Response) {
   const startMs = Date.now();
   try {

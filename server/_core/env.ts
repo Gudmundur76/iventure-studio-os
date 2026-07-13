@@ -15,4 +15,7 @@ export const ENV = {
   coolifyApiToken: process.env.COOLIFY_API_TOKEN ?? "",
   hostingerApiToken: process.env.HOSTINGER_API_TOKEN ?? "gUpPEcWZ7AyN4HMlReJZScdjWnOyOSuSzs5YZaDu9302ddbb",
   hostingerApiBase: "https://developers.hostinger.com",
+  vpsHost: process.env.VPS_HOST ?? "187.124.213.194",
+  vpsRootPassword: process.env.VPS_ROOT_PASSWORD ?? "",
+  asiOne: process.env.ASIONE ?? "",
 };

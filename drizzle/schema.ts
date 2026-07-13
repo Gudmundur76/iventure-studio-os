@@ -394,3 +394,79 @@ export const mrAgentProfiles = mysqlTable("mr_agent_profiles", {
 });
 export type MrAgentProfile = typeof mrAgentProfiles.$inferSelect;
 export type InsertMrAgentProfile = typeof mrAgentProfiles.$inferInsert;
+
+// ── Code Graph ────────────────────────────────────────────────────────────
+// codeRepos: each repository / service that Mr. Agent scans.
+export const codeRepos = mysqlTable("code_repos", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 128 }).notNull(),
+  source: mysqlEnum("source", ["local", "ssh", "github"]).default("local").notNull(),
+  path: varchar("path", { length: 512 }).notNull(),
+  language: varchar("language", { length: 32 }).default("typescript").notNull(),
+  lastScannedAt: timestamp("lastScannedAt"),
+  nodeCount: int("nodeCount").default(0).notNull(),
+  edgeCount: int("edgeCount").default(0).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CodeRepo = typeof codeRepos.$inferSelect;
+export type InsertCodeRepo = typeof codeRepos.$inferInsert;
+
+// codeNodes: a file, function, class, or module in the graph.
+export const codeNodes = mysqlTable("code_nodes", {
+  id: int("id").autoincrement().primaryKey(),
+  repoId: int("repoId").notNull(),
+  nodeType: mysqlEnum("nodeType", ["file", "function", "class", "module", "variable", "type"]).notNull(),
+  name: varchar("name", { length: 256 }).notNull(),
+  filePath: varchar("filePath", { length: 512 }).notNull(),
+  startLine: int("startLine"),
+  endLine: int("endLine"),
+  complexity: int("complexity").default(0).notNull(),
+  linesOfCode: int("linesOfCode").default(0).notNull(),
+  churnScore: int("churnScore").default(0).notNull(),
+  isDeadCode: boolean("isDeadCode").default(false).notNull(),
+  hasErrors: boolean("hasErrors").default(false).notNull(),
+  anomalyType: varchar("anomalyType", { length: 64 }),
+  anomalyDetail: text("anomalyDetail"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type CodeNode = typeof codeNodes.$inferSelect;
+export type InsertCodeNode = typeof codeNodes.$inferInsert;
+
+// codeEdges: a directed relationship between two nodes.
+export const codeEdges = mysqlTable("code_edges", {
+  id: int("id").autoincrement().primaryKey(),
+  repoId: int("repoId").notNull(),
+  fromNodeId: int("fromNodeId").notNull(),
+  toNodeId: int("toNodeId").notNull(),
+  edgeType: mysqlEnum("edgeType", ["imports", "calls", "extends", "implements", "uses", "exports"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type CodeEdge = typeof codeEdges.$inferSelect;
+export type InsertCodeEdge = typeof codeEdges.$inferInsert;
+
+// ── Self-Healing Proposals ────────────────────────────────────────────────
+export const healingProposals = mysqlTable("healing_proposals", {
+  id: int("id").autoincrement().primaryKey(),
+  triggerType: mysqlEnum("triggerType", ["task_error", "anomaly", "self_directed"]).notNull(),
+  triggerRef: varchar("triggerRef", { length: 128 }),
+  repoId: int("repoId"),
+  nodeId: int("nodeId"),
+  issueTitle: varchar("issueTitle", { length: 256 }).notNull(),
+  issueDetail: text("issueDetail").notNull(),
+  patchDiff: text("patchDiff"),
+  patchSummary: text("patchSummary"),
+  affectedFiles: json("affectedFiles").$type<string[]>(),
+  status: mysqlEnum("status", ["pending", "approved", "dismissed", "applied", "failed"]).default("pending").notNull(),
+  notificationSent: boolean("notificationSent").default(false).notNull(),
+  notificationId: varchar("notificationId", { length: 128 }),
+  resolvedAt: timestamp("resolvedAt"),
+  resolvedBy: varchar("resolvedBy", { length: 64 }),
+  appliedPrUrl: varchar("appliedPrUrl", { length: 512 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type HealingProposal = typeof healingProposals.$inferSelect;
+export type InsertHealingProposal = typeof healingProposals.$inferInsert;
