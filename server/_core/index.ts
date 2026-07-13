@@ -13,6 +13,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { memorySyncHandler, cortexDigestHandler, manualTriggerHandler, awarenessLoopHandler } from "../scheduledHandlers";
+import { applyProposal, dismissProposal } from "../selfHealing";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -47,6 +48,37 @@ async function startServer() {
   app.post("/api/scheduled/cortex-digest", cortexDigestHandler);
   app.post("/api/scheduled/manual-trigger", manualTriggerHandler);
   app.post("/api/scheduled/awareness-loop", awarenessLoopHandler);
+
+  // ── Healing quick-action endpoints (one-click Yes/No from notifications) ──
+  app.get("/api/healing/approve/:id", async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) { res.status(400).send("Invalid proposal ID"); return; }
+    try {
+      const result = await applyProposal(id);
+      if (result.success) {
+        res.redirect(`/os/healing?action=approved&id=${id}`);
+      } else {
+        res.redirect(`/os/healing?action=error&id=${id}&msg=${encodeURIComponent(result.message)}`);
+      }
+    } catch (e: any) {
+      res.redirect(`/os/healing?action=error&id=${id}&msg=${encodeURIComponent(e.message)}`);
+    }
+  });
+
+  app.get("/api/healing/dismiss/:id", async (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) { res.status(400).send("Invalid proposal ID"); return; }
+    try {
+      const result = await dismissProposal(id);
+      if (result.success) {
+        res.redirect(`/os/healing?action=dismissed&id=${id}`);
+      } else {
+        res.redirect(`/os/healing?action=error&id=${id}`);
+      }
+    } catch (e: any) {
+      res.redirect(`/os/healing?action=error&id=${id}&msg=${encodeURIComponent(e.message)}`);
+    }
+  });
 
   // Start in-process agent schedule runner (node-cron, VPS-compatible)
   startAgentScheduleRunner();

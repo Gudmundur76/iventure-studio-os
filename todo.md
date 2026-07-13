@@ -110,3 +110,8 @@ Designed to scale toward a multi-tenant client platform.
 - [x] Add VPS_HOST secret (187.124.213.194) so code graph scanner can SSH into VPS
 - [x] Update Mr. Agent default profile doctrine with anomaly thresholds and VPS service map
 - [x] Create awareness-loop heartbeat schedule (every 6h, task_uid: a8cbFB7DD68ETuXVRothZT)
+- [x] Seed codeRepos rows for all 7 VPS services (nanoclaw, openmanus, mragent-vps, iventure-sandbox, browser-worker, coolify-mcp, iventure-studio-os)
+- [x] Enrich healing notifications with repo name, file path, anomaly type, affected files, and severity emoji
+- [x] Add quick-approve/dismiss GET endpoints (/api/healing/approve/:id, /api/healing/dismiss/:id) for one-click Yes/No from notifications
+- [x] Awareness-loop heartbeat schedule created (every 6 hours, task_uid: a8cbFB7DD68ETuXVRothZT)
+- [x] VPS_HOST secret set to 187.124.213.194

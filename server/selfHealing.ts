@@ -222,7 +222,16 @@ Produce a fix proposal.`;
   if (!newProposal) return null;
 
   // Send Yes/No notification
-  const notificationSent = await sendHealingNotification(newProposal.id, proposal.issueTitle, proposal.patchSummary);
+  const notificationSent = await sendHealingNotification({
+    proposalId: newProposal.id,
+    issueTitle: proposal.issueTitle,
+    patchSummary: proposal.patchSummary,
+    repoName: repo.name,
+    filePath,
+    anomalyType,
+    affectedFiles: proposal.affectedFiles,
+    severity: anomalyType === "circular_dependency" ? "critical" : anomalyType === "high_complexity" ? "high" : "medium",
+  });
 
   await db.update(healingProposals)
     .set({ notificationSent, notificationId: notificationSent ? `notif-${newProposal.id}` : null })
@@ -267,7 +276,12 @@ async function generateTaskErrorProposal(
 
   if (!inserted) return null;
 
-  const notificationSent = await sendHealingNotification(inserted.id, issueTitle, patchSummary);
+  const notificationSent = await sendHealingNotification({
+    proposalId: inserted.id,
+    issueTitle,
+    patchSummary,
+    severity: "high",
+  });
 
   await db.update(healingProposals)
     .set({ notificationSent, notificationId: notificationSent ? `notif-${inserted.id}` : null })
@@ -278,15 +292,43 @@ async function generateTaskErrorProposal(
 
 // ── Notification ───────────────────────────────────────────────────────────
 
-async function sendHealingNotification(proposalId: number, issueTitle: string, patchSummary: string): Promise<boolean> {
+type HealingNotificationContext = {
+  proposalId: number;
+  issueTitle: string;
+  patchSummary: string;
+  repoName?: string;
+  filePath?: string;
+  anomalyType?: string;
+  affectedFiles?: string[];
+  severity?: "critical" | "high" | "medium" | "low";
+};
+
+async function sendHealingNotification(ctx: HealingNotificationContext): Promise<boolean> {
+  const { proposalId, issueTitle, patchSummary, repoName, filePath, anomalyType, affectedFiles, severity } = ctx;
   try {
     const appUrl = ENV.isProduction
       ? "https://iventureos-7fncoxhd.manus.space"
       : "http://localhost:3000";
 
+    const severityEmoji = severity === "critical" ? "🚨" : severity === "high" ? "⚠️" : severity === "medium" ? "🔶" : "ℹ️";
+    const lines: string[] = [];
+    lines.push(patchSummary);
+    lines.push("");
+    if (repoName) lines.push(`📁 Repo: ${repoName}`);
+    if (filePath) lines.push(`📄 File: ${filePath}`);
+    if (anomalyType) lines.push(`🔍 Anomaly: ${anomalyType.replace(/_/g, " ")}`);
+    if (affectedFiles && affectedFiles.length > 0) {
+      lines.push(`📝 Affected files: ${affectedFiles.slice(0, 3).join(", ")}${affectedFiles.length > 3 ? ` +${affectedFiles.length - 3} more` : ""}`);
+    }
+    lines.push("");
+    lines.push(`✅ YES — Approve fix: ${appUrl}/api/healing/approve/${proposalId}`);
+    lines.push(`❌ NO — Dismiss: ${appUrl}/api/healing/dismiss/${proposalId}`);
+    lines.push("");
+    lines.push(`🔗 Full review: ${appUrl}/os/healing#proposal-${proposalId}`);
+
     await notifyOwner({
-      title: `🔧 Mr. Agent: Fix Proposal — ${issueTitle}`,
-      content: `${patchSummary}\n\nReview and approve or dismiss at:\n${appUrl}/os/healing#proposal-${proposalId}`,
+      title: `${severityEmoji} Mr. Agent Fix: ${issueTitle}`,
+      content: lines.join("\n"),
     });
     return true;
   } catch {
@@ -360,13 +402,13 @@ export async function applyProposal(proposalId: number): Promise<{ success: bool
 
 // ── Dismiss Proposal ───────────────────────────────────────────────────────
 
-export async function dismissProposal(proposalId: number): Promise<{ success: boolean }> {
+export async function dismissProposal(proposalId: number): Promise<{ success: boolean; message: string }> {
   const db = await getDb();
-  if (!db) return { success: false };
+  if (!db) return { success: false, message: "DB unavailable" };
   await db.update(healingProposals)
     .set({ status: "dismissed", resolvedAt: new Date(), resolvedBy: "operator" })
     .where(eq(healingProposals.id, proposalId));
-  return { success: true };
+  return { success: true, message: "Proposal dismissed" };
 }
 
 // ── List Proposals ─────────────────────────────────────────────────────────
