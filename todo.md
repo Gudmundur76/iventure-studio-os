@@ -105,3 +105,8 @@ Designed to scale toward a multi-tenant client platform.
 - [x] MrAgentProfile.tsx editor — persona, doctrine, workingStyle fields with live preview of system prompt
 - [x] Route /os/meta-agent and /os/mr-agent-profile wired in App.tsx
 - [x] Nav items added to IVLayout.tsx (Bot icon for Meta Agent, Settings2 for Profile)
+
+## All 3 Next Steps (completed)
+- [x] Add VPS_HOST secret (187.124.213.194) so code graph scanner can SSH into VPS
+- [x] Update Mr. Agent default profile doctrine with anomaly thresholds and VPS service map
+- [x] Create awareness-loop heartbeat schedule (every 6h, task_uid: a8cbFB7DD68ETuXVRothZT)
