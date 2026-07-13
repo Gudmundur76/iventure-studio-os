@@ -20,6 +20,7 @@ import {
   Zap,
   MemoryStick,
 } from "lucide-react";
+import { History, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -38,6 +39,16 @@ interface ParentRow {
   status: "queued" | "thinking" | "done" | "error";
   reply: string | null;
   prompt: string;
+}
+
+interface HistoryRow {
+  id: number;
+  prompt: string;
+  status: string;
+  reply: string | null;
+  createdAt: Date;
+  elapsedMs: number | null;
+  subtaskCount: number;
 }
 
 // ── Status helpers ─────────────────────────────────────────────────────────
@@ -114,6 +125,9 @@ export default function MetaAgent() {
   const [planSummary, setPlanSummary] = useState<string | null>(null);
   const [polling, setPolling] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [selectedHistoryId, setSelectedHistoryId] = useState<number | null>(null);
+
+  const historyQuery = trpc.metaAgent.history.useQuery({ limit: 20 });
 
   const dispatchMut = trpc.metaAgent.dispatch.useMutation({
     onSuccess: (data) => {
@@ -122,6 +136,7 @@ export default function MetaAgent() {
       setPlanSummary(data.plan.summary);
       setPolling(true);
       toast.success("Mr. Agent dispatched — working on it…");
+      historyQuery.refetch();
     },
     onError: (err) => {
       toast.error(`Dispatch failed: ${err.message}`);
@@ -152,6 +167,7 @@ export default function MetaAgent() {
     setMetaRef(null);
     setPlanSummary(null);
     setPolling(false);
+    setSelectedHistoryId(null);
     dispatchMut.mutate({ prompt: prompt.trim() });
   };
 
@@ -167,6 +183,14 @@ export default function MetaAgent() {
 
   const doneCount = subtasks.filter((s) => s.status === "done").length;
   const totalCount = subtasks.length;
+
+  const handleLoadSession = (row: HistoryRow) => {
+    setSelectedHistoryId(row.id);
+    setParentTaskId(row.id);
+    setMetaRef(null);
+    setPlanSummary(null);
+    setPolling(false);
+  };
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
@@ -299,6 +323,77 @@ export default function MetaAgent() {
           </CardContent>
         </Card>
       )}
+
+      {/* Past Sessions */}
+      <Card className="bg-zinc-900/80 border-zinc-800">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-sm font-medium text-zinc-300 flex items-center gap-2">
+              <History className="w-4 h-4 text-zinc-500" />
+              Past Sessions
+            </CardTitle>
+            <button
+              onClick={() => historyQuery.refetch()}
+              className="text-zinc-600 hover:text-zinc-400 transition-colors"
+              title="Refresh"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${historyQuery.isFetching ? "animate-spin" : ""}`} />
+            </button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {historyQuery.isLoading ? (
+            <div className="flex items-center gap-2 text-sm text-zinc-600 py-4 justify-center">
+              <Spinner className="w-4 h-4" />
+              Loading history…
+            </div>
+          ) : !historyQuery.data || historyQuery.data.length === 0 ? (
+            <div className="py-6 text-center">
+              <History className="w-8 h-8 text-zinc-800 mx-auto mb-2" />
+              <p className="text-sm text-zinc-600">No sessions yet. Dispatch your first task above.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {(historyQuery.data as HistoryRow[]).map((row) => (
+                <button
+                  key={row.id}
+                  onClick={() => handleLoadSession(row)}
+                  className={`w-full text-left rounded-lg border p-3 transition-colors ${
+                    selectedHistoryId === row.id
+                      ? "border-violet-500/40 bg-violet-500/10"
+                      : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 hover:bg-zinc-900/70"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-zinc-300 line-clamp-1">{row.prompt}</p>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        {statusBadge(row.status)}
+                        <span className="text-xs text-zinc-600">
+                          {row.subtaskCount} subtask{row.subtaskCount !== 1 ? "s" : ""}
+                        </span>
+                        {row.elapsedMs != null && (
+                          <span className="text-xs text-zinc-600">
+                            {(row.elapsedMs / 1000).toFixed(1)}s
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-xs text-zinc-600 flex-shrink-0 mt-0.5">
+                      {new Date(row.createdAt).toLocaleString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

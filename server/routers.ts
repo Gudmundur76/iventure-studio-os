@@ -120,6 +120,30 @@ const metaAgentRouter = router({
       .input(z.object({ id: z.number().int() }))
       .mutation(({ input }) => deleteProfile(input.id)),
   }),
+  history: protectedProcedure
+    .input(z.object({ limit: z.number().int().min(1).max(50).default(20) }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      const { workerTasks: wt } = await import('../drizzle/schema');
+      const { eq, desc, count } = await import('drizzle-orm');
+      const rows = await db
+        .select()
+        .from(wt)
+        .where(eq(wt.workerId, 'mr-agent'))
+        .orderBy(desc(wt.createdAt))
+        .limit(input.limit);
+      const withCounts = await Promise.all(
+        rows.map(async (row) => {
+          const [countRow] = await db
+            .select({ total: count() })
+            .from(wt)
+            .where(eq(wt.parentTaskId, row.id));
+          return { ...row, subtaskCount: countRow?.total ?? 0 };
+        })
+      );
+      return withCounts;
+    }),
 });
 
 const tenantsRouter = router({
