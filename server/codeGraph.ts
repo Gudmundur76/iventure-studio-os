@@ -321,12 +321,12 @@ export async function scanSshRepo(repo: CodeRepo): Promise<ScanResult> {
     // Use sshpass + ssh to run remote commands
     const { execSync } = await import("child_process");
     const sshCmd = (cmd: string) =>
-      execSync(`sshpass -p '${password}' ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${user}@${host} "${cmd}"`, { timeout: 30000 }).toString().trim();
+      execSync(`sshpass -p '${password}' ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${user}@${host} '${cmd.replace(/'/g, "'\\''")}'`, { timeout: 30000 }).toString().trim();
 
     // List all source files with line counts
     let fileList: string;
     try {
-      fileList = sshCmd(`find ${remotePath} -type f \\( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.py" -o -name "*.go" \\) ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/dist/*" 2>/dev/null | head -200`);
+      fileList = sshCmd(`find ${remotePath} -type f \\( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.py' -o -name '*.go' \\) ! -path '*/node_modules/*' ! -path '*/.git/*' ! -path '*/dist/*' 2>/dev/null | head -200`);
     } catch {
       return { repoId: repo.id, repoName: repo.name, nodesWritten: 0, edgesWritten: 0, anomaliesFound: 0, durationMs: Date.now() - start, error: `SSH connection failed to ${host}` };
     }
