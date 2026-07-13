@@ -185,6 +185,9 @@ export const workerTasks = mysqlTable("worker_tasks", {
   elapsedMs: int("elapsedMs"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   completedAt: timestamp("completedAt"),
+  parentTaskId: int("parentTaskId"),   // set on subtasks — points to the meta-agent parent task
+  metaRef: varchar("metaRef", { length: 64 }), // e.g. "meta-abc123" groups parent + subtasks
+  subtaskIndex: int("subtaskIndex"),   // order within the dispatch plan (0-based)
 });
 export type WorkerTask = typeof workerTasks.$inferSelect;
 export type InsertWorkerTask = typeof workerTasks.$inferInsert;
@@ -373,3 +376,21 @@ export const clientTasks = mysqlTable("client_tasks", {
 });
 export type ClientTask = typeof clientTasks.$inferSelect;
 export type InsertClientTask = typeof clientTasks.$inferInsert;
+
+// ── Mr. Agent Profiles ────────────────────────────────────────────────────
+// Each profile defines the persona, doctrine, and working style that the
+// meta agent loads before orchestrating any task. One profile can be
+// marked as the default for a tenant (or globally if tenantRef is null).
+export const mrAgentProfiles = mysqlTable("mr_agent_profiles", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 128 }).notNull(),
+  tenantRef: varchar("tenantRef", { length: 32 }), // null = global default
+  persona: text("persona").notNull(),              // tone, style, how it introduces itself
+  doctrine: text("doctrine").notNull(),            // task decomposition rules, escalation rules
+  workingStyle: text("workingStyle").notNull(),    // formatting preferences, verbosity, language
+  isDefault: boolean("isDefault").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type MrAgentProfile = typeof mrAgentProfiles.$inferSelect;
+export type InsertMrAgentProfile = typeof mrAgentProfiles.$inferInsert;

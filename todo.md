@@ -93,3 +93,15 @@ Designed to scale toward a multi-tenant client platform.
 - [x] ClientManagement → AgentInbox direct link: View Inbox button navigates to /os/email?agent=<assignedAgentId>; AgentInbox reads ?agent= param on mount
 - [x] TenantManagement page (/os/tenants) — Astryx components (Table, Card, Dialog, Badge, Button, Grid, HStack, VStack, Selector, NumberInput); KPI cards; create/edit/delete dialogs with optimistic updates; nav item added to IVLayout
 - [x] Assign Clients dialog on TenantManagement — UserPlus button per row opens MultiSelector dialog; setTenantClients bulk helper in db.ts; tenants.setClients tRPC procedure; pre-populates current assignments; clears old + sets new in one operation
+
+## Mr. Agent Meta-Agent System
+- [x] mrAgentProfiles schema table (id, name, tenantRef, persona, doctrine, workingStyle, isDefault, createdAt, updatedAt)
+- [x] DB migration applied via webdev_execute_sql
+- [x] server/metaAgent.ts — orchestration module: loadProfile, readMemory, buildPlan (LLM), dispatchSubtasks, synthesise, writeMemory
+- [x] metaAgent.dispatch tRPC procedure — async, creates parent workerTask + subtask workerTasks, returns parentTaskId
+- [x] metaAgent.status tRPC procedure — returns parent task + all subtasks with statuses
+- [x] metaAgent.profiles CRUD tRPC procedures (list, get, create, update, delete)
+- [x] MetaAgent.tsx page — task input, dispatch plan view, live subtask polling, synthesised result panel
+- [x] MrAgentProfile.tsx editor — persona, doctrine, workingStyle fields with live preview of system prompt
+- [x] Route /os/meta-agent and /os/mr-agent-profile wired in App.tsx
+- [x] Nav items added to IVLayout.tsx (Bot icon for Meta Agent, Settings2 for Profile)

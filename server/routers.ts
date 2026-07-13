@@ -33,6 +33,14 @@ import {
   listClientsByTenant,
 } from "./db";
 import { setTenantClients } from "./db";
+import {
+  dispatchMetaAgent,
+  listProfiles,
+  getProfileById,
+  createProfile,
+  updateProfile,
+  deleteProfile,
+} from "./metaAgent";
 import { routeTask, logRoutingDecision } from "./routingEngine";
 import { routingLogs } from "../drizzle/schema";
 import { desc } from "drizzle-orm";
@@ -43,6 +51,77 @@ import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 
 // ── Tenants Router ─────────────────────────────────────────────────────────
+// ── Meta Agent Router ──────────────────────────────────────────────────────
+const metaAgentRouter = router({
+  dispatch: protectedProcedure
+    .input(z.object({
+      prompt: z.string().min(1).max(4096),
+      tenantRef: z.string().optional(),
+      clientRef: z.string().optional(),
+    }))
+    .mutation(({ input }) =>
+      dispatchMetaAgent({
+        prompt: input.prompt,
+        tenantRef: input.tenantRef ?? null,
+        clientRef: input.clientRef ?? null,
+      })
+    ),
+
+  status: protectedProcedure
+    .input(z.object({ parentTaskId: z.number().int() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return { parent: null, subtasks: [] };
+      const { workerTasks: wt } = await import("../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const [parent] = await db.select().from(wt).where(eq(wt.id, input.parentTaskId)).limit(1);
+      const subtasks = await db
+        .select()
+        .from(wt)
+        .where(eq(wt.parentTaskId, input.parentTaskId))
+        .orderBy(wt.subtaskIndex);
+      return { parent: parent ?? null, subtasks };
+    }),
+
+  profiles: router({
+    list: protectedProcedure.query(() => listProfiles()),
+
+    get: protectedProcedure
+      .input(z.object({ id: z.number().int() }))
+      .query(({ input }) => getProfileById(input.id)),
+
+    create: protectedProcedure
+      .input(z.object({
+        name: z.string().min(1).max(128),
+        tenantRef: z.string().optional(),
+        persona: z.string().min(1),
+        doctrine: z.string().min(1),
+        workingStyle: z.string().min(1),
+        isDefault: z.boolean().optional(),
+      }))
+      .mutation(({ input }) => createProfile(input)),
+
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number().int(),
+        name: z.string().min(1).max(128).optional(),
+        tenantRef: z.string().nullable().optional(),
+        persona: z.string().min(1).optional(),
+        doctrine: z.string().min(1).optional(),
+        workingStyle: z.string().min(1).optional(),
+        isDefault: z.boolean().optional(),
+      }))
+      .mutation(({ input }) => {
+        const { id, ...rest } = input;
+        return updateProfile(id, rest);
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number().int() }))
+      .mutation(({ input }) => deleteProfile(input.id)),
+  }),
+});
+
 const tenantsRouter = router({
   list: protectedProcedure.query(() => listTenants()),
 
@@ -1283,6 +1362,7 @@ export const appRouter = router({
   tenants: tenantsRouter,
   portal: clientPortalRouter,
   hostinger: hostingerRouter,
+  metaAgent: metaAgentRouter,
 });
 
 export type AppRouter = typeof appRouter;

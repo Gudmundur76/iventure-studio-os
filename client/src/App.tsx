@@ -98,6 +98,12 @@ function Router() {
       <Route path="/os/tenants">
         <IVLayout><TenantManagement /></IVLayout>
       </Route>
+      <Route path="/os/meta-agent">
+        <IVLayout><MetaAgent /></IVLayout>
+      </Route>
+      <Route path="/os/mr-agent-profile">
+        <IVLayout><MrAgentProfile /></IVLayout>
+      </Route>
       <Route path="/portal/:token" component={PublicPortal} />
       {/* Public Giggo site routes */}
       <Route path="/chat" component={GiggoChat} />
@@ -139,3 +145,5 @@ import AgentSchedules from "./pages/AgentSchedules";
 import ClientManagement from "./pages/ClientManagement";
 import TenantManagement from "./pages/TenantManagement";
 import PublicPortal from "./pages/PublicPortal";
+import MetaAgent from "./pages/MetaAgent";
+import MrAgentProfile from "./pages/MrAgentProfile";

@@ -5,7 +5,7 @@ import {
   FolderKanban, ListTodo, ChevronLeft, ChevronRight, Settings, LogOut, Layers,
   Cpu, Shield, Clock, Server, Package, Mail, Globe, CalendarClock
 } from "lucide-react";
-import { Users, Building2 } from "lucide-react";
+import { Users, Building2, Settings2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
 
@@ -23,6 +23,8 @@ const NAV_ITEMS = [
   { path: "/os/portal", icon: FolderKanban, label: "Client Portal", badge: null },
   { path: "/os/clients", icon: Users, label: "Clients", badge: "NEW" },
   { path: "/os/tenants", icon: Building2, label: "Tenants", badge: "NEW" },
+  { path: "/os/meta-agent", icon: Bot, label: "Mr. Agent", badge: "NEW" },
+  { path: "/os/mr-agent-profile", icon: Settings2, label: "Agent Profile", badge: null },
   { path: "/os/email", icon: Mail, label: "Agent Inbox", badge: "NEW" },
   { path: "/os/browser", icon: Globe, label: "Browser Worker", badge: "NEW" },
   { path: "/os/agent-schedules", icon: CalendarClock, label: "Agent Schedules", badge: "NEW" },
