@@ -1,6 +1,6 @@
 FROM node:22-slim
-# Install curl for Coolify healthcheck
-RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
+# Install curl (Coolify healthcheck), sshpass + openssh-client (remote repo scanning)
+RUN apt-get update && apt-get install -y --no-install-recommends curl sshpass openssh-client && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 # Copy everything first (patches dir must exist before pnpm install)
 COPY . .
