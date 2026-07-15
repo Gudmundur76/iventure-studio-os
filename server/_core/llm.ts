@@ -69,6 +69,7 @@ export type InvokeParams = {
   model?: string;
   thinking?: Record<string, unknown>;
   reasoning?: Record<string, unknown>;
+  provider?: "nexos" | "forge";
 };
 
 export type ToolCall = {
@@ -212,14 +213,24 @@ const normalizeToolChoice = (
   return toolChoice;
 };
 
-const resolveApiUrl = () =>
-  ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
+const resolveApiUrl = (provider?: "nexos" | "forge") => {
+  if (provider === "nexos") {
+    const base = (ENV as any).nexosApiUrl?.trim() || "https://api.nexos.ai/v1";
+    return `${base.replace(/\/$/, "")}/chat/completions`;
+  }
+  return ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
     ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/chat/completions`
     : "https://forge.manus.im/v1/chat/completions";
+};
 
-const assertApiKey = () => {
-  if (!ENV.forgeApiKey) {
-    throw new Error("OPENAI_API_KEY is not configured");
+const resolveApiKey = (provider?: "nexos" | "forge") =>
+  provider === "nexos" ? (ENV as any).nexosApiKey : ENV.forgeApiKey;
+
+const assertApiKey = (provider?: "nexos" | "forge") => {
+  if (!resolveApiKey(provider)) {
+    throw new Error(provider === "nexos"
+      ? "NEXOS_API_KEY is not configured"
+      : "BUILT_IN_FORGE_API_KEY is not configured");
   }
 };
 
@@ -340,7 +351,8 @@ const fetchWithBackoff = async (
 };
 
 export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
-  assertApiKey();
+  const { provider } = params;
+  assertApiKey(provider);
 
   const {
     messages,
@@ -401,11 +413,11 @@ export async function invokeLLM(params: InvokeParams): Promise<InvokeResult> {
     payload.response_format = normalizedResponseFormat;
   }
 
-  const response = await fetchWithBackoff(resolveApiUrl(), {
+  const response = await fetchWithBackoff(resolveApiUrl(provider), {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      authorization: `Bearer ${ENV.forgeApiKey}`,
+      authorization: `Bearer ${resolveApiKey(provider)}`,
     },
     body: JSON.stringify(payload),
   });
@@ -433,7 +445,7 @@ export type ModelsResponse = {
 };
 
 export async function listLLMModels(): Promise<ModelsResponse> {
-  assertApiKey();
+  assertApiKey("forge");
 
   const url = ENV.forgeApiUrl && ENV.forgeApiUrl.trim().length > 0
     ? `${ENV.forgeApiUrl.replace(/\/$/, "")}/v1/models`
@@ -450,5 +462,21 @@ export async function listLLMModels(): Promise<ModelsResponse> {
     );
   }
 
+  return (await response.json()) as ModelsResponse;
+}
+
+export async function listNexosModels(): Promise<ModelsResponse> {
+  assertApiKey("nexos");
+  const base = (ENV as any).nexosApiUrl?.trim() || "https://api.nexos.ai/v1";
+  const url = `${base.replace(/\/$/, "")}/models`;
+  const response = await fetchWithBackoff(url, {
+    headers: { authorization: `Bearer ${(ENV as any).nexosApiKey}` },
+  });
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(
+      `List nexos models failed: ${response.status} ${response.statusText} – ${errorText}`
+    );
+  }
   return (await response.json()) as ModelsResponse;
 }

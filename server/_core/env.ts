@@ -18,4 +18,6 @@ export const ENV = {
   vpsHost: process.env.VPS_HOST ?? "187.124.213.194",
   vpsRootPassword: process.env.VPS_ROOT_PASSWORD ?? "",
   asiOne: process.env.ASIONE ?? "",
+  nexosApiKey: process.env.NEXOS_API_KEY ?? "",
+  nexosApiUrl: process.env.NEXOS_API_URL ?? "https://api.nexos.ai/v1",
 };
