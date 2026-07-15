@@ -470,3 +470,30 @@ export const healingProposals = mysqlTable("healing_proposals", {
 });
 export type HealingProposal = typeof healingProposals.$inferSelect;
 export type InsertHealingProposal = typeof healingProposals.$inferInsert;
+
+// ── Public Leads (from iventure.studio public chat) ───────────────────────
+export const publicLeads = mysqlTable("public_leads", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: varchar("sessionId", { length: 128 }).notNull().unique(),
+  visitorName: varchar("visitorName", { length: 128 }),
+  visitorEmail: varchar("visitorEmail", { length: 256 }),
+  source: varchar("source", { length: 64 }).default("iventure.studio").notNull(),
+  status: mysqlEnum("status", ["new", "contacted", "qualified", "closed"]).default("new").notNull(),
+  summary: text("summary"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type PublicLead = typeof publicLeads.$inferSelect;
+export type InsertPublicLead = typeof publicLeads.$inferInsert;
+
+// ── Public Chat Messages (from iventure.studio) ───────────────────────────
+export const publicChatMessages = mysqlTable("public_chat_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: varchar("sessionId", { length: 128 }).notNull(),
+  role: mysqlEnum("role", ["user", "assistant", "system"]).notNull(),
+  content: text("content").notNull(),
+  model: varchar("model", { length: 128 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PublicChatMessage = typeof publicChatMessages.$inferSelect;
+export type InsertPublicChatMessage = typeof publicChatMessages.$inferInsert;

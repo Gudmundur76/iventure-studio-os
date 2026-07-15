@@ -14,6 +14,7 @@ import { enquiries, InsertEnquiry, updates, InsertUpdate, Update } from "../driz
 import { invoices, InsertInvoice, Invoice } from "../drizzle/schema";
 import { scheduledJobs, jobRunLogs, type InsertScheduledJob, type InsertJobRunLog, type ScheduledJob, type JobRunLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
+import { publicLeads, publicChatMessages, type InsertPublicLead, type InsertPublicChatMessage, type PublicLead, type PublicChatMessage } from "../drizzle/schema";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -602,3 +603,44 @@ export async function setTenantClients(tenantRef: string, clientIds: number[]): 
 }
 
 export type { Tenant };
+
+// ── Public Chat / Leads ───────────────────────────────────────────────────
+
+export async function upsertPublicLead(sessionId: string, data?: Partial<InsertPublicLead>): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(publicLeads)
+    .values({ sessionId, ...data })
+    .onDuplicateKeyUpdate({ set: { updatedAt: new Date(), ...(data ?? {}) } });
+}
+
+export async function savePublicChatMessage(msg: InsertPublicChatMessage): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(publicChatMessages).values(msg);
+}
+
+export async function getPublicChatHistory(sessionId: string, limit = 20): Promise<PublicChatMessage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(publicChatMessages)
+    .where(eq(publicChatMessages.sessionId, sessionId))
+    .orderBy(publicChatMessages.createdAt)
+    .limit(limit);
+}
+
+export async function listPublicLeads(limit = 50): Promise<PublicLead[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(publicLeads)
+    .orderBy(desc(publicLeads.createdAt))
+    .limit(limit);
+}
+
+export async function updatePublicLeadStatus(sessionId: string, status: "new" | "contacted" | "qualified" | "closed"): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(publicLeads).set({ status }).where(eq(publicLeads.sessionId, sessionId));
+}
+
+export type { PublicLead, PublicChatMessage };

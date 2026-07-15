@@ -14,6 +14,7 @@ import { seedDatabase } from "./seed";
 import { createEnquiry, listEnquiries } from "./db";
 import { listUpdates, getUpdateBySlug, createUpdate, updatePost, deleteUpdate } from "./db";
 import { invokeLLM, listLLMModels } from "./_core/llm";
+import { listNexosModels } from "./_core/llm";
 import { createWorkerTask, updateWorkerTask, listWorkerTasks, getWorkerTask, getProjectById, updateProject, getProjectTasks } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { ENV } from "./_core/env";
@@ -55,6 +56,65 @@ import { runAwarenessLoop, applyProposal, dismissProposal, listProposals } from 
 
 // ── Tenants Router ─────────────────────────────────────────────────────────
 // ── Meta Agent Router ──────────────────────────────────────────────────────
+const VELORAH_SYSTEM_PROMPT = `You are Velorah, the AI agent for iVenture Studio — a creative technology studio based in Iceland founded by Guðmundur (Gummi) Sigurðsson. iVenture Studio builds AI-powered products and services for ambitious founders and companies. Our core offerings: AI Agent Systems (custom autonomous agents for operations, sales, research, content), iVenture OS (multi-agent operating system for running a portfolio of companies with minimal headcount), Web & Product Development (fast AI-assisted product builds), and Strategy & Consulting (AI adoption roadmaps). You are the first point of contact. Your job is to understand what the visitor needs, explain how iVenture Studio can help, and guide them toward booking a call or leaving their contact details. Keep responses concise (2-4 sentences), warm, and direct. If someone asks a technical question, answer it clearly. If they seem interested in working together, ask for their name and email. Contact: hello@iventure.studio`;
+
+const publicChatRouter = router({
+  send: publicProcedure
+    .input(z.object({
+      sessionId: z.string().min(1).max(128),
+      message: z.string().min(1).max(2000),
+      history: z.array(z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string(),
+      })).max(20).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      await upsertPublicLead(input.sessionId);
+      await savePublicChatMessage({ sessionId: input.sessionId, role: "user", content: input.message, model: "Grok 4.3" });
+      const messages = [
+        { role: "system" as const, content: VELORAH_SYSTEM_PROMPT },
+        ...(input.history ?? []).map(h => ({ role: h.role as "user" | "assistant", content: h.content })),
+        { role: "user" as const, content: input.message },
+      ];
+      const response = await invokeLLM({ messages, model: "Grok 4.3", provider: "nexos" });
+      const rawContent = response.choices?.[0]?.message?.content;
+      const content = typeof rawContent === 'string' ? rawContent
+        : (Array.isArray(rawContent) ? rawContent.map((c: { type: string; text?: string }) => c.type === 'text' ? c.text : '').join('')
+        : "I'm having trouble responding right now. Please email hello@iventure.studio.");
+      await savePublicChatMessage({ sessionId: input.sessionId, role: "assistant", content, model: "Grok 4.3" });
+      return { content };
+    }),
+
+  identify: publicProcedure
+    .input(z.object({
+      sessionId: z.string().min(1).max(128),
+      name: z.string().max(128).optional(),
+      email: z.string().email().max(256).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      await upsertPublicLead(input.sessionId, { visitorName: input.name, visitorEmail: input.email });
+      if (input.email) {
+        await notifyOwner({
+          title: `New lead from iventure.studio`,
+          content: `${input.name ?? "Visitor"} (${input.email}) started a conversation on iventure.studio.`,
+        });
+      }
+      return { ok: true };
+    }),
+
+  leads: protectedProcedure.query(async () => listPublicLeads(100)),
+
+  updateLeadStatus: protectedProcedure
+    .input(z.object({
+      sessionId: z.string(),
+      status: z.enum(["new", "contacted", "qualified", "closed"]),
+    }))
+    .mutation(async ({ input }) => {
+      await updatePublicLeadStatus(input.sessionId, input.status);
+      return { ok: true };
+    }),
+});
+
 const metaAgentRouter = router({
   dispatch: protectedProcedure
     .input(z.object({
@@ -1149,11 +1209,20 @@ export const appRouter = router({
         return [];
       }
     }),
+    nexosModels: publicProcedure.query(async () => {
+      try {
+        const { data } = await listNexosModels();
+        return data ?? [];
+      } catch {
+        return [];
+      }
+    }),
     send: publicProcedure
       .input(z.object({
         sessionId: z.string(),
         message: z.string().min(1),
         model: z.string().optional(),
+        provider: z.enum(["nexos", "forge"]).optional(),
         history: z.array(z.object({
           role: z.enum(["user", "assistant", "system"]),
           content: z.string(),
@@ -1166,7 +1235,7 @@ export const appRouter = router({
           ...(input.history ?? []).map(h => ({ role: h.role as "user" | "assistant" | "system", content: h.content })),
           { role: "user" as const, content: input.message },
         ];
-        const response = await invokeLLM({ messages, model: input.model });
+        const response = await invokeLLM({ messages, model: input.model, provider: input.provider });
         const rawContent = response.choices?.[0]?.message?.content;
         const content = typeof rawContent === 'string' ? rawContent : (Array.isArray(rawContent) ? rawContent.map((c: {type: string; text?: string}) => c.type === 'text' ? c.text : '').join('') : "No response generated.");
         await saveChatMessage({ sessionId: input.sessionId, role: "assistant", content, model: input.model });
@@ -1513,6 +1582,7 @@ export const appRouter = router({
   }),
   coolify: coolifyRouter,
   email: emailRouter,
+  publicChat: publicChatRouter,
   browser: browserRouter,
   schedules: schedulesRouter,
   clients: clientsRouter,
@@ -1525,3 +1595,4 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
+import { upsertPublicLead, savePublicChatMessage, listPublicLeads, updatePublicLeadStatus } from "./db";
