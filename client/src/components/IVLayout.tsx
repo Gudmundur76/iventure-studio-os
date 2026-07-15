@@ -6,7 +6,8 @@ import {
   Cpu, Shield, Clock, Server, Package, Mail, Globe, CalendarClock,
   GitBranch, Wrench, Phone
 } from "lucide-react";
-import { Users, Building2, Settings2 } from "lucide-react";
+import { Users, Building2, Settings2, Sparkles } from "lucide-react";
+import { Inbox } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { getLoginUrl } from "@/const";
 
@@ -23,6 +24,7 @@ const NAV_ITEMS = [
   { path: "/os/analytics", icon: BarChart3, label: "Analytics", badge: null },
   { path: "/os/portal", icon: FolderKanban, label: "Client Portal", badge: null },
   { path: "/os/clients", icon: Users, label: "Clients", badge: "NEW" },
+  { path: "/os/leads", icon: Inbox, label: "Leads", badge: "NEW" },
   { path: "/os/tenants", icon: Building2, label: "Tenants", badge: "NEW" },
   { path: "/os/meta-agent", icon: Bot, label: "Mr. Agent", badge: "NEW" },
   { path: "/os/mr-agent-profile", icon: Settings2, label: "Agent Profile", badge: null },
@@ -36,6 +38,7 @@ const NAV_ITEMS = [
   { path: "/os/sandbox", icon: Server, label: "Sandbox Nodes", badge: "NEW" },
   { path: "/os/coolify", icon: Package, label: "Coolify MCP", badge: "MCP" },
   { path: "/os/hostinger", icon: Globe, label: "Hostinger Infra", badge: "DNS" },
+  { path: "/os/ai-router", icon: Sparkles, label: "AI Router", badge: "NEW" },
 ];
 
 interface IVLayoutProps {

@@ -9,6 +9,7 @@ import {
   getCortexSignals, getCortexStats, getAllProjects,
   createProject, updateProjectStatus, getChatHistory,
   saveChatMessage,
+  upsertPublicLead, savePublicChatMessage, listPublicLeads, updatePublicLeadStatus, getPublicChatHistory,
 } from "./db";
 import { seedDatabase } from "./seed";
 import { createEnquiry, listEnquiries } from "./db";
@@ -56,7 +57,30 @@ import { runAwarenessLoop, applyProposal, dismissProposal, listProposals } from 
 
 // ── Tenants Router ─────────────────────────────────────────────────────────
 // ── Meta Agent Router ──────────────────────────────────────────────────────
-const VELORAH_SYSTEM_PROMPT = `You are Velorah, the AI agent for iVenture Studio — a creative technology studio based in Iceland founded by Guðmundur (Gummi) Sigurðsson. iVenture Studio builds AI-powered products and services for ambitious founders and companies. Our core offerings: AI Agent Systems (custom autonomous agents for operations, sales, research, content), iVenture OS (multi-agent operating system for running a portfolio of companies with minimal headcount), Web & Product Development (fast AI-assisted product builds), and Strategy & Consulting (AI adoption roadmaps). You are the first point of contact. Your job is to understand what the visitor needs, explain how iVenture Studio can help, and guide them toward booking a call or leaving their contact details. Keep responses concise (2-4 sentences), warm, and direct. If someone asks a technical question, answer it clearly. If they seem interested in working together, ask for their name and email. Contact: hello@iventure.studio`;
+const VELORAH_SYSTEM_PROMPT = `You are Velorah — the AI agent and first point of contact for iVenture Studio.
+
+iVenture Studio is an AI-native studio founded in Iceland by Guðmundur (Gummi) Sigurðsson. We build autonomous AI systems that let founders run entire companies with minimal headcount. Think of us as the engineering team, ops team, and strategy team — all powered by AI agents.
+
+SERVICES & PRICING:
+- AI Agent Systems: Custom autonomous agents for sales, operations, research, content, and customer support. Starting at €2,500/month for a fully managed agent.
+- iVenture OS: Our multi-agent operating system for portfolio founders. Manages tasks, agents, clients, and workflows in one dashboard. €500/month.
+- Web & Product Development: AI-assisted product builds — MVP to production in weeks, not months. Project-based, from €5,000.
+- Strategy & Consulting: AI adoption roadmaps, agent architecture design, and team upskilling. €200/hour or €3,000 for a full roadmap.
+
+WHO WE WORK WITH:
+- Solo founders and small teams who want to scale without hiring
+- Companies replacing repetitive workflows with AI agents
+- Startups that need to move fast and ship real products
+
+YOUR ROLE:
+- Understand what the visitor is building or struggling with
+- Explain clearly how iVenture Studio can help them specifically
+- Guide them toward booking a call (https://cal.com/iventure) or leaving their email
+- Keep responses concise: 2-4 sentences, warm, direct, no fluff
+- If they ask technical questions, answer them honestly and specifically
+- If they seem like a good fit, ask: "Would you like to book a quick call, or should I have Gummi reach out by email?"
+
+CONTACT: hello@iventure.studio | Book a call: https://cal.com/iventure | Based in Reykjavík, Iceland — serving clients globally.`;
 
 const publicChatRouter = router({
   send: publicProcedure
@@ -103,6 +127,10 @@ const publicChatRouter = router({
     }),
 
   leads: protectedProcedure.query(async () => listPublicLeads(100)),
+
+  getMessages: protectedProcedure
+    .input(z.object({ sessionId: z.string().min(1).max(128) }))
+    .query(async ({ input }) => getPublicChatHistory(input.sessionId, 100)),
 
   updateLeadStatus: protectedProcedure
     .input(z.object({
@@ -1249,19 +1277,6 @@ export const appRouter = router({
       return seedDatabase();
     }),
   }),
-  migrate: router({
-    runPublicLeads: publicProcedure.mutation(async () => {
-      const db = await getDb();
-      if (!db) return { ok: false, error: "No DB" };
-      try {
-        await db.execute(sql`CREATE TABLE IF NOT EXISTS \`public_chat_messages\` (\`id\` int AUTO_INCREMENT NOT NULL, \`sessionId\` varchar(128) NOT NULL, \`role\` enum('user','assistant','system') NOT NULL, \`content\` text NOT NULL, \`model\` varchar(128), \`createdAt\` timestamp NOT NULL DEFAULT (now()), CONSTRAINT \`public_chat_messages_id\` PRIMARY KEY(\`id\`))`);
-        await db.execute(sql`CREATE TABLE IF NOT EXISTS \`public_leads\` (\`id\` int AUTO_INCREMENT NOT NULL, \`sessionId\` varchar(128) NOT NULL, \`visitorName\` varchar(128), \`visitorEmail\` varchar(256), \`source\` varchar(64) NOT NULL DEFAULT 'iventure.studio', \`status\` enum('new','contacted','qualified','closed') NOT NULL DEFAULT 'new', \`summary\` text, \`createdAt\` timestamp NOT NULL DEFAULT (now()), \`updatedAt\` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP, CONSTRAINT \`public_leads_id\` PRIMARY KEY(\`id\`), CONSTRAINT \`public_leads_sessionId_unique\` UNIQUE(\`sessionId\`))`);
-        return { ok: true, message: "Tables created" };
-      } catch (e: unknown) {
-        return { ok: false, error: String(e) };
-      }
-    }),
-  }),
 
   // Updates (Nýjustu fréttir)
   updates: router({
@@ -1608,4 +1623,3 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
-import { upsertPublicLead, savePublicChatMessage, listPublicLeads, updatePublicLeadStatus } from "./db";
