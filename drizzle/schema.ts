@@ -497,3 +497,25 @@ export const publicChatMessages = mysqlTable("public_chat_messages", {
 });
 export type PublicChatMessage = typeof publicChatMessages.$inferSelect;
 export type InsertPublicChatMessage = typeof publicChatMessages.$inferInsert;
+
+// ── Giggo Service Orders ─────────────────────────────────────────────────
+export const serviceOrders = mysqlTable("service_orders", {
+  id: int("id").autoincrement().primaryKey(),
+  portalToken: varchar("portalToken", { length: 64 }).notNull().unique(),
+  clientName: varchar("clientName", { length: 128 }).notNull(),
+  clientEmail: varchar("clientEmail", { length: 256 }).notNull(),
+  service: varchar("service", { length: 128 }).notNull(),
+  description: text("description").notNull(),
+  plan: mysqlEnum("plan", ["grunnur", "voxtur", "studio"]).default("grunnur").notNull(),
+  status: mysqlEnum("status", ["new", "in_progress", "revision", "delivered", "closed"]).default("new").notNull(),
+  slaDeadline: timestamp("slaDeadline"),
+  deliveryUrl: text("deliveryUrl"),
+  deliveryNote: text("deliveryNote"),
+  internalNotes: text("internalNotes"),
+  agentTaskId: int("agentTaskId"),
+  source: varchar("source", { length: 64 }).default("giggo.io").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ServiceOrder = typeof serviceOrders.$inferSelect;
+export type InsertServiceOrder = typeof serviceOrders.$inferInsert;

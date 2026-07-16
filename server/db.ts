@@ -15,6 +15,7 @@ import { invoices, InsertInvoice, Invoice } from "../drizzle/schema";
 import { scheduledJobs, jobRunLogs, type InsertScheduledJob, type InsertJobRunLog, type ScheduledJob, type JobRunLog } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { publicLeads, publicChatMessages, type InsertPublicLead, type InsertPublicChatMessage, type PublicLead, type PublicChatMessage } from "../drizzle/schema";
+import { serviceOrders, type ServiceOrder, type InsertServiceOrder } from "../drizzle/schema";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -644,3 +645,51 @@ export async function updatePublicLeadStatus(sessionId: string, status: "new" | 
 }
 
 export type { PublicLead, PublicChatMessage };
+
+// ── Service Orders (Giggo pipeline) ──────────────────────────────────────
+export async function createServiceOrder(data: InsertServiceOrder): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(serviceOrders).values(data);
+}
+
+export async function listServiceOrders(limit = 100): Promise<ServiceOrder[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(serviceOrders)
+    .orderBy(desc(serviceOrders.createdAt))
+    .limit(limit);
+}
+
+export async function getServiceOrder(portalToken: string): Promise<ServiceOrder | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(serviceOrders)
+    .where(eq(serviceOrders.portalToken, portalToken))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+export async function updateServiceOrderStatus(
+  id: number,
+  status: ServiceOrder["status"],
+  extra?: { internalNotes?: string; slaDeadline?: Date }
+): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(serviceOrders).set({ status, ...(extra ?? {}) }).where(eq(serviceOrders.id, id));
+}
+
+export async function deliverServiceOrder(
+  id: number,
+  deliveryUrl: string,
+  deliveryNote: string
+): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(serviceOrders)
+    .set({ status: "delivered", deliveryUrl, deliveryNote })
+    .where(eq(serviceOrders.id, id));
+}
+
+export type { ServiceOrder };

@@ -119,6 +119,12 @@ function Router() {
       <Route path="/os/leads">
         <IVLayout><Leads /></IVLayout>
       </Route>
+      <Route path="/os/orders">
+        <IVLayout><Orders /></IVLayout>
+      </Route>
+      <Route path="/service-portal/:portalToken">
+        <ServicePortal />
+      </Route>
       <Route path="/portal/:token" component={PublicPortal} />
       {/* Public Giggo site routes */}
       <Route path="/chat" component={GiggoChat} />
@@ -167,3 +173,5 @@ import HealingProposals from "./pages/HealingProposals";
 import VoiceAgent from "./pages/VoiceAgent";
 import AIRouter from "./pages/AIRouter";
 import Leads from "./pages/Leads";
+import Orders from "./pages/Orders";
+import ServicePortal from "./pages/ServicePortal";

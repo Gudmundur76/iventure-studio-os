@@ -453,18 +453,24 @@ function Pricing() {
 
 // ─── CONTACT ──────────────────────────────────────────────────────────────────
 function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", service: "", message: "" });
-  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", service: "", message: "", plan: "grunnur" });
+  const [portalToken, setPortalToken] = useState<string | null>(null);
 
-  const submitEnquiry = trpc.enquiries.submit.useMutation({
-    onSuccess: () => { setSent(true); toast.success("Skilaboð send!"); },
+  const createOrder = trpc.publicOrders.create.useMutation({
+    onSuccess: (data) => { setPortalToken(data.portalToken); toast.success("Pöntun móttekin!"); },
     onError: (err) => toast.error(err.message || "Villa við sendingu"),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) { toast.error("Vinsamlegast fylltu út öll nauðsynleg svæði"); return; }
-    submitEnquiry.mutate(form);
+    createOrder.mutate({
+      clientName: form.name,
+      clientEmail: form.email,
+      service: form.service || "Almenn fyrirspurn",
+      description: form.message,
+      plan: form.plan,
+    });
   };
 
   return (
@@ -482,18 +488,35 @@ function Contact() {
           </p>
         </FadeIn>
 
-        {sent ? (
+        {portalToken ? (
           <FadeIn>
             <div className="service-card rounded-2xl p-10 text-center">
               <span className="text-4xl mb-4 block">✓</span>
-              <h3 className="text-xl text-white mb-2" style={{ fontFamily: "'Instrument Serif', serif" }}>Skilaboð móttekin</h3>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif" }}>Við höfum samband við þig fljótlega.</p>
+              <h3 className="text-xl text-white mb-2" style={{ fontFamily: "'Instrument Serif', serif" }}>Pöntun móttekin!</h3>
+              <p className="text-sm mb-4" style={{ color: "rgba(255,255,255,0.45)", fontFamily: "'Inter', sans-serif" }}>
+                Við byrjum strax. Fylgstu með stöðu pöntunarinnar hér:
+              </p>
+              <a
+                href={`/service-portal/${portalToken}`}
+                className="liquid-glass rounded-full px-6 py-3 text-sm text-white inline-block hover:scale-[1.02] transition-transform btn-active"
+                style={{ fontFamily: "'Inter', sans-serif" }}
+              >
+                Skoða stöðu pöntunar →
+              </a>
             </div>
           </FadeIn>
         ) : (
           <FadeIn>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>Þjónustupakki</label>
+                  <select className="giggo-input" value={form.plan} onChange={(e) => setForm(p => ({ ...p, plan: e.target.value }))}>
+                    <option value="grunnur">Grunnur — $29 / verkefni</option>
+                    <option value="voxtur">Vöxtur — $99 / mánuður</option>
+                    <option value="studio">Stúdíó — Sérsniðið</option>
+                  </select>
+                </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>Nafn *</label>
                   <input className="giggo-input" placeholder="Fullt nafn" value={form.name} onChange={(e) => setForm(p => ({ ...p, name: e.target.value }))} />
@@ -511,9 +534,9 @@ function Contact() {
                 <label className="text-xs uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif" }}>Skilaboð *</label>
                 <textarea className="giggo-input resize-none" rows={4} placeholder="Lýstu verkefninu eða spurðu spurningu..." value={form.message} onChange={(e) => setForm(p => ({ ...p, message: e.target.value }))} />
               </div>
-              <button type="submit" disabled={submitEnquiry.isPending}
+              <button type="submit" disabled={createOrder.isPending}
                 className="liquid-glass rounded-full px-8 py-4 text-base text-white hover:scale-[1.02] transition-transform btn-active cursor-pointer giggo-body disabled:opacity-50 mt-2">
-                {submitEnquiry.isPending ? "Sendi..." : "Senda skilaboð"}
+                {createOrder.isPending ? "Sendi pöntun..." : "Senda pöntun"}
               </button>
             </form>
           </FadeIn>

@@ -55,6 +55,11 @@ import { codeRepos, codeNodes, codeEdges, healingProposals } from "../drizzle/sc
 import { publicLeads } from "../drizzle/schema";
 import { scanRepo, scanAllActiveRepos, getAnomalies, seedDefaultRepos } from "./codeGraph";
 import { runAwarenessLoop, applyProposal, dismissProposal, listProposals } from "./selfHealing";
+import {
+  createServiceOrder, listServiceOrders, getServiceOrder,
+  updateServiceOrderStatus, deliverServiceOrder,
+} from "./db";
+import crypto from "crypto";
 
 // ── Tenants Router ─────────────────────────────────────────────────────────
 // ── Meta Agent Router ──────────────────────────────────────────────────────
@@ -1656,6 +1661,89 @@ export const appRouter = router({
       };
     }),
   }),
-});
 
+  publicOrders: router({
+    create: publicProcedure
+      .input((raw: unknown) => {
+        const d = raw as { clientName: string; clientEmail: string; service: string; description: string; plan: string };
+        if (!d.clientName || !d.clientEmail || !d.service || !d.description || !d.plan) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'All fields required' });
+        }
+        return d;
+      })
+      .mutation(async ({ input }) => {
+        const portalToken = crypto.randomBytes(32).toString('hex');
+        const slaHours = input.plan === 'grunnur' ? 48 : 24;
+        const slaDeadline = new Date(Date.now() + slaHours * 60 * 60 * 1000);
+        await createServiceOrder({
+          portalToken,
+          clientName: input.clientName,
+          clientEmail: input.clientEmail,
+          service: input.service,
+          description: input.description,
+          plan: input.plan as 'grunnur' | 'voxtur' | 'studio',
+          status: 'new',
+          slaDeadline,
+          source: 'web',
+        });
+        await notifyOwner({
+          title: 'New order: ' + input.service,
+          content: input.clientName + ' (' + input.clientEmail + ') ordered ' + input.plan + ' plan. Description: ' + input.description + ' Portal: https://os.gummi.lt/service-portal/' + portalToken,
+        });
+        return { portalToken };
+      }),
+  }),
+
+  orders: router({
+    list: protectedProcedure.query(async () => {
+      return listServiceOrders(100);
+    }),
+    updateStatus: protectedProcedure
+      .input((raw: unknown) => {
+        const d = raw as { id: number; status: string; internalNotes?: string };
+        return d;
+      })
+      .mutation(async ({ input }) => {
+        await updateServiceOrderStatus(
+          input.id,
+          input.status as 'new' | 'in_progress' | 'revision' | 'delivered' | 'closed',
+          input.internalNotes ? { internalNotes: input.internalNotes } : undefined
+        );
+        return { ok: true };
+      }),
+    deliver: protectedProcedure
+      .input((raw: unknown) => {
+        const d = raw as { id: number; deliveryUrl: string; deliveryNote: string };
+        return d;
+      })
+      .mutation(async ({ input }) => {
+        await deliverServiceOrder(input.id, input.deliveryUrl, input.deliveryNote ?? '');
+        return { ok: true };
+      }),
+  }),
+
+  servicePortal: router({
+    getOrder: publicProcedure
+      .input((raw: unknown) => {
+        const d = raw as { portalToken: string };
+        if (!d.portalToken) throw new TRPCError({ code: 'BAD_REQUEST', message: 'portalToken required' });
+        return d;
+      })
+      .query(async ({ input }) => {
+        const order = await getServiceOrder(input.portalToken);
+        if (!order) throw new TRPCError({ code: 'NOT_FOUND', message: 'Order not found' });
+        return {
+          id: order.id,
+          clientName: order.clientName,
+          service: order.service,
+          plan: order.plan,
+          status: order.status,
+          slaDeadline: order.slaDeadline,
+          deliveryUrl: order.deliveryUrl,
+          deliveryNote: order.deliveryNote,
+          createdAt: order.createdAt,
+        };
+      }),
+  }),
+});
 export type AppRouter = typeof appRouter;
