@@ -52,6 +52,7 @@ import { agents as agentsTable } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { codeRepos, codeNodes, codeEdges, healingProposals } from "../drizzle/schema";
+import { publicLeads } from "../drizzle/schema";
 import { scanRepo, scanAllActiveRepos, getAnomalies, seedDefaultRepos } from "./codeGraph";
 import { runAwarenessLoop, applyProposal, dismissProposal, listProposals } from "./selfHealing";
 
@@ -1620,6 +1621,41 @@ export const appRouter = router({
   metaAgent: metaAgentRouter,
   codeGraph: codeGraphRouter,
   healing: healingRouter,
+  dashboard: router({
+    summary: protectedProcedure.query(async () => {
+      const { count: countFn } = await import('drizzle-orm');
+      const db = await getDb();
+      if (!db) return { leads: { total: 0, new: 0, recent: [] }, tasks: { pending: 0, total: 0 }, clients: { total: 0 }, healing: { pending: 0, applied: 0 }, timestamp: Date.now() };
+      const recentLeads = await listPublicLeads(5);
+      const [leadCountRow] = await db.select({ total: countFn() }).from(publicLeads);
+      const newLeads = recentLeads.filter(l => l.status === 'new').length;
+      const workerTasks = await listWorkerTasks();
+      const pendingTasks = workerTasks.filter(t => t.status === 'queued' || t.status === 'thinking').length;
+      const clients = await listClients();
+      const healingRows = await db.select({ status: healingProposals.status, cnt: countFn() })
+        .from(healingProposals)
+        .groupBy(healingProposals.status);
+      const healingStats: Record<string, number> = {};
+      for (const row of healingRows) healingStats[row.status] = Number(row.cnt);
+      return {
+        leads: {
+          total: Number(leadCountRow?.total ?? 0),
+          new: newLeads,
+          recent: recentLeads.slice(0, 5).map(l => ({
+            id: l.id,
+            name: l.visitorName ?? 'Anonymous',
+            email: l.visitorEmail,
+            status: l.status,
+            createdAt: l.createdAt,
+          })),
+        },
+        tasks: { pending: pendingTasks, total: workerTasks.length },
+        clients: { total: clients.length },
+        healing: { pending: healingStats['pending'] ?? 0, applied: healingStats['applied'] ?? 0 },
+        timestamp: Date.now(),
+      };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
